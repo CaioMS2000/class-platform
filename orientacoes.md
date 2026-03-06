@@ -578,3 +578,218 @@ class PaymentService {     // Pagamentos
 ```
 
 **Conclusão**: Não force complexidade onde não existe. Se aluno realmente só tem dados básicos, uma entidade pobre é a escolha correta. O importante é que as regras complexas estejam **em algum lugar** (serviços, value objects, outras entidades), não que **todas** as entidades sejam ricas.
+
+
+---
+
+# QUestionamento: "Em que contexto controla o aluno poder assistir uma ula?"
+Aluno cadastrado fazer login e assistir aula **atravessa múltiplos contextos** - e isso é normal!
+
+## O aluno existe em diferentes contextos com diferentes responsabilidades
+
+### 1. **Contexto de Identity/Access (IAM) - Você precisa dele!**
+```typescript
+src/contexts/
+├── iam/                          # Identity and Access Management
+│   ├── domain/
+│   │   ├── entities/
+│   │   │   └── User.ts          # Credenciais, roles, permissões
+│   │   ├── value-objects/
+│   │   │   ├── Email.ts
+│   │   │   └── Password.ts
+│   │   └── services/
+│   │       └── AuthenticationService.ts
+│   │
+│   ├── application/
+│   │   ├── use-cases/
+│   │   │   ├── LoginUseCase.ts
+│   │   │   ├── RegisterUseCase.ts
+│   │   │   └── ResetPasswordUseCase.ts
+│   │   └── dtos/
+│   │       └── AuthDTOs.ts
+│   │
+│   └── infrastructure/
+│       ├── jwt/
+│       └── session/
+```
+
+### 2. **Contexto de Learning (Progresso do aluno)**
+```typescript
+src/contexts/
+├── learning/                      # Assistir aulas, progresso
+│   ├── domain/
+│   │   ├── entities/
+│   │   │   ├── Enrollment.ts     # Matrícula do aluno no curso
+│   │   │   ├── Progress.ts       # Progresso em aulas
+│   │   │   └── WatchHistory.ts   # Histórico de visualização
+│   │   └── value-objects/
+│   │       ├── CompletionStatus.ts
+│   │       └── WatchTime.ts
+│   │
+│   ├── application/
+│   │   ├── use-cases/
+│   │   │   ├── WatchLessonUseCase.ts
+│   │   │   ├── TrackProgressUseCase.ts
+│   │   │   └── GetDashboardUseCase.ts
+│   │   └── services/
+│   │       └── ProgressCalculator.ts
+│   │
+│   └── infrastructure/
+│       └── video-streaming/
+```
+
+### 3. **Contexto de Catalog (Visualização de cursos)**
+```typescript
+src/contexts/
+├── catalog/                       # Catálogo de cursos (leitura)
+│   ├── domain/
+│   │   ├── entities/
+│   │   │   ├── Course.ts
+│   │   │   ├── Module.ts
+│   │   │   └── Lesson.ts
+│   │   └── services/
+│   │       └── CourseFinder.ts
+│   │
+│   ├── application/
+│   │   └── use-cases/
+│   │       ├── BrowseCoursesUseCase.ts
+│   │       └── ViewLessonUseCase.ts  # Visualizar CONTEÚDO da aula
+│   │
+│   └── infrastructure/
+│       └── content-delivery/
+```
+
+## Como eles se relacionam?
+
+```typescript
+// 1. IAM: Quem é você?
+class IAMContext {
+  async login(email: string, password: string): Promise<Session> {
+    // Retorna token e dados básicos do usuário
+  }
+}
+
+// 2. Catalog: O que você pode ver?
+class CatalogContext {
+  async getCourse(courseId: string): Promise<Course> {
+    // Retorna informações do curso (independente de matrícula)
+  }
+}
+
+// 3. Learning: O que você já fez/acessou?
+class LearningContext {
+  constructor(
+    private iam: IAMContext,
+    private catalog: CatalogContext
+  ) {}
+
+  async watchLesson(userId: string, lessonId: string) {
+    // 1. Verifica se usuário existe (IAM)
+    const user = await this.iam.getUser(userId)
+    
+    // 2. Verifica se aula existe (Catalog)
+    const lesson = await this.catalog.getLesson(lessonId)
+    
+    // 3. Verifica se tem acesso (Enrollment)
+    if (!await this.hasAccess(userId, lesson.courseId)) {
+      throw new Error('Not enrolled')
+    }
+    
+    // 4. Registra progresso
+    await this.trackProgress(userId, lessonId)
+    
+    // 5. Retorna URL da aula (integração com infra)
+    return this.getStreamUrl(lesson.videoId)
+  }
+}
+```
+
+## O "Aluno" em cada contexto
+
+```typescript
+// IAM: Usuário com credenciais
+interface User {
+  id: string
+  email: string
+  password: string
+  roles: Role[]
+}
+
+// Catalog: Visualizador (quase não existe)
+interface Viewer {
+  id: string
+  preferences?: Preferences
+}
+
+// Learning: Estudante com progresso
+interface Student {
+  userId: string
+  enrollments: Enrollment[]
+  progress: Map<CourseId, Completion>
+  lastAccess: Date
+}
+```
+
+## Recomendação para seu caso
+
+### Contextos que você PRECISA:
+
+```typescript
+// 1. IAM (NOVO) - Obrigatório
+src/contexts/iam/
+├── domain/
+├── application/
+└── infrastructure/
+
+// 2. Catalog (já tem ideia) - Visualização
+src/contexts/catalog/
+├── domain/
+├── application/
+└── infrastructure/
+
+// 3. Learning (NOVO) - Assistir/progresso
+src/contexts/learning/
+├── domain/
+├── application/
+└── infrastructure/
+```
+
+### Como decidir se um contexto é necessário:
+
+Pergunte: **"Se eu mudar X, o que mais impacta?"**
+
+- Mudar login → Só IAM (independente)
+- Mudar como calcula progresso → Só Learning
+- Mudar como exibe aulas → Catalog
+
+Se a mudança impacta várias áreas, talvez esteja no contexto errado.
+
+## Exemplo prático de uso
+
+```typescript
+// Frontend: Aluno acessa aula
+async function handleWatchLesson(lessonId: string) {
+  // 1. Pega token do usuário logado (IAM)
+  const session = await iamAPI.getSession()
+  
+  // 2. Busca conteúdo da aula (Catalog)
+  const lesson = await catalogAPI.getLesson(lessonId)
+  
+  // 3. Registra acesso e pega URL do vídeo (Learning)
+  const { videoUrl, progress } = await learningAPI.watchLesson(
+    session.userId,
+    lessonId
+  )
+  
+  // 4. Renderiza
+  return { lesson, videoUrl, progress }
+}
+```
+
+## Resumo
+
+- **Crie IAM**: Para autenticação (login, registro, senha)
+- **Use Catalog**: Para visualizar cursos/aulas (dados estáticos)
+- **Crie Learning**: Para progresso e histórico (comportamento do aluno)
+
+O "aluno" não existe como uma entidade única - ele é representado por diferentes conceitos em cada contexto (User, Viewer, Student). Isso é **intencional** e faz parte da modelagem por contextos!
