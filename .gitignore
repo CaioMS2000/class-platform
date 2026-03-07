@@ -38,5 +38,8 @@ yarn-error.log*
 *.pem
 
 # others
+.vscode
 *.py
+*.sh
+!commit-stages.sh
 arquivos.txt
