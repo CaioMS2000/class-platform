@@ -9,10 +9,10 @@ const _ApplicationContext = {
 
 type ApplicationContextType = typeof _ApplicationContext
 
-declare global {
+/*declare global {
 	var ApplicationContext: ApplicationContextType
 }
 
 Object.assign(globalThis, {
 	ApplicationContext: _ApplicationContext,
-})
+})*/

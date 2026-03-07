@@ -1,1 +1,1 @@
-import './application-context'
+import './global'
