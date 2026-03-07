@@ -1,7 +1,9 @@
-import { Class, type Money, type UniqueId } from '@repo/core'
+import { Class, IdGenerator, type Money, type UniqueId } from '@repo/core'
+import { resolveId } from '@/utils/resolve-id'
+import { createSlug } from '@/utils/slug'
 import type { Category, CourseStatus } from '../@types'
 
-export type CouseProps = {
+export type CourseProps = {
 	id: UniqueId
 	slug: string // url-friendly name
 	title: string
@@ -38,9 +40,83 @@ export type CouseProps = {
 	updatedAt: Date
 }
 
-export type CreateCourseInput = Optional<CouseProps, 'id'>
-export class Couse extends Class<CouseProps> {
-	protected constructor(protected props: CouseProps) {
+export type CreateCourseInput = Pick<
+	CourseProps,
+	| 'title'
+	| 'subtitle'
+	| 'description'
+	| 'price'
+	| 'promotionalPrice'
+	| 'level'
+	| 'thumbnail'
+> &
+	Partial<CourseProps>
+
+type X = Optional<CourseProps, 'id'>
+type CreationParams = {
+	idGenerator: IdGenerator
+	input: CreateCourseInput
+}
+
+export class Course extends Class<CourseProps> {
+	protected constructor(protected props: CourseProps) {
 		super()
+	}
+
+	static async create({ idGenerator, input }: CreationParams) {
+		let {
+			id,
+			slug,
+			title,
+			subtitle,
+			description,
+			thumbnail,
+			coverImage,
+			level,
+			price,
+			promotionalPrice,
+
+			// with default
+			totalRatings = 0,
+			rating = 0,
+			totalEnrollments = 0,
+			status = 'published',
+			publishedAt = new Date(),
+			createdAt = new Date(),
+			updatedAt = new Date(),
+			modulesIds = [],
+			totalLessons = 0,
+			totalDuration = 0,
+			tags = [],
+			categories = [],
+		} = input
+
+		id = await resolveId(idGenerator, id)
+		slug = slug ?? createSlug(title)
+
+		return new Course({
+			id,
+			slug,
+			title,
+			subtitle,
+			description,
+			thumbnail,
+			coverImage,
+			level,
+			price,
+			promotionalPrice,
+			updatedAt,
+			totalRatings,
+			rating,
+			totalEnrollments,
+			status,
+			publishedAt,
+			createdAt,
+			modulesIds,
+			totalLessons,
+			totalDuration,
+			tags,
+			categories,
+		})
 	}
 }
