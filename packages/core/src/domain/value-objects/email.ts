@@ -1,4 +1,4 @@
-import { failure, Result, success } from '../../result'
+import { failure, type Result, success } from '../../result'
 import { ValueObject } from '../../value-object'
 import { InvalidValueError } from '../@errors/domain-errors/invalid-value-error'
 import { EmailContainsAtRule } from './rules/email-contains-at-rule'

@@ -1,4 +1,5 @@
 export * from './cpf'
 export * from './email'
+export * from './money'
 export * from './phone'
 export * from './rules'
