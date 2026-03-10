@@ -1,7 +1,8 @@
 import { Class, IdGenerator, type Money, type UniqueId } from '@repo/core'
 import { resolveId } from '@/utils/resolve-id'
 import { createSlug } from '@/utils/slug'
-import type { Category, CourseStatus } from '../@types'
+import type { Category, CourseLevel, CourseStatus } from '../@types'
+import { Rating } from '../value-objects'
 
 export type CourseProps = {
 	id: UniqueId
@@ -20,14 +21,14 @@ export type CourseProps = {
 	// Classificação
 	categories: Category[]
 	tags: string[]
-	level: 'beginner' | 'intermediate' | 'advanced'
+	level: CourseLevel
 
 	// Preço
 	price: Money
 	promotionalPrice?: Money
 
 	// Métricas
-	rating: number // média de 0-5
+	rating: Rating
 	totalRatings: number
 	totalEnrollments: number
 
@@ -52,7 +53,6 @@ export type CreateCourseInput = Pick<
 > &
 	Partial<CourseProps>
 
-type X = Optional<CourseProps, 'id'>
 type CreationParams = {
 	idGenerator: IdGenerator
 	input: CreateCourseInput
@@ -78,7 +78,7 @@ export class Course extends Class<CourseProps> {
 
 			// with default
 			totalRatings = 0,
-			rating = 0,
+			rating = Rating.zero(),
 			totalEnrollments = 0,
 			status = 'published',
 			publishedAt = new Date(),
