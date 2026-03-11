@@ -21,6 +21,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@johanblumenberg/ts-mockito": "^1.0.52",
     "@types/bun": "latest",
     "bun-types": "^1.3.10"
   },

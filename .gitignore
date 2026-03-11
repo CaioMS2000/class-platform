@@ -43,3 +43,4 @@ yarn-error.log*
 *.sh
 !commit-stages.sh
 arquivos.txt
+temp
