@@ -58,6 +58,10 @@ type CreationParams = {
 	input: CreateCourseInput
 }
 
+export type UpdateCourseInput = Partial<
+	Omit<CourseProps, 'id' | 'createdAt' | 'updatedAt'>
+>
+
 export class Course extends Class<CourseProps> {
 	protected constructor(protected props: CourseProps) {
 		super()
@@ -117,6 +121,94 @@ export class Course extends Class<CourseProps> {
 			totalDuration,
 			tags,
 			categories,
+		})
+	}
+
+	get id(): UniqueId {
+		return this.props.id
+	}
+
+	get title(): string {
+		return this.props.title
+	}
+
+	get subtitle(): string | undefined {
+		return this.props.subtitle
+	}
+
+	get description(): string {
+		return this.props.description
+	}
+
+	get coverImage(): string | undefined {
+		return this.props.coverImage
+	}
+
+	get tags(): string[] {
+		return this.props.tags
+	}
+
+	get level(): CourseLevel {
+		return this.props.level
+	}
+
+	get thumbnail(): string {
+		return this.props.thumbnail
+	}
+
+	get price(): Money {
+		return this.props.price
+	}
+
+	get promotionalPrice(): Money | undefined {
+		return this.props.promotionalPrice
+	}
+
+	get status(): CourseStatus {
+		return this.props.status
+	}
+
+	get slug(): string {
+		return this.props.slug
+	}
+
+	update(input: UpdateCourseInput): Course {
+		return new Course({
+			...this.props,
+			...(input.slug !== undefined && { slug: input.slug }),
+			...(input.title !== undefined && { title: input.title }),
+			...(input.subtitle !== undefined && { subtitle: input.subtitle }),
+			...(input.description !== undefined && {
+				description: input.description,
+			}),
+			...(input.thumbnail !== undefined && { thumbnail: input.thumbnail }),
+			...(input.coverImage !== undefined && { coverImage: input.coverImage }),
+			...(input.modulesIds !== undefined && { modulesIds: input.modulesIds }),
+			...(input.totalLessons !== undefined && {
+				totalLessons: input.totalLessons,
+			}),
+			...(input.totalDuration !== undefined && {
+				totalDuration: input.totalDuration,
+			}),
+			...(input.categories !== undefined && { categories: input.categories }),
+			...(input.tags !== undefined && { tags: input.tags }),
+			...(input.level !== undefined && { level: input.level }),
+			...(input.price !== undefined && { price: input.price }),
+			...('promotionalPrice' in input && {
+				promotionalPrice: input.promotionalPrice,
+			}),
+			...(input.rating !== undefined && { rating: input.rating }),
+			...(input.totalRatings !== undefined && {
+				totalRatings: input.totalRatings,
+			}),
+			...(input.totalEnrollments !== undefined && {
+				totalEnrollments: input.totalEnrollments,
+			}),
+			...(input.status !== undefined && { status: input.status }),
+			...(input.publishedAt !== undefined && {
+				publishedAt: input.publishedAt,
+			}),
+			updatedAt: new Date(),
 		})
 	}
 }

@@ -27,6 +27,19 @@ type CreationParams = {
 	id?: UniqueId
 }
 
+export type UpdateModuleInput = Partial<
+	Omit<
+		ModuleProps,
+		| 'id'
+		| 'courseId'
+		| 'lessonsIds'
+		| 'totalLessons'
+		| 'totalDuration'
+		| 'createdAt'
+		| 'updatedAt'
+	>
+>
+
 export class Module extends Class<ModuleProps> {
 	protected constructor(protected props: ModuleProps) {
 		super()
@@ -54,6 +67,38 @@ export class Module extends Class<ModuleProps> {
 			totalLessons,
 			totalDuration,
 			...rest,
+		})
+	}
+
+	get id(): UniqueId {
+		return this.props.id
+	}
+
+	get title(): string {
+		return this.props.title
+	}
+
+	get order(): number {
+		return this.props.order
+	}
+
+	get description(): string | undefined {
+		return this.props.description
+	}
+
+	get courseId(): UniqueId {
+		return this.props.courseId
+	}
+
+	update(input: UpdateModuleInput): Module {
+		return new Module({
+			...this.props,
+			...(input.title !== undefined && { title: input.title }),
+			...(input.description !== undefined && {
+				description: input.description,
+			}),
+			...(input.order !== undefined && { order: input.order }),
+			updatedAt: new Date(),
 		})
 	}
 }
