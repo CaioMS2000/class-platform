@@ -1,20 +1,4 @@
-export class AdminNotFoundError extends Error {
-	constructor(public message: string = 'Admin not found') {
-		super(message)
-		this.name = 'AdminNotFoundError'
-	}
-}
-
-export class InstructorNotFoundError extends Error {
-	constructor(public message: string = 'Instructor not found') {
-		super(message)
-		this.name = 'InstructorNotFoundError'
-	}
-}
-
-export class StudentNotFoundError extends Error {
-	constructor(public message: string = 'Student not found') {
-		super(message)
-		this.name = 'StudentNotFoundError'
-	}
-}
+export { AdminNotFoundError } from './admin-not-found-error'
+export { EmailAlreadyRegisteredError } from './email-already-registered-error'
+export { InstructorNotFoundError } from './instructor-not-found-error'
+export { StudentNotFoundError } from './student-not-found-error'
