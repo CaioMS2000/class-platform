@@ -4,7 +4,7 @@ import type { AdminStatus } from './@types'
 export type AdminProps = {
 	id: UniqueId
 	email: string
-	passwordHash: string
+	passwordHash: string | null
 	name: string
 	avatar?: string
 	status: AdminStatus
@@ -68,7 +68,7 @@ export class Admin extends Class<AdminProps> {
 		return this.props.email
 	}
 
-	get passwordHash(): string {
+	get passwordHash(): string | null {
 		return this.props.passwordHash
 	}
 

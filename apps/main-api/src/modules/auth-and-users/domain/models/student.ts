@@ -4,7 +4,7 @@ import type { StudentStatus } from './@types'
 export type StudentProps = {
 	id: UniqueId
 	email: string
-	passwordHash: string
+	passwordHash: string | null
 	name: string
 	avatar?: string
 	status: StudentStatus
@@ -68,7 +68,7 @@ export class Student extends Class<StudentProps> {
 		return this.props.email
 	}
 
-	get passwordHash(): string {
+	get passwordHash(): string | null {
 		return this.props.passwordHash
 	}
 
