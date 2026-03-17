@@ -1,6 +1,8 @@
+import type { UniqueId } from '@repo/core'
+
 export type OAuthAccountRecord = {
 	id: string
-	userId: string
+	userId: UniqueId
 	provider: string
 	providerAccountId: string
 }
@@ -12,7 +14,7 @@ export abstract class OAuthAccountRepository {
 	): Promise<OAuthAccountRecord | null>
 
 	abstract save(data: {
-		userId: string
+		userId: UniqueId
 		provider: string
 		providerAccountId: string
 	}): Promise<{ id: string }>
