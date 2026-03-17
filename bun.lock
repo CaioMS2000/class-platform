@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "class-platform",
+      "dependencies": {
+        "jose": "^6.2.1",
+      },
       "devDependencies": {
         "@caioms/biomejs-config": "latest",
         "husky": "^9.1.7",
