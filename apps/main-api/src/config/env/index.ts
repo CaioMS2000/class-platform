@@ -18,6 +18,18 @@ export const envSchema = z.object({
 
 	// Database
 	DATABASE_URL: z.string(),
+
+	// JWT (RS256)
+	JWT_PRIVATE_KEY: z.string(),
+	JWT_PUBLIC_KEY: z.string(),
+	
+	// OAuth - Google
+	GOOGLE_CLIENT_ID: z.string().default(''),
+	GOOGLE_CLIENT_SECRET: z.string().default(''),
+	GOOGLE_REDIRECT_URI: z.string().default(''),
+	
+	// OAuth - Frontend callback URL
+	OAUTH_FRONTEND_CALLBACK_URL: z.string().default(''),
 })
 
 const env = envSchema.parse(process.env)
