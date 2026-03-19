@@ -18,8 +18,9 @@
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",
     "@repo/core": "*",
+    "arctic": "^3.7.0",
     "dotenv": "^17.3.1",
-    "jose": "^6.2.1",
+    "jose": "^6.2.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
