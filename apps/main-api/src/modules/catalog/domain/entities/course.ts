@@ -6,6 +6,7 @@ import { Rating } from '../value-objects'
 
 export type CourseProps = {
 	id: UniqueId
+	instructorId: UniqueId
 	slug: string // url-friendly name
 	title: string
 	subtitle?: string
@@ -43,6 +44,7 @@ export type CourseProps = {
 
 export type CreateCourseInput = Pick<
 	CourseProps,
+	| 'instructorId'
 	| 'title'
 	| 'subtitle'
 	| 'description'
@@ -70,6 +72,7 @@ export class Course extends Class<CourseProps> {
 	static async create({ idGenerator, input }: CreationParams) {
 		let {
 			id,
+			instructorId,
 			slug,
 			title,
 			subtitle,
@@ -100,6 +103,7 @@ export class Course extends Class<CourseProps> {
 
 		return new Course({
 			id,
+			instructorId,
 			slug,
 			title,
 			subtitle,
@@ -126,6 +130,10 @@ export class Course extends Class<CourseProps> {
 
 	get id(): UniqueId {
 		return this.props.id
+	}
+
+	get instructorId(): UniqueId {
+		return this.props.instructorId
 	}
 
 	get title(): string {

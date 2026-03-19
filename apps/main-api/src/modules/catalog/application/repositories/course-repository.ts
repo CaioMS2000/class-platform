@@ -6,6 +6,7 @@ export type CourseFilters = {
 	status?: string
 	level?: string
 	categoryId?: UniqueId
+	instructorId?: UniqueId
 }
 
 export abstract class CourseRepository {
