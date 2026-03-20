@@ -25,3 +25,12 @@ export class CategoryNotFoundError extends Error {
 		this.name = 'CategoryNotFoundError'
 	}
 }
+
+export class NotCourseOwnerError extends Error {
+	constructor(
+		public message: string = 'Instructor is not the owner of this course'
+	) {
+		super(message)
+		this.name = 'NotCourseOwnerError'
+	}
+}
