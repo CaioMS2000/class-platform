@@ -1,0 +1,102 @@
+import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
+import { describe, expect, it, beforeEach } from 'vitest'
+import { UniqueId } from '@repo/core'
+import { InstructorUpdateLessonUseCase } from './update-lesson-use-case'
+import { LessonRepository } from '../../repositories/lesson-repository'
+import { CourseRepository } from '../../repositories/course-repository'
+import { LessonNotFoundError, NotCourseOwnerError } from '../../@errors'
+import { Lesson } from '../../../domain/entities/lesson'
+import { FakeIdGenerator } from '@/modules/catalog/test/fake-id-generator'
+
+describe('InstructorUpdateLessonUseCase', () => {
+	let lessonRepo: LessonRepository
+	let courseRepo: CourseRepository
+	let sut: InstructorUpdateLessonUseCase
+
+	beforeEach(() => {
+		lessonRepo = mock(LessonRepository)
+		courseRepo = mock(CourseRepository)
+		sut = new InstructorUpdateLessonUseCase({
+			lessonRepository: instance(lessonRepo),
+			courseRepository: instance(courseRepo),
+		})
+	})
+
+	it('should return failure when lesson is not found', async () => {
+		when(lessonRepo.findById(anything())).thenResolve(null)
+
+		const result = await sut.execute({
+			lessonId: 'non-existent-id',
+			instructorId: 'instructor-123',
+			title: 'New Title',
+		})
+
+		expect(result.isFailure()).toBe(true)
+		expect(result.value).toBeInstanceOf(LessonNotFoundError)
+	})
+
+	it('should return failure when instructor is not the course owner', async () => {
+		const lesson = await Lesson.create({
+			idGenerator: new FakeIdGenerator(),
+			input: {
+				moduleId: UniqueId('module-id'),
+				courseId: UniqueId('course-id'),
+				order: 1,
+				title: 'Intro Lesson',
+				type: 'video',
+				content: { videoUrl: 'https://example.com/video.mp4' },
+				duration: 10,
+				isFree: true,
+			},
+		})
+		const mockCourse: any = { instructorId: UniqueId('other-instructor') }
+
+		when(lessonRepo.findById(anything())).thenResolve(lesson)
+		when(courseRepo.findById(anything())).thenResolve(mockCourse)
+
+		const result = await sut.execute({
+			lessonId: lesson.id.toString(),
+			instructorId: 'instructor-123',
+			title: 'New Title',
+		})
+
+		expect(result.isFailure()).toBe(true)
+		expect(result.value).toBeInstanceOf(NotCourseOwnerError)
+	})
+
+	it('should return success with updated lesson', async () => {
+		const lesson = await Lesson.create({
+			idGenerator: new FakeIdGenerator(),
+			input: {
+				moduleId: UniqueId('module-id'),
+				courseId: UniqueId('course-id'),
+				order: 1,
+				title: 'Intro Lesson',
+				type: 'video',
+				content: { videoUrl: 'https://example.com/video.mp4' },
+				duration: 10,
+				isFree: true,
+			},
+		})
+		const mockCourse: any = { instructorId: UniqueId('instructor-123') }
+
+		when(lessonRepo.findById(anything())).thenResolve(lesson)
+		when(courseRepo.findById(anything())).thenResolve(mockCourse)
+		when(lessonRepo.update(anything())).thenResolve()
+
+		const result = await sut.execute({
+			lessonId: lesson.id.toString(),
+			instructorId: 'instructor-123',
+			title: 'Advanced Lesson',
+			duration: 20,
+			isFree: false,
+		})
+
+		expect(result.isSuccess()).toBe(true)
+		if (result.isSuccess()) {
+			expect(result.value.lesson.title).toBe('Advanced Lesson')
+			expect(result.value.lesson.duration).toBe(20)
+			expect(result.value.lesson.isFree).toBe(false)
+		}
+	})
+})
