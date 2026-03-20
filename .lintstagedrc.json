@@ -1,5 +1,6 @@
 {
-    "*.{js,jsx,ts,tsx,mjs,cjs}": [
-        "npx biome format --write --no-errors-on-unmatched --files-ignore-unknown=true"
-    ]
+  "*.{js,jsx,ts,tsx,mjs,cjs}": [
+    "bunx biome format --write --no-errors-on-unmatched --files-ignore-unknown=true",
+    "bunx eslint --fix --no-warn-ignored"
+  ]
 }
