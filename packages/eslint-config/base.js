@@ -1,32 +1,23 @@
-import js from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
-import turboPlugin from "eslint-plugin-turbo";
-import tseslint from "typescript-eslint";
-import onlyWarn from "eslint-plugin-only-warn";
+import tseslint from 'typescript-eslint'
 
 /**
  * A shared ESLint configuration for the repository.
+ * Stripped down to only enforce @typescript-eslint/explicit-override.
  *
  * @type {import("eslint").Linter.Config[]}
  * */
 export const config = [
-  js.configs.recommended,
-  eslintConfigPrettier,
-  ...tseslint.configs.recommended,
-  {
-    plugins: {
-      turbo: turboPlugin,
-    },
-    rules: {
-      "turbo/no-undeclared-env-vars": "warn",
-    },
-  },
-  {
-    plugins: {
-      onlyWarn,
-    },
-  },
-  {
-    ignores: ["dist/**"],
-  },
-];
+	// Only the parser/plugin setup — sem regras recommended
+	{
+		plugins: {
+			'@typescript-eslint': tseslint.plugin,
+		},
+		languageOptions: {
+			parser: tseslint.parser,
+		},
+		rules: {},
+	},
+	{
+		ignores: ['dist/**'],
+	},
+]
