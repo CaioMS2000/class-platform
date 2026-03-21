@@ -1,7 +1,7 @@
 import { Class, IdGenerator, type Money, type UniqueId } from '@repo/core'
 import { resolveId } from '@/utils/resolve-id'
 import { createSlug } from '@/utils/slug'
-import type { Category, CourseLevel, CourseStatus } from '../@types'
+import type { CourseLevel, CourseStatus } from '../@types'
 import { Rating } from '../value-objects'
 
 export type CourseProps = {
@@ -20,7 +20,7 @@ export type CourseProps = {
 	totalDuration: number // em minutos
 
 	// Classificação
-	categories: Category[]
+	categoriesIds: string[]
 	tags: string[]
 	level: CourseLevel
 
@@ -95,7 +95,7 @@ export class Course extends Class<CourseProps> {
 			totalLessons = 0,
 			totalDuration = 0,
 			tags = [],
-			categories = [],
+			categoriesIds = [],
 		} = input
 
 		id = await resolveId(idGenerator, id)
@@ -124,7 +124,7 @@ export class Course extends Class<CourseProps> {
 			totalLessons,
 			totalDuration,
 			tags,
-			categories,
+			categoriesIds,
 		})
 	}
 
@@ -198,7 +198,9 @@ export class Course extends Class<CourseProps> {
 			...(input.totalDuration !== undefined && {
 				totalDuration: input.totalDuration,
 			}),
-			...(input.categories !== undefined && { categories: input.categories }),
+			...(input.categoriesIds !== undefined && {
+				categoriesIds: input.categoriesIds,
+			}),
 			...(input.tags !== undefined && { tags: input.tags }),
 			...(input.level !== undefined && { level: input.level }),
 			...(input.price !== undefined && { price: input.price }),
