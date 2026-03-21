@@ -1,4 +1,4 @@
-import { Class, IdGenerator, type Money, type UniqueId } from '@repo/core'
+import { Class, type IdGenerator, type Money, type UniqueId } from '@repo/core'
 import { resolveId } from '@/utils/resolve-id'
 import { createSlug } from '@/utils/slug'
 import type { CourseLevel, CourseStatus } from '../@types'
@@ -87,7 +87,7 @@ export class Course extends Class<CourseProps> {
 			totalRatings = 0,
 			rating = Rating.zero(),
 			totalEnrollments = 0,
-			status = 'published',
+			status = 'draft',
 			publishedAt = new Date(),
 			createdAt = new Date(),
 			updatedAt = new Date(),
