@@ -1,8 +1,16 @@
-import { Result, UseCase, UniqueId, success, failure, Money } from '@repo/core'
-import { Course } from '../../../domain/entities/course'
-import { CourseRepository } from '../../repositories/course-repository'
-import { CourseNotFoundError } from '../../@errors'
-import { CourseLevel, CourseStatus } from '../../../domain/@types'
+import {
+	type Result,
+	UseCase,
+	UniqueId,
+	success,
+	failure,
+	type Money,
+} from '@repo/core'
+import type { Course } from '../../../domain/entities/course'
+import type { CourseRepository } from '../../repositories/course-repository'
+import type { CategoryRepository } from '../../repositories/category-repository'
+import { CategoryNotFoundError, CourseNotFoundError } from '../../@errors'
+import type { CourseLevel, CourseStatus } from '../../../domain/@types'
 
 export type UpdateCourseUseCaseRequest = {
 	courseId: string
@@ -16,10 +24,11 @@ export type UpdateCourseUseCaseRequest = {
 	coverImage?: string
 	status?: CourseStatus
 	tags?: string[]
+	categoryIds?: string[]
 }
 
 export type UpdateCourseUseCaseResponse = Result<
-	CourseNotFoundError,
+	CourseNotFoundError | CategoryNotFoundError,
 	{
 		course: Course
 	}
@@ -27,6 +36,7 @@ export type UpdateCourseUseCaseResponse = Result<
 
 type UseCaseProps = {
 	courseRepository: CourseRepository
+	categoryRepository: CategoryRepository
 }
 
 export class UpdateCourseUseCase extends UseCase<
@@ -53,6 +63,7 @@ export class UpdateCourseUseCase extends UseCase<
 			coverImage,
 			status,
 			tags,
+			categoryIds,
 		} = input
 
 		const course = await this.props.courseRepository.findById(
@@ -61,6 +72,21 @@ export class UpdateCourseUseCase extends UseCase<
 
 		if (!course) {
 			return failure(new CourseNotFoundError())
+		}
+
+		let resolvedCategoryIds: ReturnType<typeof UniqueId>[] | undefined
+		if (categoryIds !== undefined) {
+			const found = await Promise.all(
+				categoryIds.map(id =>
+					this.props.categoryRepository.findById(UniqueId(id))
+				)
+			)
+			if (found.some(c => c === null)) {
+				return failure(new CategoryNotFoundError())
+			}
+			resolvedCategoryIds = (
+				found as NonNullable<(typeof found)[number]>[]
+			).map(c => c.id)
 		}
 
 		const updatedCourse = course.update({
@@ -74,6 +100,7 @@ export class UpdateCourseUseCase extends UseCase<
 			coverImage,
 			status,
 			tags,
+			categoriesIds: resolvedCategoryIds,
 		})
 
 		await this.props.courseRepository.update(updatedCourse)

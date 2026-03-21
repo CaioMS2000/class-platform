@@ -1,13 +1,13 @@
 import {
-	Result,
-	IdGenerator,
+	type Result,
+	type IdGenerator,
 	UseCase,
 	success,
 	UniqueId,
 	failure,
 } from '@repo/core'
 import { Category } from '../../../domain/entities/category'
-import { CategoryRepository } from '../../repositories/category-repository'
+import type { CategoryRepository } from '../../repositories/category-repository'
 import { CategoryNotFoundError } from '../../@errors'
 
 export type CreateCategoryUseCaseRequest = {
@@ -34,7 +34,7 @@ export class CreateCategoryUseCase extends UseCase<
 	CreateCategoryUseCaseResponse,
 	UseCaseProps
 > {
-	constructor(protected props: UseCaseProps) {
+	constructor(protected override props: UseCaseProps) {
 		super()
 	}
 

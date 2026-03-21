@@ -1,7 +1,17 @@
-import { type Result, type IdGenerator, UniqueId, UseCase, success, type Money } from '@repo/core'
+import {
+	type Result,
+	type IdGenerator,
+	UniqueId,
+	UseCase,
+	success,
+	failure,
+	type Money,
+} from '@repo/core'
 import { Course } from '../../../domain/entities/course'
-import { CourseRepository } from '../../repositories/course-repository'
+import type { CourseRepository } from '../../repositories/course-repository'
 import type { CourseLevel } from '../../../domain/@types'
+import type { CategoryRepository } from '../../repositories/category-repository'
+import { CategoryNotFoundError } from '../../@errors'
 
 export type CreateCourseUseCaseRequest = {
 	instructorId: string
@@ -12,10 +22,11 @@ export type CreateCourseUseCaseRequest = {
 	promotionalPrice?: Money
 	level: CourseLevel
 	thumbnail: string
+	categoryIds?: string[]
 }
 
 export type CreateCourseUseCaseResponse = Result<
-	never,
+	CategoryNotFoundError,
 	{
 		course: Course
 	}
@@ -24,6 +35,7 @@ export type CreateCourseUseCaseResponse = Result<
 type UseCaseProps = {
 	courseRepository: CourseRepository
 	idGenerator: IdGenerator
+	categoryRepository: CategoryRepository
 }
 
 export class CreateCourseUseCase extends UseCase<
@@ -31,7 +43,7 @@ export class CreateCourseUseCase extends UseCase<
 	CreateCourseUseCaseResponse,
 	UseCaseProps
 > {
-	constructor(protected props: UseCaseProps) {
+	constructor(protected override props: UseCaseProps) {
 		super()
 	}
 
@@ -47,7 +59,18 @@ export class CreateCourseUseCase extends UseCase<
 			promotionalPrice,
 			level,
 			thumbnail,
+			categoryIds = [],
 		} = input
+
+		const categories = await Promise.all(
+			categoryIds.map(id =>
+				this.props.categoryRepository.findById(UniqueId(id))
+			)
+		)
+
+		if (categories.some(c => c === null)) {
+			return failure(new CategoryNotFoundError())
+		}
 
 		const course = await Course.create({
 			input: {
@@ -59,6 +82,9 @@ export class CreateCourseUseCase extends UseCase<
 				promotionalPrice,
 				level,
 				thumbnail,
+				categoriesIds: (
+					categories as NonNullable<(typeof categories)[number]>[]
+				).map(c => c.id),
 			},
 			idGenerator: this.props.idGenerator,
 		})
