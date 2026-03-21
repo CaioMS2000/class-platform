@@ -9,21 +9,6 @@ Pendências de domínio e negócio identificadas durante o desenvolvimento. Infr
 ### 1. ???
 **Tarefa propositalmente removida.**
 
----
-
-### 2. Não existe como atribuir categorias a um curso
-
-**Problema:** `CreateCourseUseCaseRequest` não tem campo `categories`. A entidade `Course` tem `categories: Category[]` mas não há como populá-las na criação nem na atualização.
-
-**O que fazer:** Adicionar `categoryIds?: string[]` ao request de `CreateCourseUseCase` e `UpdateCourseUseCase`. O use case valida que as categorias existem antes de associar.
-
----
-
-### 3. Default de `status` é `'published'` ao criar um curso
-
-**Problema:** `Course.create()` usa `status = 'published'` como default. Um curso incompleto vai imediatamente para o catálogo público.
-
-**O que fazer:** Mudar o default para `'draft'`. A publicação deve ser uma ação explícita do instrutor.
 
 ---
 
@@ -100,3 +85,20 @@ A criar em `catalog/application/use-cases/instructor/`:
 4. Use cases de progresso (#7)
 5. Self-service profiles (#8)
 6. Use cases de instrutor restantes (#9)
+
+---
+# **Tasks finalizadas**
+```markdown
+### 2. Não existe como atribuir categorias a um curso
+
+**Problema:** `CreateCourseUseCaseRequest` não tem campo `categories`. A entidade `Course` tem `categories: Category[]` mas não há como populá-las na criação nem na atualização.
+
+**O que fazer:** Adicionar `categoryIds?: string[]` ao request de `CreateCourseUseCase` e `UpdateCourseUseCase`. O use case valida que as categorias existem antes de associar.
+```
+```markdown
+### 3. Default de `status` é `'published'` ao criar um curso
+
+**Problema:** `Course.create()` usa `status = 'published'` como default. Um curso incompleto vai imediatamente para o catálogo público.
+
+**O que fazer:** Mudar o default para `'draft'`. A publicação deve ser uma ação explícita do instrutor.
+```
