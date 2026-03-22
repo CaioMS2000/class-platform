@@ -8,4 +8,5 @@ export abstract class LessonRepository {
 	abstract findById(id: UniqueId): Promise<Lesson | null>
 	abstract getById(id: UniqueId): Promise<Lesson>
 	abstract findManyByModuleId(moduleId: UniqueId): Promise<Lesson[]>
+	abstract findManyByCourseId(courseId: UniqueId): Promise<Lesson[]>
 }
