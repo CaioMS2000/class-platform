@@ -1,5 +1,5 @@
 import { Class, type IdGenerator, type UniqueId } from '@repo/core'
-import type { EnrollmentProgressValue } from '../value-objects'
+import { EnrollmentProgressValue } from '../value-objects'
 import type { EnrollmentStatus } from './@types'
 
 export type EnrollmentProps = {
@@ -29,7 +29,15 @@ export type EnrollmentProps = {
 
 type CreateEnrollmentInput = Optional<
 	Omit<EnrollmentProps, 'id'>,
-	'createdAt' | 'updatedAt'
+	| 'createdAt'
+	| 'updatedAt'
+	| 'status'
+	| 'progressValue'
+	| 'completedLessons'
+	| 'enrolledAt'
+	| 'certificateIssued'
+	| 'certificateUrl'
+	| 'completedAt'
 >
 
 type CreationParams = {
@@ -51,7 +59,16 @@ export class Enrollment extends Class<EnrollmentProps> {
 	}
 
 	static async create({ idGenerator, input, id }: CreationParams) {
-		const { createdAt = new Date(), updatedAt = new Date(), ...rest } = input
+		const {
+			createdAt = new Date(),
+			updatedAt = new Date(),
+			status = 'active',
+			progressValue = EnrollmentProgressValue.zero(),
+			completedLessons = 0,
+			enrolledAt = new Date(),
+			certificateIssued = false,
+			...rest
+		} = input
 
 		if (!id) {
 			id = await idGenerator.generate()
@@ -61,6 +78,11 @@ export class Enrollment extends Class<EnrollmentProps> {
 			id,
 			createdAt,
 			updatedAt,
+			status,
+			progressValue,
+			completedLessons,
+			enrolledAt,
+			certificateIssued,
 			...rest,
 		})
 	}
@@ -84,6 +106,31 @@ export class Enrollment extends Class<EnrollmentProps> {
 	update(input: UpdateEnrollmentInput): Enrollment {
 		return new Enrollment({
 			...this.props,
+			...(input.userId !== undefined && { userId: input.userId }),
+			...(input.status !== undefined && { status: input.status }),
+			...(input.progressValue !== undefined && {
+				progressValue: input.progressValue,
+			}),
+			...(input.completedLessons !== undefined && {
+				completedLessons: input.completedLessons,
+			}),
+			...(input.totalLessons !== undefined && {
+				totalLessons: input.totalLessons,
+			}),
+			...(input.enrolledAt !== undefined && { enrolledAt: input.enrolledAt }),
+			...(input.expiresAt !== undefined && { expiresAt: input.expiresAt }),
+			...(input.lastAccessAt !== undefined && {
+				lastAccessAt: input.lastAccessAt,
+			}),
+			...(input.certificateIssued !== undefined && {
+				certificateIssued: input.certificateIssued,
+			}),
+			...(input.certificateUrl !== undefined && {
+				certificateUrl: input.certificateUrl,
+			}),
+			...(input.completedAt !== undefined && {
+				completedAt: input.completedAt,
+			}),
 			updatedAt: new Date(),
 		})
 	}
