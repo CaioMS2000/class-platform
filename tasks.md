@@ -16,13 +16,6 @@ Pendências de domínio e negócio identificadas durante o desenvolvimento. Infr
 
 Este contexto é o que desbloqueiam o fluxo completo aluno → acesso ao conteúdo.
 
-### 5. Domínio de Enrollment
-
-Criar o módulo `learning` com:
-- Entidade `Enrollment` (studentId, courseId, status, enrolledAt, expiresAt?)
-- `EnrollStudentUseCase` — pode começar sem pagamento (inscrição gratuita ou após pagamento confirmado)
-- `GetEnrolledCoursesUseCase` — lista cursos em que o aluno está inscrito
-
 ### 6. Controle de acesso ao conteúdo
 
 - `CheckEnrollmentUseCase` (ou regra no repositório) — valida se aluno tem acesso a um módulo/aula antes de servir o conteúdo
@@ -100,4 +93,12 @@ A criar em `catalog/application/use-cases/instructor/`:
 - Só o instrutor dono ou admin pode publicar
 
 **Por que separar?** São intenções diferentes. `UpdateCourse` edita conteúdo; `PublishCourse` é uma transição de estado com regras de negócio próprias. Misturar os dois num único use case exige `if (input.status === 'published') { ... validações ... }` dentro de um use case de edição, o que viola SRP.
+```
+```markdown
+### 5. Domínio de Enrollment
+
+Criar o módulo `learning` com:
+- Entidade `Enrollment` (studentId, courseId, status, enrolledAt, expiresAt?)
+- `EnrollStudentUseCase` — pode começar sem pagamento (inscrição gratuita ou após pagamento confirmado)
+- `GetEnrolledCoursesUseCase` — lista cursos em que o aluno está inscrito
 ```
