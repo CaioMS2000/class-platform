@@ -9,28 +9,8 @@ Pendências de domínio e negócio identificadas durante o desenvolvimento. Infr
 ### 1. ???
 **Tarefa propositalmente removida.**
 
-
 ---
 
-### 4. Separar `UpdateCourseUseCase` e `PublishCourseUseCase`
-
-**`UpdateCourseUseCase`** (já existe — `catalog/application/use-cases/admin/`)
-- Propósito: edição de metadados (título, descrição, preço, thumbnail, etc.)
-- Não muda status
-- Admin e instrutor (com verificação de ownership)
-
-**`PublishCourseUseCase`** (a criar)
-- Propósito: transição explícita de `draft` → `published`
-- Deve validar pré-condições de negócio antes de publicar:
-  - Curso tem pelo menos 1 módulo
-  - Cada módulo tem pelo menos 1 aula
-  - Thumbnail preenchida
-- Registra `publishedAt = new Date()`
-- Só o instrutor dono ou admin pode publicar
-
-**Por que separar?** São intenções diferentes. `UpdateCourse` edita conteúdo; `PublishCourse` é uma transição de estado com regras de negócio próprias. Misturar os dois num único use case exige `if (input.status === 'published') { ... validações ... }` dentro de um use case de edição, o que viola SRP.
-
----
 
 ## Learning / Enrollment — Contexto ainda não implementado
 
@@ -101,4 +81,23 @@ A criar em `catalog/application/use-cases/instructor/`:
 **Problema:** `Course.create()` usa `status = 'published'` como default. Um curso incompleto vai imediatamente para o catálogo público.
 
 **O que fazer:** Mudar o default para `'draft'`. A publicação deve ser uma ação explícita do instrutor.
+```
+```markdown
+### 4. Separar `UpdateCourseUseCase` e `PublishCourseUseCase`
+
+**`UpdateCourseUseCase`** (já existe — `catalog/application/use-cases/admin/`)
+- Propósito: edição de metadados (título, descrição, preço, thumbnail, etc.)
+- Não muda status
+- Admin e instrutor (com verificação de ownership)
+
+**`PublishCourseUseCase`** (a criar)
+- Propósito: transição explícita de `draft` → `published`
+- Deve validar pré-condições de negócio antes de publicar:
+  - Curso tem pelo menos 1 módulo
+  - Cada módulo tem pelo menos 1 aula
+  - Thumbnail preenchida
+- Registra `publishedAt = new Date()`
+- Só o instrutor dono ou admin pode publicar
+
+**Por que separar?** São intenções diferentes. `UpdateCourse` edita conteúdo; `PublishCourse` é uma transição de estado com regras de negócio próprias. Misturar os dois num único use case exige `if (input.status === 'published') { ... validações ... }` dentro de um use case de edição, o que viola SRP.
 ```
