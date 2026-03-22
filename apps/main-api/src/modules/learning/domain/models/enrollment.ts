@@ -103,6 +103,22 @@ export class Enrollment extends Class<EnrollmentProps> {
 		return this.props.updatedAt
 	}
 
+	get status(): EnrollmentStatus {
+		return this.props.status
+	}
+
+	get completedLessons(): number {
+		return this.props.completedLessons
+	}
+
+	get totalLessons(): number {
+		return this.props.totalLessons
+	}
+
+	get progressValue(): EnrollmentProgressValue {
+		return this.props.progressValue
+	}
+
 	update(input: UpdateEnrollmentInput): Enrollment {
 		return new Enrollment({
 			...this.props,

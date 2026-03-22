@@ -9,3 +9,9 @@ export class StudentNotFoundError extends Error {
 		super('Student not found.')
 	}
 }
+
+export class EnrollmentNotFoundError extends Error {
+	constructor() {
+		super('Enrollment not found.')
+	}
+}

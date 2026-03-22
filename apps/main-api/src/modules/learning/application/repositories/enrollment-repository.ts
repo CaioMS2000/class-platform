@@ -9,4 +9,5 @@ export abstract class EnrollmentRepository {
 	): Promise<Enrollment | null>
 	abstract findManyByStudent(studentId: UniqueId): Promise<Enrollment[]>
 	abstract save(enrollment: Enrollment): Promise<void>
+	abstract update(enrollment: Enrollment): Promise<void>
 }

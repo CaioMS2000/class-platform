@@ -84,6 +84,10 @@ export class Progress extends Class<ProgressProps> {
 		return this.props.updatedAt
 	}
 
+	get status(): ProgressStatus {
+		return this.props.status
+	}
+
 	update(input: UpdateProgressInput): Progress {
 		return new Progress({
 			...this.props,
