@@ -19,4 +19,8 @@ export class EnrollmentProgressValue extends ValueObject<number> {
 	isCompleted(): boolean {
 		return this.value === 100
 	}
+
+	static zero(): EnrollmentProgressValue {
+		return new EnrollmentProgressValue(0)
+	}
 }

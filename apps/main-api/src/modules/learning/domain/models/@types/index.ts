@@ -5,3 +5,10 @@ export const EnrollmentStatus = [
 	'expired',
 ] as const
 export type EnrollmentStatus = (typeof EnrollmentStatus)[number]
+
+export const ProgressStatus = [
+	'not_started',
+	'in_progress',
+	'completed',
+] as const
+export type ProgressStatus = (typeof ProgressStatus)[number]
