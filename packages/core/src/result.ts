@@ -46,6 +46,20 @@ export class Success<L, R> {
 
 export type Result<L, R> = Failure<L, R> | Success<L, R>
 
+export type FailureOf<T extends Result<any, any>> = T extends Result<
+	infer L,
+	any
+>
+	? L
+	: never
+
+export type SuccessOf<T extends Result<any, any>> = T extends Result<
+	any,
+	infer R
+>
+	? R
+	: never
+
 export function failure<L extends Constructor>(
 	value: L
 ): Result<InstanceType<L>, never>
