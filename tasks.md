@@ -21,16 +21,6 @@ Este contexto é o que desbloqueiam o fluxo completo aluno → acesso ao conteú
 
 ---
 
-## Auth-and-Users — Use cases self-service pendentes
-
-### 8. Perfil self-service (baixa prioridade)
-
-A criar em `auth-and-users/domain/application/use-cases/student/` e `.../instructor/`:
-- `GetMyProfileUseCase` — recebe `requesterId` do JWT, retorna o próprio perfil
-- `UpdateMyProfileUseCase` — aluno/instrutor atualiza nome, avatar, bio (não muda role nem status)
-
----
-
 ## Catalog — Use cases de instrutor pendentes (baixa prioridade)
 
 A criar em `catalog/application/use-cases/instructor/`:
@@ -89,4 +79,13 @@ Criar o módulo `learning` com:
 - Entidade `LessonProgress` (studentId, lessonId, completedAt, watchedSeconds?)
 - `MarkLessonCompleteUseCase`
 - `GetCourseProgressUseCase` — retorna % de conclusão por curso
+```
+```markdown
+## Auth-and-Users — Use cases self-service pendentes
+
+### 8. Perfil self-service (baixa prioridade)
+
+A criar em `auth-and-users/domain/application/use-cases/student/` e `.../instructor/`:
+- `GetMyProfileUseCase` — recebe `requesterId` do JWT, retorna o próprio perfil
+- `UpdateMyProfileUseCase` — aluno/instrutor atualiza nome, avatar, bio (não muda role nem status)
 ```
