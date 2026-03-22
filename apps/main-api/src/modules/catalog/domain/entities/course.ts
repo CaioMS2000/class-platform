@@ -88,7 +88,7 @@ export class Course extends Class<CourseProps> {
 			rating = Rating.zero(),
 			totalEnrollments = 0,
 			status = 'draft',
-			publishedAt = new Date(),
+			publishedAt = undefined,
 			createdAt = new Date(),
 			updatedAt = new Date(),
 			modulesIds = [],
@@ -219,6 +219,14 @@ export class Course extends Class<CourseProps> {
 				publishedAt: input.publishedAt,
 			}),
 			updatedAt: new Date(),
+		})
+	}
+
+	publish(): Course {
+		return new Course({
+			...this.props,
+			status: 'published',
+			publishedAt: new Date(),
 		})
 	}
 }

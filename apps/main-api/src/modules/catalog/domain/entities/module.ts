@@ -90,6 +90,10 @@ export class Module extends Class<ModuleProps> {
 		return this.props.courseId
 	}
 
+	get lessonsIds(): UniqueId[] {
+		return this.props.lessonsIds
+	}
+
 	update(input: UpdateModuleInput): Module {
 		return new Module({
 			...this.props,
