@@ -1,40 +1,31 @@
-import {
-	failure,
-	type IdGenerator,
-	type Result,
-	success,
-	UniqueId,
-	UseCase,
-} from '@repo/core'
-import { StudentAlreadyEnrolledError } from '../../domain/@errors/student-already-enrolled-error'
-import { Enrollment } from '../../domain/models/enrollment'
+import { failure, type Result, success, UniqueId, UseCase } from '@repo/core'
+import type { Enrollment } from '../../domain/models/enrollment'
 import { CourseNotFoundError, StudentNotFoundError } from '../@errors'
 import type { CourseRepository } from '../repositories/course-repository'
 import type { EnrollmentRepository } from '../repositories/enrollment-repository'
 import type { StudentRepository } from '../repositories/student-repository'
 
-export type EnrollStudentUseCaseRequest = {
+export type GetStudentEnrollmentUseCaseRequest = {
 	studentId: string
 	courseId: string
 }
 
-export type EnrollStudentUseCaseResponse = Result<
-	StudentAlreadyEnrolledError | StudentNotFoundError | CourseNotFoundError,
+export type GetStudentEnrollmentUseCaseResponse = Result<
+	StudentNotFoundError | CourseNotFoundError,
 	{
-		enrollment: Enrollment
+		enrollment: Enrollment | null
 	}
 >
 
 type UseCaseProps = {
-	idGenerator: IdGenerator
 	studentRepository: StudentRepository
 	courseRepository: CourseRepository
 	enrollmentRepository: EnrollmentRepository
 }
 
-export class EnrollStudentUseCase extends UseCase<
-	EnrollStudentUseCaseRequest,
-	EnrollStudentUseCaseResponse,
+export class GetStudentEnrollmentUseCase extends UseCase<
+	GetStudentEnrollmentUseCaseRequest,
+	GetStudentEnrollmentUseCaseResponse,
 	UseCaseProps
 > {
 	constructor(protected override props: UseCaseProps) {
@@ -42,8 +33,8 @@ export class EnrollStudentUseCase extends UseCase<
 	}
 
 	async execute(
-		input: EnrollStudentUseCaseRequest
-	): Promise<EnrollStudentUseCaseResponse> {
+		input: GetStudentEnrollmentUseCaseRequest
+	): Promise<GetStudentEnrollmentUseCaseResponse> {
 		const student = await this.props.studentRepository.findById(input.studentId)
 
 		if (!student) return failure(new StudentNotFoundError())
@@ -58,19 +49,6 @@ export class EnrollStudentUseCase extends UseCase<
 				UniqueId(input.courseId)
 			)
 
-		if (existingEnrollment) return failure(new StudentAlreadyEnrolledError())
-
-		const enrollment = await Enrollment.create({
-			idGenerator: this.props.idGenerator,
-			input: {
-				userId: student.id,
-				courseId: course.id,
-				totalLessons: course.totalLessons,
-			},
-		})
-
-		await this.props.enrollmentRepository.save(enrollment)
-
-		return success({ enrollment })
+		return success({ enrollment: existingEnrollment })
 	}
 }
