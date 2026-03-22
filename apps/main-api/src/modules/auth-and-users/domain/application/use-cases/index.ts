@@ -21,3 +21,11 @@ export * from './admin/get-instructor-by-admin-use-case'
 export * from './admin/get-all-instructors-use-case'
 export * from './admin/update-instructor-use-case'
 export * from './admin/delete-instructor-use-case'
+
+// student self-service
+export * from './student/get-my-profile-use-case'
+export * from './student/update-my-profile-use-case'
+
+// instructor self-service
+export * from './instructor/get-my-profile-use-case'
+export * from './instructor/update-my-profile-use-case'
