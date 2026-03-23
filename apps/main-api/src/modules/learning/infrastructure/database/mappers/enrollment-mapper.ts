@@ -1,8 +1,8 @@
-import { type UniqueId } from '@repo/core'
+import type { UniqueId } from '@repo/core'
 import { Enrollment } from '../../../domain/models/enrollment'
 import { EnrollmentProgressValue } from '../../../domain/value-objects'
 import { nullIdGenerator } from '@/modules/auth-and-users/infrastructure/database/repositories/null-id-generator'
-import { enrollments } from '../schema'
+import type { enrollments } from '../schema'
 
 type Row = typeof enrollments.$inferSelect
 type InsertRow = typeof enrollments.$inferInsert

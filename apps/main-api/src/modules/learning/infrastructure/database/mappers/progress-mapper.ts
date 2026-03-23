@@ -1,7 +1,7 @@
-import { type UniqueId } from '@repo/core'
+import type { UniqueId } from '@repo/core'
 import { Progress } from '../../../domain/models/progress'
 import { nullIdGenerator } from '@/modules/auth-and-users/infrastructure/database/repositories/null-id-generator'
-import { lessonProgress } from '../schema'
+import type { lessonProgress } from '../schema'
 
 type Row = typeof lessonProgress.$inferSelect
 type InsertRow = typeof lessonProgress.$inferInsert
