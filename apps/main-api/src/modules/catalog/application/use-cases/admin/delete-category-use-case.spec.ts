@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { DeleteCategoryUseCase } from './delete-category-use-case'
 import { CategoryRepository } from '../../repositories/category-repository'
 import { CategoryNotFoundError } from '../../@errors'

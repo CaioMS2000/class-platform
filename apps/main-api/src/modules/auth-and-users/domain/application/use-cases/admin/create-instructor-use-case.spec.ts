@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { CreateInstructorUseCase } from './create-instructor-use-case'
 import { InstructorRepository } from '../../repositories/instructor-repository'
 import { FakeIdGenerator } from '@/modules/auth-and-users/test/fake-id-generator'

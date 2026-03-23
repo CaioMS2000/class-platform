@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { UniqueId } from '@repo/core'
 import { DeleteModuleUseCase } from './delete-module-use-case'
 import { ModuleRepository } from '../../repositories/module-repository'

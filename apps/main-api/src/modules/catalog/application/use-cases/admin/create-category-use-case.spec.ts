@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { CreateCategoryUseCase } from './create-category-use-case'
 import { CategoryRepository } from '../../repositories/category-repository'
 import { FakeIdGenerator } from '@/modules/catalog/test/fake-id-generator'

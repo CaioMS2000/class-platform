@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { UpdateAdminUseCase } from './update-admin-use-case'
 import { AdminRepository } from '../../repositories/admin-repository'
 import { AdminNotFoundError } from '../../@errors'

@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { UniqueId } from '@repo/core'
 import { GetStudentEnrollmentUseCase } from './get-student-enrollment-use-case'
 import { StudentRepository } from '../repositories/student-repository'

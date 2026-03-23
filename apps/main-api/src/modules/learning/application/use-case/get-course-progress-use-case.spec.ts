@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { UniqueId } from '@repo/core'
 import { GetCourseProgressUseCase } from './get-course-progress-use-case'
 import { EnrollmentRepository } from '../repositories/enrollment-repository'

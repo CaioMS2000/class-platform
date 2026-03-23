@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { GetStudentByAdminUseCase } from './get-student-by-admin-use-case'
 import { StudentRepository } from '../../repositories/student-repository'
 import { StudentNotFoundError } from '../../@errors'
@@ -12,7 +11,9 @@ describe('GetStudentByAdminUseCase', () => {
 
 	beforeEach(() => {
 		studentRepo = mock(StudentRepository)
-		sut = new GetStudentByAdminUseCase({ studentRepository: instance(studentRepo) })
+		sut = new GetStudentByAdminUseCase({
+			studentRepository: instance(studentRepo),
+		})
 	})
 
 	it('should return failure when student is not found', async () => {

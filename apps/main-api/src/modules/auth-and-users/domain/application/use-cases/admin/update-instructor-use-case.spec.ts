@@ -1,5 +1,4 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { describe, expect, it, beforeEach } from 'vitest'
 import { UpdateInstructorUseCase } from './update-instructor-use-case'
 import { InstructorRepository } from '../../repositories/instructor-repository'
 import { InstructorNotFoundError } from '../../@errors'
