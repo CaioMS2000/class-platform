@@ -38,7 +38,9 @@ describe('GetInstructorCoursesUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.courses).toHaveLength(1)
-			expect(result.value.courses[0].instructorId.toString()).toBe(instructorId)
+			expect(result.value.courses[0]?.instructorId.toString()).toBe(
+				instructorId
+			)
 		}
 	})
 

@@ -66,8 +66,8 @@ describe('GetAllModulesUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.modules).toHaveLength(2)
-			expect(result.value.modules[0].title).toBe('Module 1')
-			expect(result.value.modules[1].title).toBe('Module 2')
+			expect(result.value.modules[0]?.title).toBe('Module 1')
+			expect(result.value.modules[1]?.title).toBe('Module 2')
 		}
 	})
 })

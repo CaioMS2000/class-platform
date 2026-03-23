@@ -37,7 +37,7 @@ describe('BrowsePublicCatalogUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.courses).toHaveLength(1)
-			expect(result.value.courses[0].status).toBe('published')
+			expect(result.value.courses[0]?.status).toBe('published')
 		}
 	})
 

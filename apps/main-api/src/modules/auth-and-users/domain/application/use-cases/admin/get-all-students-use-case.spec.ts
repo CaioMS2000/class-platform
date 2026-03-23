@@ -43,8 +43,8 @@ describe('GetAllStudentsUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.students).toHaveLength(2)
-			expect(result.value.students[0].name).toBe('Student 1')
-			expect(result.value.students[1].name).toBe('Student 2')
+			expect(result.value.students[0]?.name).toBe('Student 1')
+			expect(result.value.students[1]?.name).toBe('Student 2')
 		}
 	})
 })

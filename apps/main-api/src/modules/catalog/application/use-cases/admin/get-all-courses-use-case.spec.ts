@@ -48,8 +48,8 @@ describe('GetAllCoursesUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.courses).toHaveLength(2)
-			expect(result.value.courses[0].title).toBe('Node.js Course')
-			expect(result.value.courses[1].title).toBe('React Course')
+			expect(result.value.courses[0]?.title).toBe('Node.js Course')
+			expect(result.value.courses[1]?.title).toBe('React Course')
 		}
 	})
 })

@@ -43,8 +43,8 @@ describe('GetAllInstructorsUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.instructors).toHaveLength(2)
-			expect(result.value.instructors[0].name).toBe('Instructor 1')
-			expect(result.value.instructors[1].name).toBe('Instructor 2')
+			expect(result.value.instructors[0]?.name).toBe('Instructor 1')
+			expect(result.value.instructors[1]?.name).toBe('Instructor 2')
 		}
 	})
 })

@@ -117,8 +117,8 @@ describe('GetCourseProgressUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.progressRecords).toHaveLength(2)
-			expect(result.value.progressRecords[0].status).toBe('completed')
-			expect(result.value.progressRecords[1].status).toBe('in_progress')
+			expect(result.value.progressRecords[0]?.status).toBe('completed')
+			expect(result.value.progressRecords[1]?.status).toBe('in_progress')
 		}
 	})
 })

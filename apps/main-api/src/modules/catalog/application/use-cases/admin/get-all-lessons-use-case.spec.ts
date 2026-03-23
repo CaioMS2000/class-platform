@@ -76,8 +76,8 @@ describe('GetAllLessonsUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.lessons).toHaveLength(2)
-			expect(result.value.lessons[0].title).toBe('Lesson 1')
-			expect(result.value.lessons[1].title).toBe('Lesson 2')
+			expect(result.value.lessons[0]?.title).toBe('Lesson 1')
+			expect(result.value.lessons[1]?.title).toBe('Lesson 2')
 		}
 	})
 })

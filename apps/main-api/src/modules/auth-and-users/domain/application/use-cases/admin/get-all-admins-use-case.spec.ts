@@ -41,8 +41,8 @@ describe('GetAllAdminsUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.admins).toHaveLength(2)
-			expect(result.value.admins[0].name).toBe('Admin 1')
-			expect(result.value.admins[1].name).toBe('Admin 2')
+			expect(result.value.admins[0]?.name).toBe('Admin 1')
+			expect(result.value.admins[1]?.name).toBe('Admin 2')
 		}
 	})
 })

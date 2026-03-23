@@ -37,8 +37,8 @@ describe('GetAllCategoriesUseCase', () => {
 		expect(result.isSuccess()).toBe(true)
 		if (result.isSuccess()) {
 			expect(result.value.categories).toHaveLength(2)
-			expect(result.value.categories[0].name).toBe('Programming')
-			expect(result.value.categories[1].name).toBe('Design')
+			expect(result.value.categories[0]?.name).toBe('Programming')
+			expect(result.value.categories[1]?.name).toBe('Design')
 		}
 	})
 })
