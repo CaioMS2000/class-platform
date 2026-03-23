@@ -1,10 +1,11 @@
 import { config } from 'dotenv'
 import { z } from 'zod'
 
+const isTest = process.env.NODE_ENV === 'test'
+
 config({
-	path: '.env',
-	// override: process.env.NODE_ENV !== 'production',
-	override: true,
+	path: isTest ? '.env.test' : '.env',
+	override: !isTest,
 })
 
 export const envSchema = z.object({
@@ -22,12 +23,12 @@ export const envSchema = z.object({
 	// JWT (RS256)
 	JWT_PRIVATE_KEY: z.string(),
 	JWT_PUBLIC_KEY: z.string(),
-	
+
 	// OAuth - Google
 	GOOGLE_CLIENT_ID: z.string().default(''),
 	GOOGLE_CLIENT_SECRET: z.string().default(''),
 	GOOGLE_REDIRECT_URI: z.string().default(''),
-	
+
 	// OAuth - Frontend callback URL
 	OAUTH_FRONTEND_CALLBACK_URL: z.string().default(''),
 })
