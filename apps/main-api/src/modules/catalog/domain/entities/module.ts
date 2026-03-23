@@ -94,6 +94,22 @@ export class Module extends Class<ModuleProps> {
 		return this.props.lessonsIds
 	}
 
+	get totalLessons(): number {
+		return this.props.totalLessons
+	}
+
+	get totalDuration(): number {
+		return this.props.totalDuration
+	}
+
+	get createdAt(): Date {
+		return this.props.createdAt
+	}
+
+	get updatedAt(): Date {
+		return this.props.updatedAt
+	}
+
 	update(input: UpdateModuleInput): Module {
 		return new Module({
 			...this.props,

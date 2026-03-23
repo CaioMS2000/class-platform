@@ -180,6 +180,46 @@ export class Course extends Class<CourseProps> {
 		return this.props.slug
 	}
 
+	get modulesIds(): UniqueId[] {
+		return this.props.modulesIds
+	}
+
+	get totalLessons(): number {
+		return this.props.totalLessons
+	}
+
+	get totalDuration(): number {
+		return this.props.totalDuration
+	}
+
+	get categoriesIds(): string[] {
+		return this.props.categoriesIds
+	}
+
+	get rating(): Rating {
+		return this.props.rating
+	}
+
+	get totalRatings(): number {
+		return this.props.totalRatings
+	}
+
+	get totalEnrollments(): number {
+		return this.props.totalEnrollments
+	}
+
+	get publishedAt(): Date | undefined {
+		return this.props.publishedAt
+	}
+
+	get createdAt(): Date {
+		return this.props.createdAt
+	}
+
+	get updatedAt(): Date {
+		return this.props.updatedAt
+	}
+
 	update(input: UpdateCourseInput): Course {
 		return new Course({
 			...this.props,
