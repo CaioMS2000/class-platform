@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'bun:test'
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
+import { setupSchema, teardownSchema } from '@/test/setup-schema'
 import { drizzle } from '@/lib/drizzle'
 import { courses } from '@/modules/catalog/infrastructure/database/schema'
 import { instructors } from '@/modules/auth-and-users/infrastructure/database/schema'
@@ -12,6 +13,13 @@ describe('DrizzleCourseRepository (learning)', () => {
 	const repo = new DrizzleCourseRepository()
 	const catalogCourseRepo = new CatalogDrizzleCourseRepository()
 	const instructorRepo = new DrizzleInstructorRepository()
+
+	beforeAll(async () => {
+		await setupSchema()
+	})
+	afterAll(async () => {
+		await teardownSchema()
+	})
 
 	beforeEach(async () => {
 		await drizzle.delete(courses)

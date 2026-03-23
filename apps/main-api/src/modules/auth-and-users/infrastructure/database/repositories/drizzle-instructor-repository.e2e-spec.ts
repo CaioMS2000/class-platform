@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'bun:test'
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
+import { setupSchema, teardownSchema } from '@/test/setup-schema'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleInstructorRepository } from './drizzle-instructor-repository'
 import { instructors } from '../schema'
@@ -6,6 +7,13 @@ import { makeInstructor } from '@/modules/auth-and-users/test/factories/make-ins
 
 describe('DrizzleInstructorRepository', () => {
 	const repo = new DrizzleInstructorRepository()
+
+	beforeAll(async () => {
+		await setupSchema()
+	})
+	afterAll(async () => {
+		await teardownSchema()
+	})
 
 	beforeEach(async () => {
 		await drizzle.delete(instructors)

@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'bun:test'
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
+import { setupSchema, teardownSchema } from '@/test/setup-schema'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleOAuthAccountRepository } from './drizzle-oauth-account-repository'
 import { DrizzleStudentRepository } from './drizzle-student-repository'
@@ -9,6 +10,13 @@ import { makeStudent } from '@/modules/auth-and-users/test/factories/make-studen
 describe('DrizzleOAuthAccountRepository', () => {
 	const repo = new DrizzleOAuthAccountRepository()
 	const studentRepo = new DrizzleStudentRepository()
+
+	beforeAll(async () => {
+		await setupSchema()
+	})
+	afterAll(async () => {
+		await teardownSchema()
+	})
 
 	beforeEach(async () => {
 		await drizzle.delete(oauthAccounts)

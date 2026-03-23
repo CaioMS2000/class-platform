@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'bun:test'
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
+import { setupSchema, teardownSchema } from '@/test/setup-schema'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleCategoryRepository } from './drizzle-category-repository'
 import { categories } from '../schema'
@@ -6,6 +7,13 @@ import { makeCategory } from '@/modules/catalog/test/factories/make-category'
 
 describe('DrizzleCategoryRepository', () => {
 	const repo = new DrizzleCategoryRepository()
+
+	beforeAll(async () => {
+		await setupSchema()
+	})
+	afterAll(async () => {
+		await teardownSchema()
+	})
 
 	beforeEach(async () => {
 		await drizzle.delete(categories)

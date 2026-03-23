@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'bun:test'
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
+import { setupSchema, teardownSchema } from '@/test/setup-schema'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleAdminRepository } from './drizzle-admin-repository'
 import { admins } from '../schema'
@@ -6,6 +7,13 @@ import { makeAdmin } from '@/modules/auth-and-users/test/factories/make-admin'
 
 describe('DrizzleAdminRepository', () => {
 	const repo = new DrizzleAdminRepository()
+
+	beforeAll(async () => {
+		await setupSchema()
+	})
+	afterAll(async () => {
+		await teardownSchema()
+	})
 
 	beforeEach(async () => {
 		await drizzle.delete(admins)
