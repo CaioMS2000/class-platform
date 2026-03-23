@@ -15,7 +15,7 @@ export const userStatusEnum = pgEnum('user_status', [
 
 const userColumns = {
 	id: text('id').primaryKey(),
-	email: text('email').notNull().unique(),
+	email: text('email').notNull(),
 	passwordHash: text('password_hash'),
 	name: text('name').notNull(),
 	avatar: text('avatar'),
@@ -27,9 +27,15 @@ const userColumns = {
 	updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }
 
-export const admins = pgTable('admins', userColumns)
-export const students = pgTable('students', userColumns)
-export const instructors = pgTable('instructors', userColumns)
+export const admins = pgTable('admins', userColumns, t => [
+	unique('admins_email_unique').on(t.email),
+])
+export const students = pgTable('students', userColumns, t => [
+	unique('students_email_unique').on(t.email),
+])
+export const instructors = pgTable('instructors', userColumns, t => [
+	unique('instructors_email_unique').on(t.email),
+])
 
 export const refreshTokens = pgTable('refresh_tokens', {
 	id: text('id').primaryKey(),
