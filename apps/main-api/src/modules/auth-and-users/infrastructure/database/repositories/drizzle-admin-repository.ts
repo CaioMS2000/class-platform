@@ -1,5 +1,5 @@
 import { eq, and } from 'drizzle-orm'
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { drizzle } from '@/lib/drizzle'
 import type { UniqueId } from '@repo/core'
 import {
 	AdminRepository,
@@ -11,25 +11,21 @@ import { admins } from '../schema'
 import { AdminMapper } from '../mappers/admin-mapper'
 
 export class DrizzleAdminRepository extends AdminRepository {
-	constructor(private readonly db: NodePgDatabase) {
-		super()
-	}
-
 	async save(admin: Admin): Promise<void> {
-		await this.db.insert(admins).values(AdminMapper.toPersistence(admin))
+		await drizzle.insert(admins).values(AdminMapper.toPersistence(admin))
 	}
 
 	async update(admin: Admin): Promise<void> {
 		const { id, createdAt, ...updateData } = AdminMapper.toPersistence(admin)
-		await this.db.update(admins).set(updateData).where(eq(admins.id, admin.id))
+		await drizzle.update(admins).set(updateData).where(eq(admins.id, admin.id))
 	}
 
 	async delete(admin: Admin): Promise<void> {
-		await this.db.delete(admins).where(eq(admins.id, admin.id))
+		await drizzle.delete(admins).where(eq(admins.id, admin.id))
 	}
 
 	async findById(id: UniqueId): Promise<Admin | null> {
-		const [row] = await this.db.select().from(admins).where(eq(admins.id, id))
+		const [row] = await drizzle.select().from(admins).where(eq(admins.id, id))
 		if (!row) return null
 		return AdminMapper.toDomain(row)
 	}
@@ -41,7 +37,7 @@ export class DrizzleAdminRepository extends AdminRepository {
 	}
 
 	async findByEmail(email: string): Promise<Admin | null> {
-		const [row] = await this.db
+		const [row] = await drizzle
 			.select()
 			.from(admins)
 			.where(eq(admins.email, email))
@@ -58,7 +54,7 @@ export class DrizzleAdminRepository extends AdminRepository {
 			conditions.push(eq(admins.status, filters.status))
 		}
 
-		let query = this.db
+		let query = drizzle
 			.select()
 			.from(admins)
 			.where(conditions.length ? and(...conditions) : undefined)

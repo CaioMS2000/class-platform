@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm'
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { drizzle } from '@/lib/drizzle'
 import type { UniqueId } from '@repo/core'
 import {
 	OAuthAccountRepository,
@@ -9,15 +9,11 @@ import { oauthAccounts } from '../schema'
 import { OAuthAccountMapper } from '../mappers/oauth-account-mapper'
 
 export class DrizzleOAuthAccountRepository extends OAuthAccountRepository {
-	constructor(private readonly db: NodePgDatabase) {
-		super()
-	}
-
 	async findByProviderAndAccountId(
 		provider: string,
 		providerAccountId: string
 	): Promise<OAuthAccountRecord | null> {
-		const [row] = await this.db
+		const [row] = await drizzle
 			.select()
 			.from(oauthAccounts)
 			.where(
@@ -36,7 +32,7 @@ export class DrizzleOAuthAccountRepository extends OAuthAccountRepository {
 		providerAccountId: string
 	}): Promise<{ id: string }> {
 		const id = crypto.randomUUID()
-		await this.db
+		await drizzle
 			.insert(oauthAccounts)
 			.values(OAuthAccountMapper.toInsert({ id, ...data }))
 		return { id }

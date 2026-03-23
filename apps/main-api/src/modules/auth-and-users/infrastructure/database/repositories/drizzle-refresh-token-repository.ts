@@ -1,22 +1,18 @@
 import { eq } from 'drizzle-orm'
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { drizzle } from '@/lib/drizzle'
 import type { UniqueId } from '@repo/core'
 import { RefreshTokenRepository } from '../../../domain/application/repositories/refresh-token-repository'
 import { refreshTokens } from '../schema'
 import { RefreshTokenMapper } from '../mappers/refresh-token-mapper'
 
 export class DrizzleRefreshTokenRepository extends RefreshTokenRepository {
-	constructor(private readonly db: NodePgDatabase) {
-		super()
-	}
-
 	async save(
 		userId: UniqueId,
 		tokenHash: string,
 		expiresInSeconds: number,
 		role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 	): Promise<void> {
-		await this.db
+		await drizzle
 			.insert(refreshTokens)
 			.values(
 				RefreshTokenMapper.toInsert(
@@ -34,7 +30,7 @@ export class DrizzleRefreshTokenRepository extends RefreshTokenRepository {
 		used: boolean
 		role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 	} | null> {
-		const [row] = await this.db
+		const [row] = await drizzle
 			.select()
 			.from(refreshTokens)
 			.where(eq(refreshTokens.tokenHash, tokenHash))
@@ -43,17 +39,17 @@ export class DrizzleRefreshTokenRepository extends RefreshTokenRepository {
 	}
 
 	async revoke(tokenHash: string): Promise<void> {
-		await this.db
+		await drizzle
 			.delete(refreshTokens)
 			.where(eq(refreshTokens.tokenHash, tokenHash))
 	}
 
 	async revokeAllForUser(userId: UniqueId): Promise<void> {
-		await this.db.delete(refreshTokens).where(eq(refreshTokens.userId, userId))
+		await drizzle.delete(refreshTokens).where(eq(refreshTokens.userId, userId))
 	}
 
 	async markUsed(tokenHash: string): Promise<void> {
-		await this.db
+		await drizzle
 			.update(refreshTokens)
 			.set({ used: true })
 			.where(eq(refreshTokens.tokenHash, tokenHash))

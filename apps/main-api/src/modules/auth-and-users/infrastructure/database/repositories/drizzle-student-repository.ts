@@ -1,5 +1,5 @@
 import { eq, and } from 'drizzle-orm'
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { drizzle } from '@/lib/drizzle'
 import type { UniqueId } from '@repo/core'
 import {
 	StudentRepository,
@@ -11,29 +11,25 @@ import { students } from '../schema'
 import { StudentMapper } from '../mappers/student-mapper'
 
 export class DrizzleStudentRepository extends StudentRepository {
-	constructor(private readonly db: NodePgDatabase) {
-		super()
-	}
-
 	async save(student: Student): Promise<void> {
-		await this.db.insert(students).values(StudentMapper.toPersistence(student))
+		await drizzle.insert(students).values(StudentMapper.toPersistence(student))
 	}
 
 	async update(student: Student): Promise<void> {
 		const { id, createdAt, ...updateData } =
 			StudentMapper.toPersistence(student)
-		await this.db
+		await drizzle
 			.update(students)
 			.set(updateData)
 			.where(eq(students.id, student.id))
 	}
 
 	async delete(student: Student): Promise<void> {
-		await this.db.delete(students).where(eq(students.id, student.id))
+		await drizzle.delete(students).where(eq(students.id, student.id))
 	}
 
 	async findById(id: UniqueId): Promise<Student | null> {
-		const [row] = await this.db
+		const [row] = await drizzle
 			.select()
 			.from(students)
 			.where(eq(students.id, id))
@@ -48,7 +44,7 @@ export class DrizzleStudentRepository extends StudentRepository {
 	}
 
 	async findByEmail(email: string): Promise<Student | null> {
-		const [row] = await this.db
+		const [row] = await drizzle
 			.select()
 			.from(students)
 			.where(eq(students.email, email))
@@ -65,7 +61,7 @@ export class DrizzleStudentRepository extends StudentRepository {
 			conditions.push(eq(students.status, filters.status))
 		}
 
-		let query = this.db
+		let query = drizzle
 			.select()
 			.from(students)
 			.where(conditions.length ? and(...conditions) : undefined)
