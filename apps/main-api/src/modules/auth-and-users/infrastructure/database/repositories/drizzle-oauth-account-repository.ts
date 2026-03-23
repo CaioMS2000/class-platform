@@ -1,11 +1,12 @@
 import { and, eq } from 'drizzle-orm'
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { type UniqueId } from '@repo/core'
+import type { UniqueId } from '@repo/core'
 import {
 	OAuthAccountRepository,
 	type OAuthAccountRecord,
-} from '../../domain/application/repositories/oauth-account-repository'
-import { oauthAccounts } from '../database/schema'
+} from '../../../domain/application/repositories/oauth-account-repository'
+import { oauthAccounts } from '../schema'
+import { OAuthAccountMapper } from '../mappers/oauth-account-mapper'
 
 export class DrizzleOAuthAccountRepository extends OAuthAccountRepository {
 	constructor(private readonly db: NodePgDatabase) {
@@ -26,12 +27,7 @@ export class DrizzleOAuthAccountRepository extends OAuthAccountRepository {
 				)
 			)
 		if (!row) return null
-		return {
-			id: row.id,
-			userId: row.userId as UniqueId,
-			provider: row.provider,
-			providerAccountId: row.providerAccountId,
-		}
+		return OAuthAccountMapper.toDomain(row)
 	}
 
 	async save(data: {
@@ -40,12 +36,9 @@ export class DrizzleOAuthAccountRepository extends OAuthAccountRepository {
 		providerAccountId: string
 	}): Promise<{ id: string }> {
 		const id = crypto.randomUUID()
-		await this.db.insert(oauthAccounts).values({
-			id,
-			userId: data.userId,
-			provider: data.provider,
-			providerAccountId: data.providerAccountId,
-		})
+		await this.db
+			.insert(oauthAccounts)
+			.values(OAuthAccountMapper.toInsert({ id, ...data }))
 		return { id }
 	}
 }

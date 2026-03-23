@@ -3,8 +3,9 @@ import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import {
 	OAuthStateRepository,
 	type OAuthStateData,
-} from '../../domain/application/repositories/oauth-state-repository'
-import { oauthStates } from '../database/schema'
+} from '../../../domain/application/repositories/oauth-state-repository'
+import { oauthStates } from '../schema'
+import { OAuthStateMapper } from '../mappers/oauth-state-mapper'
 
 export class DrizzleOAuthStateRepository extends OAuthStateRepository {
 	constructor(private readonly db: NodePgDatabase) {
@@ -16,12 +17,9 @@ export class DrizzleOAuthStateRepository extends OAuthStateRepository {
 		data: OAuthStateData,
 		expiresInSeconds: number
 	): Promise<void> {
-		await this.db.insert(oauthStates).values({
-			state,
-			codeVerifier: data.codeVerifier,
-			provider: data.provider,
-			expiresAt: new Date(Date.now() + expiresInSeconds * 1000),
-		})
+		await this.db
+			.insert(oauthStates)
+			.values(OAuthStateMapper.toInsert(state, data, expiresInSeconds))
 	}
 
 	async findAndDelete(state: string): Promise<OAuthStateData | null> {
@@ -32,9 +30,6 @@ export class DrizzleOAuthStateRepository extends OAuthStateRepository {
 			)
 			.returning()
 		if (!row) return null
-		return {
-			codeVerifier: row.codeVerifier,
-			provider: row.provider,
-		}
+		return OAuthStateMapper.toDomain(row)
 	}
 }

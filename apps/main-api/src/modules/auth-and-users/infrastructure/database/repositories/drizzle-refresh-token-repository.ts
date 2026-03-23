@@ -1,8 +1,9 @@
 import { eq } from 'drizzle-orm'
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { type UniqueId } from '@repo/core'
-import { RefreshTokenRepository } from '../../domain/application/repositories/refresh-token-repository'
-import { refreshTokens } from '../database/schema'
+import type { UniqueId } from '@repo/core'
+import { RefreshTokenRepository } from '../../../domain/application/repositories/refresh-token-repository'
+import { refreshTokens } from '../schema'
+import { RefreshTokenMapper } from '../mappers/refresh-token-mapper'
 
 export class DrizzleRefreshTokenRepository extends RefreshTokenRepository {
 	constructor(private readonly db: NodePgDatabase) {
@@ -15,14 +16,17 @@ export class DrizzleRefreshTokenRepository extends RefreshTokenRepository {
 		expiresInSeconds: number,
 		role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 	): Promise<void> {
-		await this.db.insert(refreshTokens).values({
-			id: crypto.randomUUID(),
-			userId,
-			tokenHash,
-			role,
-			used: false,
-			expiresAt: new Date(Date.now() + expiresInSeconds * 1000),
-		})
+		await this.db
+			.insert(refreshTokens)
+			.values(
+				RefreshTokenMapper.toInsert(
+					crypto.randomUUID(),
+					userId,
+					tokenHash,
+					role,
+					expiresInSeconds
+				)
+			)
 	}
 
 	async findByTokenHash(tokenHash: string): Promise<{
@@ -35,11 +39,7 @@ export class DrizzleRefreshTokenRepository extends RefreshTokenRepository {
 			.from(refreshTokens)
 			.where(eq(refreshTokens.tokenHash, tokenHash))
 		if (!row) return null
-		return {
-			userId: row.userId as UniqueId,
-			used: row.used,
-			role: row.role,
-		}
+		return RefreshTokenMapper.toDomain(row)
 	}
 
 	async revoke(tokenHash: string): Promise<void> {
