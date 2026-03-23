@@ -96,8 +96,24 @@ export class Course extends Class<CourseProps> {
 	get slug(): string {
 		return this.props.slug
 	}
+	get thumbnail(): string {
+		return this.props.thumbnail
+	}
+
 	get totalLessons() {
 		return this.props.totalLessons
+	}
+
+	get publishedAt(): Date | undefined {
+		return this.props.publishedAt
+	}
+
+	get createdAt(): Date {
+		return this.props.createdAt
+	}
+
+	get updatedAt(): Date {
+		return this.props.updatedAt
 	}
 
 	update(input: UpdateCourseInput): Course {
