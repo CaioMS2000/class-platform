@@ -6,6 +6,7 @@ export default defineConfig({
 	schema: [
 		'./src/modules/auth-and-users/infrastructure/database/schema.ts',
 		'./src/modules/catalog/infrastructure/database/schema.ts',
+		'./src/modules/learning/infrastructure/database/schema.ts',
 	],
 	dialect: 'postgresql',
 	dbCredentials: {

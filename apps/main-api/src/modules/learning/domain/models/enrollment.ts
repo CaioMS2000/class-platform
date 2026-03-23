@@ -119,6 +119,34 @@ export class Enrollment extends Class<EnrollmentProps> {
 		return this.props.progressValue
 	}
 
+	get userId(): UniqueId {
+		return this.props.userId
+	}
+
+	get enrolledAt(): Date {
+		return this.props.enrolledAt
+	}
+
+	get expiresAt(): Date | undefined {
+		return this.props.expiresAt
+	}
+
+	get lastAccessAt(): Date | undefined {
+		return this.props.lastAccessAt
+	}
+
+	get certificateIssued(): boolean {
+		return this.props.certificateIssued ?? false
+	}
+
+	get certificateUrl(): string | undefined {
+		return this.props.certificateUrl
+	}
+
+	get completedAt(): Date | undefined {
+		return this.props.completedAt
+	}
+
 	update(input: UpdateEnrollmentInput): Enrollment {
 		return new Enrollment({
 			...this.props,

@@ -88,6 +88,38 @@ export class Progress extends Class<ProgressProps> {
 		return this.props.status
 	}
 
+	get userId(): UniqueId {
+		return this.props.userId
+	}
+
+	get lessonId(): UniqueId {
+		return this.props.lessonId
+	}
+
+	get watchTime(): number {
+		return this.props.watchTime
+	}
+
+	get lastPosition(): number {
+		return this.props.lastPosition
+	}
+
+	get completedAt(): Date | undefined {
+		return this.props.completedAt
+	}
+
+	get notesIds(): string[] | undefined {
+		return this.props.notesIds
+	}
+
+	get timeSpent(): number {
+		return this.props.timeSpent
+	}
+
+	get deviceType(): string | undefined {
+		return this.props.deviceType
+	}
+
 	update(input: UpdateProgressInput): Progress {
 		return new Progress({
 			...this.props,
