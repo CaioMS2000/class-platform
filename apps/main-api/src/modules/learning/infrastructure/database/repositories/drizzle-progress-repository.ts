@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm'
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { drizzle } from '@/lib/drizzle'
 import { type UniqueId } from '@repo/core'
 import { ProgressRepository } from '../../../application/repositories/progress-repository'
 import { Progress } from '../../../domain/models/progress'
@@ -7,15 +7,11 @@ import { lessonProgress } from '../schema'
 import { ProgressMapper } from '../mappers/progress-mapper'
 
 export class DrizzleProgressRepository extends ProgressRepository {
-	constructor(private readonly db: NodePgDatabase) {
-		super()
-	}
-
 	async findByUserAndLesson(
 		userId: UniqueId,
 		lessonId: UniqueId
 	): Promise<Progress | null> {
-		const [row] = await this.db
+		const [row] = await drizzle
 			.select()
 			.from(lessonProgress)
 			.where(
@@ -32,7 +28,7 @@ export class DrizzleProgressRepository extends ProgressRepository {
 		userId: UniqueId,
 		courseId: UniqueId
 	): Promise<Progress[]> {
-		const rows = await this.db
+		const rows = await drizzle
 			.select()
 			.from(lessonProgress)
 			.where(
@@ -45,7 +41,7 @@ export class DrizzleProgressRepository extends ProgressRepository {
 	}
 
 	async save(progress: Progress): Promise<void> {
-		await this.db
+		await drizzle
 			.insert(lessonProgress)
 			.values(ProgressMapper.toPersistence(progress))
 	}
@@ -53,7 +49,7 @@ export class DrizzleProgressRepository extends ProgressRepository {
 	async update(progress: Progress): Promise<void> {
 		const { id, userId, courseId, lessonId, createdAt, ...updateData } =
 			ProgressMapper.toPersistence(progress)
-		await this.db
+		await drizzle
 			.update(lessonProgress)
 			.set(updateData)
 			.where(eq(lessonProgress.id, progress.id))

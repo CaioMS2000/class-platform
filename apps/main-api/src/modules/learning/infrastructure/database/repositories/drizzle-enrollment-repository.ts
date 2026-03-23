@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm'
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { drizzle } from '@/lib/drizzle'
 import { type UniqueId } from '@repo/core'
 import { EnrollmentRepository } from '../../../application/repositories/enrollment-repository'
 import { Enrollment } from '../../../domain/models/enrollment'
@@ -7,12 +7,8 @@ import { enrollments } from '../schema'
 import { EnrollmentMapper } from '../mappers/enrollment-mapper'
 
 export class DrizzleEnrollmentRepository extends EnrollmentRepository {
-	constructor(private readonly db: NodePgDatabase) {
-		super()
-	}
-
 	async findById(id: UniqueId): Promise<Enrollment | null> {
-		const [row] = await this.db
+		const [row] = await drizzle
 			.select()
 			.from(enrollments)
 			.where(eq(enrollments.id, id))
@@ -24,7 +20,7 @@ export class DrizzleEnrollmentRepository extends EnrollmentRepository {
 		userId: UniqueId,
 		courseId: UniqueId
 	): Promise<Enrollment | null> {
-		const [row] = await this.db
+		const [row] = await drizzle
 			.select()
 			.from(enrollments)
 			.where(
@@ -35,7 +31,7 @@ export class DrizzleEnrollmentRepository extends EnrollmentRepository {
 	}
 
 	async findManyByStudent(studentId: UniqueId): Promise<Enrollment[]> {
-		const rows = await this.db
+		const rows = await drizzle
 			.select()
 			.from(enrollments)
 			.where(eq(enrollments.userId, studentId))
@@ -43,7 +39,7 @@ export class DrizzleEnrollmentRepository extends EnrollmentRepository {
 	}
 
 	async save(enrollment: Enrollment): Promise<void> {
-		await this.db
+		await drizzle
 			.insert(enrollments)
 			.values(EnrollmentMapper.toPersistence(enrollment))
 	}
@@ -51,7 +47,7 @@ export class DrizzleEnrollmentRepository extends EnrollmentRepository {
 	async update(enrollment: Enrollment): Promise<void> {
 		const { id, userId, courseId, createdAt, ...updateData } =
 			EnrollmentMapper.toPersistence(enrollment)
-		await this.db
+		await drizzle
 			.update(enrollments)
 			.set(updateData)
 			.where(eq(enrollments.id, enrollment.id))
