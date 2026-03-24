@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
 import { setupSchema, teardownSchema } from '@/test/setup-schema'
+import { UniqueId } from '@repo/core'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleCourseRepository } from './drizzle-course-repository'
 import { DrizzleInstructorRepository } from '@/modules/auth-and-users/infrastructure/database/repositories/drizzle-instructor-repository'
@@ -90,7 +90,7 @@ describe('DrizzleCourseRepository', () => {
 		})
 
 		it('should return null when course does not exist', async () => {
-			const found = await repo.findById('non-existent-id')
+			const found = await repo.findById(UniqueId('non-existent-id'))
 			expect(found).toBeNull()
 		})
 	})
@@ -107,7 +107,7 @@ describe('DrizzleCourseRepository', () => {
 
 		it('should throw when course does not exist', async () => {
 			expect(async () => {
-				await repo.getById('non-existent-id')
+				await repo.getById(UniqueId('non-existent-id'))
 			}).toThrow()
 		})
 	})
@@ -160,7 +160,7 @@ describe('DrizzleCourseRepository', () => {
 			const result = await repo.findMany({ status: 'published' })
 
 			expect(result).toHaveLength(1)
-			expect(result[0].status).toBe('published')
+			expect(result[0]!.status).toBe('published')
 		})
 
 		it('should filter by level', async () => {
@@ -179,7 +179,7 @@ describe('DrizzleCourseRepository', () => {
 			const result = await repo.findMany({ level: 'advanced' })
 
 			expect(result).toHaveLength(1)
-			expect(result[0].level).toBe('advanced')
+			expect(result[0]!.level).toBe('advanced')
 		})
 
 		it('should filter by instructorId', async () => {
@@ -198,12 +198,12 @@ describe('DrizzleCourseRepository', () => {
 			})
 
 			expect(result).toHaveLength(1)
-			expect(result[0].instructorId).toBe(instructor1.id)
+			expect(result[0]!.instructorId).toBe(instructor1.id)
 		})
 
 		it('should filter by categoryId', async () => {
 			const { instructor } = await createInstructorAndCourse()
-			const catId = 'cat-1'
+			const catId = UniqueId('cat-1')
 			const withCategory = await makeCourse({
 				instructorId: instructor.id,
 				categoriesIds: [catId],
@@ -218,7 +218,7 @@ describe('DrizzleCourseRepository', () => {
 			const result = await repo.findMany({ categoryId: catId })
 
 			expect(result).toHaveLength(1)
-			expect(result[0].categoriesIds).toContain(catId)
+			expect(result[0]!.categoriesIds).toContain(catId)
 		})
 
 		it('should apply pagination', async () => {

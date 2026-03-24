@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
 import { setupSchema, teardownSchema } from '@/test/setup-schema'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleCategoryRepository } from './drizzle-category-repository'
 import { categories } from '../schema'
 import { makeCategory } from '@/modules/catalog/test/factories/make-category'
+import { UniqueId } from '@repo/core'
 
 describe('DrizzleCategoryRepository', () => {
 	const repo = new DrizzleCategoryRepository()
@@ -71,7 +71,7 @@ describe('DrizzleCategoryRepository', () => {
 		})
 
 		it('should return null when category does not exist', async () => {
-			const found = await repo.findById('non-existent-id')
+			const found = await repo.findById(UniqueId('non-existent-id'))
 			expect(found).toBeNull()
 		})
 	})
@@ -88,7 +88,7 @@ describe('DrizzleCategoryRepository', () => {
 
 		it('should throw when category does not exist', async () => {
 			expect(async () => {
-				await repo.getById('non-existent-id')
+				await repo.getById(UniqueId('non-existent-id'))
 			}).toThrow()
 		})
 	})

@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
 import { setupSchema, teardownSchema } from '@/test/setup-schema'
+import { UniqueId } from '@repo/core'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleLessonRepository } from './drizzle-lesson-repository'
 import { DrizzleModuleRepository } from './drizzle-module-repository'
@@ -104,7 +104,7 @@ describe('DrizzleLessonRepository', () => {
 		})
 
 		it('should return null when lesson does not exist', async () => {
-			const found = await repo.findById('non-existent-id')
+			const found = await repo.findById(UniqueId('non-existent-id'))
 			expect(found).toBeNull()
 		})
 	})
@@ -121,7 +121,7 @@ describe('DrizzleLessonRepository', () => {
 
 		it('should throw when lesson does not exist', async () => {
 			expect(async () => {
-				await repo.getById('non-existent-id')
+				await repo.getById(UniqueId('non-existent-id'))
 			}).toThrow()
 		})
 	})
@@ -148,7 +148,9 @@ describe('DrizzleLessonRepository', () => {
 		})
 
 		it('should return an empty array when no lessons exist for the module', async () => {
-			const result = await repo.findManyByModuleId('non-existent-module-id')
+			const result = await repo.findManyByModuleId(
+				UniqueId('non-existent-module-id')
+			)
 			expect(result).toHaveLength(0)
 		})
 
@@ -179,7 +181,7 @@ describe('DrizzleLessonRepository', () => {
 			const result = await repo.findManyByModuleId(module1.id)
 
 			expect(result).toHaveLength(1)
-			expect(result[0].moduleId).toBe(module1.id)
+			expect(result[0]!.moduleId).toBe(module1.id)
 		})
 	})
 
@@ -205,7 +207,9 @@ describe('DrizzleLessonRepository', () => {
 		})
 
 		it('should return an empty array when no lessons exist for the course', async () => {
-			const result = await repo.findManyByCourseId('non-existent-course-id')
+			const result = await repo.findManyByCourseId(
+				UniqueId('non-existent-course-id')
+			)
 			expect(result).toHaveLength(0)
 		})
 
@@ -239,7 +243,7 @@ describe('DrizzleLessonRepository', () => {
 			const result = await repo.findManyByCourseId(course1.id)
 
 			expect(result).toHaveLength(1)
-			expect(result[0].courseId).toBe(course1.id)
+			expect(result[0]!.courseId).toBe(course1.id)
 		})
 	})
 })

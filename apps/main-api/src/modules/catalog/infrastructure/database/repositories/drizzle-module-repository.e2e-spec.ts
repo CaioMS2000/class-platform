@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
 import { setupSchema, teardownSchema } from '@/test/setup-schema'
+import { UniqueId } from '@repo/core'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleModuleRepository } from './drizzle-module-repository'
 import { DrizzleCourseRepository } from './drizzle-course-repository'
@@ -95,7 +95,7 @@ describe('DrizzleModuleRepository', () => {
 		})
 
 		it('should return null when module does not exist', async () => {
-			const found = await repo.findById('non-existent-id')
+			const found = await repo.findById(UniqueId('non-existent-id'))
 			expect(found).toBeNull()
 		})
 	})
@@ -112,7 +112,7 @@ describe('DrizzleModuleRepository', () => {
 
 		it('should throw when module does not exist', async () => {
 			expect(async () => {
-				await repo.getById('non-existent-id')
+				await repo.getById(UniqueId('non-existent-id'))
 			}).toThrow()
 		})
 	})
@@ -131,7 +131,9 @@ describe('DrizzleModuleRepository', () => {
 		})
 
 		it('should return an empty array when no modules exist for the course', async () => {
-			const result = await repo.findManyByCourseId('non-existent-course-id')
+			const result = await repo.findManyByCourseId(
+				UniqueId('non-existent-course-id')
+			)
 			expect(result).toHaveLength(0)
 		})
 
@@ -152,7 +154,7 @@ describe('DrizzleModuleRepository', () => {
 			const result = await repo.findManyByCourseId(course1.id)
 
 			expect(result).toHaveLength(1)
-			expect(result[0].courseId).toBe(course1.id)
+			expect(result[0]!.courseId).toBe(course1.id)
 		})
 	})
 })
