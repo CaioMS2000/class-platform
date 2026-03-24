@@ -1,7 +1,8 @@
 import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { Money } from '@repo/core'
+import { Money, UniqueId } from '@repo/core'
 import { UpdateCourseUseCase } from './update-course-use-case'
 import { CourseRepository } from '../../repositories/course-repository'
+import { CategoryRepository } from '../../repositories/category-repository'
 import { CourseNotFoundError } from '../../@errors'
 import { Course } from '../../../domain/entities/course'
 import { FakeIdGenerator } from '@/modules/catalog/test/fake-id-generator'
@@ -14,6 +15,7 @@ describe('UpdateCourseUseCase', () => {
 		courseRepo = mock(CourseRepository)
 		sut = new UpdateCourseUseCase({
 			courseRepository: instance(courseRepo),
+			categoryRepository: instance(mock(CategoryRepository)),
 		})
 	})
 
@@ -33,6 +35,7 @@ describe('UpdateCourseUseCase', () => {
 		const course = await Course.create({
 			idGenerator: new FakeIdGenerator(),
 			input: {
+				instructorId: UniqueId('instructor-123'),
 				title: 'Node.js Course',
 				description: 'Learn Node.js',
 				price: Money.create(10000, 'BRL').value as Money,

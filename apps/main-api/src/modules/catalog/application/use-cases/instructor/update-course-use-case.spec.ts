@@ -2,6 +2,7 @@ import { anything, instance, mock, when } from '@johanblumenberg/ts-mockito'
 import { Money, UniqueId } from '@repo/core'
 import { InstructorUpdateCourseUseCase } from './update-course-use-case'
 import { CourseRepository } from '../../repositories/course-repository'
+import { CategoryRepository } from '../../repositories/category-repository'
 import { CourseNotFoundError, NotCourseOwnerError } from '../../@errors'
 import { Course } from '../../../domain/entities/course'
 import { FakeIdGenerator } from '@/modules/catalog/test/fake-id-generator'
@@ -14,6 +15,7 @@ describe('InstructorUpdateCourseUseCase', () => {
 		courseRepo = mock(CourseRepository)
 		sut = new InstructorUpdateCourseUseCase({
 			courseRepository: instance(courseRepo),
+			categoryRepository: instance(mock(CategoryRepository)),
 		})
 	})
 

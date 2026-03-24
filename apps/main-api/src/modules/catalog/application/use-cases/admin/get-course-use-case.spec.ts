@@ -32,6 +32,7 @@ describe('GetCourseUseCase', () => {
 		const course = await Course.create({
 			idGenerator: new FakeIdGenerator(),
 			input: {
+				instructorId: UniqueId('instructor-123'),
 				title: 'Node.js Course',
 				description: 'Learn Node.js',
 				price: Money.create(10000, 'BRL').value as Money,

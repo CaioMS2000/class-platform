@@ -1,5 +1,5 @@
 import { instance, mock, when } from '@johanblumenberg/ts-mockito'
-import { Money } from '@repo/core'
+import { Money, UniqueId } from '@repo/core'
 import { GetAllCoursesUseCase } from './get-all-courses-use-case'
 import { CourseRepository } from '../../repositories/course-repository'
 import { Course } from '../../../domain/entities/course'
@@ -20,6 +20,7 @@ describe('GetAllCoursesUseCase', () => {
 		const course1 = await Course.create({
 			idGenerator: new FakeIdGenerator(),
 			input: {
+				instructorId: UniqueId('instructor-123'),
 				title: 'Node.js Course',
 				description: 'Learn Node.js',
 				price: Money.create(10000, 'BRL').value as Money,
@@ -30,6 +31,7 @@ describe('GetAllCoursesUseCase', () => {
 		const course2 = await Course.create({
 			idGenerator: new FakeIdGenerator(),
 			input: {
+				instructorId: UniqueId('instructor-123'),
 				title: 'React Course',
 				description: 'Learn React',
 				price: Money.create(12000, 'BRL').value as Money,
