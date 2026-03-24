@@ -18,6 +18,7 @@ import { REFRESH_TOKEN_EXPIRY_SECONDS } from '../../constants'
 import { Admin } from '../../../models/admin'
 import { Instructor } from '../../../models/instructor'
 import { Student } from '../../../models/student'
+import type { HTTPUser } from '../../../models/http-user'
 
 export type RegisterUseCaseRequest = {
 	name: string
@@ -32,7 +33,7 @@ export type RegisterUseCaseResponse = Result<
 	{
 		accessToken: string
 		refreshToken: string
-		user: { id: string; name: string; email: string; role: string }
+		user: HTTPUser
 	}
 >
 

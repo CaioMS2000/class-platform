@@ -8,6 +8,7 @@ import type { JwtService } from '../../jwt'
 import type { JwtTokenGenerator } from '../../jwt'
 import { InvalidCredentialsError } from '../../@errors'
 import { REFRESH_TOKEN_EXPIRY_SECONDS } from '../../constants'
+import type { HTTPUser } from '../../../models/http-user'
 
 export type LoginUseCaseRequest = {
 	email: string
@@ -19,7 +20,7 @@ export type LoginUseCaseResponse = Result<
 	{
 		accessToken: string
 		refreshToken: string
-		user: { id: string; name: string; email: string; role: string }
+		user: HTTPUser
 	}
 >
 
