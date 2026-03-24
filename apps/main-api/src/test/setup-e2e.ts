@@ -1,6 +1,5 @@
 import { config } from 'dotenv'
 import { execSync } from 'node:child_process'
-import { afterAll } from 'bun:test'
 
 process.env.NODE_ENV = 'test'
 
