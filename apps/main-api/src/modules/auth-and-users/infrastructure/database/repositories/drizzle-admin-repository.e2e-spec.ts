@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
 import { setupSchema, teardownSchema } from '@/test/setup-schema'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleAdminRepository } from './drizzle-admin-repository'
 import { admins } from '../schema'
 import { makeAdmin } from '@/modules/auth-and-users/test/factories/make-admin'
+import { UniqueId } from '@repo/core'
 
 describe('DrizzleAdminRepository', () => {
 	const repo = new DrizzleAdminRepository()
@@ -45,7 +45,7 @@ describe('DrizzleAdminRepository', () => {
 		})
 
 		it('should return null when admin does not exist', async () => {
-			const found = await repo.findById('non-existent-id')
+			const found = await repo.findById(UniqueId('non-existent-id'))
 
 			expect(found).toBeNull()
 		})
@@ -63,7 +63,7 @@ describe('DrizzleAdminRepository', () => {
 
 		it('should throw when admin does not exist', async () => {
 			expect(async () => {
-				await repo.getById('non-existent-id')
+				await repo.getById(UniqueId('non-existent-id'))
 			}).toThrow()
 		})
 	})
@@ -107,7 +107,7 @@ describe('DrizzleAdminRepository', () => {
 			const result = await repo.findMany({ status: 'active' })
 
 			expect(result).toHaveLength(1)
-			expect(result[0].id).toBe(activeAdmin.id)
+			expect(result[0]!.id).toBe(activeAdmin.id)
 		})
 
 		it('should paginate results', async () => {

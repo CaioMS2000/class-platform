@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
 import { setupSchema, teardownSchema } from '@/test/setup-schema'
+import { UniqueId } from '@repo/core'
 import { drizzle } from '@/lib/drizzle'
 import { DrizzleStudentRepository } from './drizzle-student-repository'
 import { students } from '../schema'
@@ -45,7 +45,7 @@ describe('DrizzleStudentRepository', () => {
 		})
 
 		it('should return null when student does not exist', async () => {
-			const found = await repo.findById('non-existent-id')
+			const found = await repo.findById(UniqueId('non-existent-id'))
 
 			expect(found).toBeNull()
 		})
@@ -63,7 +63,7 @@ describe('DrizzleStudentRepository', () => {
 
 		it('should throw when student does not exist', async () => {
 			expect(async () => {
-				await repo.getById('non-existent-id')
+				await repo.getById(UniqueId('non-existent-id'))
 			}).toThrow()
 		})
 	})
@@ -107,7 +107,7 @@ describe('DrizzleStudentRepository', () => {
 			const result = await repo.findMany({ status: 'active' })
 
 			expect(result).toHaveLength(1)
-			expect(result[0].id).toBe(activeStudent.id)
+			expect(result[0]!.id).toBe(activeStudent.id)
 		})
 
 		it('should paginate results', async () => {
