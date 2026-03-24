@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'bun:test'
 import { setupSchema, teardownSchema } from '@/test/setup-schema'
+import { UniqueId } from '@repo/core'
 import { drizzle } from '@/lib/drizzle'
 import { students } from '@/modules/auth-and-users/infrastructure/database/schema'
 import { DrizzleStudentRepository } from './drizzle-student-repository'
@@ -38,7 +38,7 @@ describe('DrizzleStudentRepository (learning)', () => {
 		})
 
 		it('should return null when not found', async () => {
-			const result = await repo.findById('non-existent')
+			const result = await repo.findById(UniqueId('non-existent'))
 			expect(result).toBeNull()
 		})
 	})
