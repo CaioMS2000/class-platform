@@ -6,4 +6,13 @@ const headers = z.object({
 })
 export const routeSchemas = {
 	headers,
+	response: {
+		200: z.object({
+			id: z.string(),
+			email: z.string(),
+			name: z.string(),
+			avatar: z.string().optional(),
+			status: z.string(),
+		}),
+	},
 } as const satisfies RouteSchemas
