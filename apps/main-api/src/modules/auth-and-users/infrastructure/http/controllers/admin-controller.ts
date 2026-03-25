@@ -1,10 +1,14 @@
-import { z } from '@hono/zod-openapi'
 import { Class } from '@repo/core'
-import { routeSchemas as meRouteSchemas } from '@repo/shared/schemas/zod/http/admin-routes/me'
+import { routeSchemas as meRouteSchemas } from '@repo/shared/http/schemas/zod/admin-routes/me'
+import {
+	unauthorizedResponse,
+	notFoundResponse,
+} from '@repo/shared/http/responses/index'
 import type { GetAdminUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
 import { createRoute, httpServerApp } from '../http-server-app'
 import { authMiddleware } from '../middlewares/auth'
 import { URL_BASE_PATH } from './constants'
+import { roleGuardMiddleware } from '../middlewares/role-guard'
 
 type AdminHttpControllerProps = {
 	getAdminUseCase: GetAdminUseCase
@@ -26,25 +30,33 @@ export class AdminHttpController extends Class<AdminHttpControllerProps> {
 		const route = createRoute({
 			method: 'get',
 			path: `${this.URL_BASE_PATH}/me`,
-			middleware: [authMiddleware],
+			middleware: [authMiddleware, roleGuardMiddleware('admin')],
 			request: {
 				headers: meRouteSchemas.headers,
 			},
 			responses: {
+				...unauthorizedResponse,
+				...notFoundResponse('Admin não encontrado'),
 				200: {
 					description: 'Perfil do admin',
 					content: {
 						'application/json': {
-							schema: z.null(),
+							schema: meRouteSchemas.response[200],
 						},
 					},
 				},
 			},
 		})
 
-		httpServerApp.openapi(route, context => {
+		httpServerApp.openapi(route, async context => {
 			const user = context.get('user')
-			return context.json(null, 200)
+			const getAdminResult = await this.props.getAdminUseCase.execute({
+				adminId: user.id,
+			})
+
+			if (getAdminResult.isFailure()) return context.json(null, 404)
+
+			return context.json(getAdminResult.value.admin, 200)
 		})
 	}
 }
