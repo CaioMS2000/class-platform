@@ -1,8 +1,9 @@
 import '@/main'
-import { Elysia } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
+import { Elysia } from 'elysia'
 import { env } from '@/config/env'
 
+// Instance - initial setup
 const app = new Elysia()
 	.use(
 		swagger({
@@ -15,8 +16,12 @@ const app = new Elysia()
 	.decorate('jwtService', container.cradle.jwtService)
 	.get('/health', () => 'OK')
 	.get('/healthy', () => 'Yes')
-	.use(container.cradle.adminHttpController.createPlugin())
-	.listen(env.PORT)
+
+// Routes
+app.use(container.cradle.adminHttpController.getRouters())
+
+// Listen
+app.listen(env.PORT)
 
 console.log(`Server running on: ${app.server?.url}`)
 

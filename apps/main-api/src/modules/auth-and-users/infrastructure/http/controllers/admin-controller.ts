@@ -1,9 +1,14 @@
 import { Class } from '@repo/core'
 import { routeSchemas as meRouteSchemas } from '@repo/shared/http/schemas/typebox/admin-routes/me'
+import {
+	unauthorizedResponse,
+	notFoundResponse,
+} from '@repo/shared/http/schemas/typebox/responses/index'
 import { Elysia, status, t } from 'elysia'
 import type { GetAdminUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
 import { authPlugin } from '../middlewares/auth'
 import { roleGuardPlugin } from '../middlewares/role-guard'
+import { BASE_URL } from '../constants'
 
 type AdminHttpControllerProps = {
 	getAdminUseCase: GetAdminUseCase
@@ -15,9 +20,14 @@ export class AdminHttpController extends Class<AdminHttpControllerProps> {
 	}
 
 	readonly tags: string[] = ['Admin']
+	readonly BASE_URL = `${BASE_URL}/admin`
 
-	createPlugin() {
-		return new Elysia({ prefix: '/api/v1/admin' })
+	getRouters() {
+		return [this.getMeRouter()]
+	}
+
+	private getMeRouter() {
+		return new Elysia({ prefix: this.BASE_URL })
 			.use(authPlugin)
 			.use(roleGuardPlugin('admin'))
 			.get(
@@ -37,8 +47,8 @@ export class AdminHttpController extends Class<AdminHttpControllerProps> {
 					headers: meRouteSchemas.headers,
 					response: {
 						...meRouteSchemas.response,
-						401: t.Object({ error: t.String() }),
-						404: t.Object({ error: t.String() }),
+						...unauthorizedResponse,
+						...notFoundResponse,
 					},
 				}
 			)
