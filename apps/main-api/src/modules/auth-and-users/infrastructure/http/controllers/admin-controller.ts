@@ -1,4 +1,5 @@
 import { Class } from '@repo/core'
+import { routeSchemas as meRouteSchemas } from '@repo/shared/http/schemas/typebox/admin-routes/me'
 import { Elysia, status, t } from 'elysia'
 import type { GetAdminUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
 import { authPlugin } from '../middlewares/auth'
@@ -33,17 +34,9 @@ export class AdminHttpController extends Class<AdminHttpControllerProps> {
 				},
 				{
 					detail: { summary: 'Perfil do admin', tags: [...this.tags] },
-					headers: t.Object({
-						authorization: t.Optional(t.String()),
-					}),
+					headers: meRouteSchemas.headers,
 					response: {
-						200: t.Object({
-							id: t.String(),
-							email: t.String(),
-							name: t.String(),
-							avatar: t.Optional(t.String()),
-							status: t.String(),
-						}),
+						...meRouteSchemas.response,
 						401: t.Object({ error: t.String() }),
 						404: t.Object({ error: t.String() }),
 					},
