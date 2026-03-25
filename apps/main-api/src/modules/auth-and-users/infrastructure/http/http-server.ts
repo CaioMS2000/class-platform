@@ -1,22 +1,28 @@
+import '@/main'
 import { httpServerApp } from './http-server-app'
-import { swaggerUI } from '@hono/swagger-ui'
-import { Scalar } from '@scalar/hono-api-reference'
 import { createDependenciesMiddleware } from './middlewares/dependencies'
+import { env } from '@/config/env'
 
-httpServerApp.doc('/doc', {
-	openapi: '3.0.0',
-	info: {
-		version: '1.0.0',
-		title: 'Main API',
-	},
-})
+async function init() {
+	httpServerApp.get('/health', ctx => ctx.text('OK'))
+	httpServerApp.get('/healthy', ctx => ctx.text('Yes'))
 
-httpServerApp.get('/doc/ui', swaggerUI({ url: '/doc' }))
-httpServerApp.get('/doc/scalar', Scalar({ url: '/doc', pageTitle: 'Main API' }))
-httpServerApp.get('/health', ctx => ctx.text('OK'))
-httpServerApp.get('/healthy', ctx => ctx.text('Yes'))
+	const dependenciesMiddleware = createDependenciesMiddleware({
+		jwtService: container.cradle.jwtService,
+	})
 
-const dependenciesMiddleware = createDependenciesMiddleware({
-	jwtService: container.cradle.jwtService,
-})
-httpServerApp.use('*', dependenciesMiddleware)
+	httpServerApp.use('*', dependenciesMiddleware)
+
+	container.cradle.adminHttpController.registerRoutes()
+
+	const httpServer = Bun.serve({
+		port: env.PORT,
+		fetch: httpServerApp.fetch,
+	})
+
+	console.log(
+		`Server running on: ${httpServer.protocol}://${httpServer.hostname}:${httpServer.port}`
+	)
+}
+
+init()

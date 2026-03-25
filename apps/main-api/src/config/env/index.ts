@@ -15,7 +15,7 @@ export const envSchema = z.object({
 		.default('development'),
 
 	// HTTP Server
-	PORT: z.coerce.number().catch(8000),
+	PORT: z.coerce.number().catch(8005),
 
 	// Database
 	DATABASE_URL: z.string(),
