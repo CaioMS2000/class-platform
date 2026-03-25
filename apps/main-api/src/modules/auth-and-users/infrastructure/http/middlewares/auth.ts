@@ -1,24 +1,23 @@
-import { createMiddleware } from 'hono/factory'
+import { Elysia } from 'elysia'
+import { Value } from '@sinclair/typebox/value'
 import type { HTTPUser } from '@/modules/auth-and-users/domain/models/http-user'
-import type { AppEnv } from '../http-server-app'
 import { httpUserSchema } from '../validators/user'
+import { setup } from '../setup'
 
-export const authMiddleware = createMiddleware<AppEnv>(
-	async (context, next) => {
-		const jwtService = context.get('jwtService')
-		const token = context.req.header('Authorization')?.replace('Bearer ', '')
-
-		if (!token) return context.json({ error: 'Unauthorized' }, 401)
+export const authPlugin = new Elysia({ name: 'auth' })
+	.use(setup)
+	.derive({ as: 'scoped' }, async ({ headers, jwtService }) => {
+		const token = headers.authorization?.replace('Bearer ', '')
+		if (!token) throw new Error('Unauthorized')
 
 		const payload = await jwtService.verify(token)
-		const parseResult = httpUserSchema.safeParse(payload)
+		if (!Value.Check(httpUserSchema, payload)) throw new Error('Unauthorized')
 
-		if (!parseResult.success)
-			return context.json({ error: 'Unauthorized' }, 401)
-
-		const user: HTTPUser = parseResult.data
-		context.set('user', user)
-
-		await next()
-	}
-)
+		return { user: payload as HTTPUser }
+	})
+	.onError(({ error, set }) => {
+		if (error instanceof Error && error.message === 'Unauthorized') {
+			set.status = 401
+			return { error: 'Unauthorized' }
+		}
+	})

@@ -1,8 +1,8 @@
-import z from 'zod'
+import { t } from 'elysia'
 
-export const httpUserSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	email: z.string(),
-	role: z.string(),
+export const httpUserSchema = t.Object({
+	id: t.String(),
+	name: t.String(),
+	email: t.String(),
+	role: t.String(),
 })

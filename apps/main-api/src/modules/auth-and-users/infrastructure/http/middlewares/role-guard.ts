@@ -1,21 +1,16 @@
-import { createMiddleware } from 'hono/factory'
-import type { AppEnv } from '../http-server-app'
+import { Elysia } from 'elysia'
+import { authPlugin } from './auth'
 
 const Roles = ['admin', 'instructor', 'student'] as const
-type Roles = (typeof Roles)[number]
+type Role = (typeof Roles)[number]
 
-export const roleGuardMiddleware = (role: Roles | Roles[]) =>
-	createMiddleware<AppEnv>(async (context, next) => {
-		const currentUserRole = context.get('user').role
-
-		if (typeof role === 'string' && role !== currentUserRole) {
-			return context.json({ error: 'Unauthorized' }, 401)
-		}
-		if (Array.isArray(role)) {
-			if (!role.includes(currentUserRole as Roles)) {
-				return context.json({ error: 'Unauthorized' }, 401)
+export const roleGuardPlugin = (role: Role | Role[]) =>
+	new Elysia({ name: `role-guard-${role}` })
+		.use(authPlugin)
+		.onBeforeHandle(({ user, set }) => {
+			const allowed = Array.isArray(role) ? role : [role]
+			if (!allowed.includes(user.role as Role)) {
+				set.status = 401
+				return { error: 'Unauthorized' }
 			}
-		}
-
-		await next()
-	})
+		})

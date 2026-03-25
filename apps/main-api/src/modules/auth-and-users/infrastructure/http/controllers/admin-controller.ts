@@ -1,18 +1,11 @@
 import { Class } from '@repo/core'
-import { routeSchemas as meRouteSchemas } from '@repo/shared/http/schemas/zod/admin-routes/me'
-import {
-	unauthorizedResponse,
-	notFoundResponse,
-} from '@repo/shared/http/responses/index'
+import { Elysia, status, t } from 'elysia'
 import type { GetAdminUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
-import { createRoute, httpServerApp } from '../http-server-app'
-import { authMiddleware } from '../middlewares/auth'
-import { URL_BASE_PATH } from './constants'
-import { roleGuardMiddleware } from '../middlewares/role-guard'
+import { authPlugin } from '../middlewares/auth'
+import { roleGuardPlugin } from '../middlewares/role-guard'
 
 type AdminHttpControllerProps = {
 	getAdminUseCase: GetAdminUseCase
-	// x: X
 }
 
 export class AdminHttpController extends Class<AdminHttpControllerProps> {
@@ -20,43 +13,41 @@ export class AdminHttpController extends Class<AdminHttpControllerProps> {
 		super()
 	}
 
-	private readonly URL_BASE_PATH = `${URL_BASE_PATH}/admin`
+	readonly tags: string[] = ['Admin']
 
-	registerRoutes() {
-		this.getMeRoute()
-	}
+	createPlugin() {
+		return new Elysia({ prefix: '/api/v1/admin' })
+			.use(authPlugin)
+			.use(roleGuardPlugin('admin'))
+			.get(
+				'/me',
+				async ({ user }) => {
+					const result = await this.props.getAdminUseCase.execute({
+						adminId: user.id,
+					})
 
-	private getMeRoute() {
-		const route = createRoute({
-			method: 'get',
-			path: `${this.URL_BASE_PATH}/me`,
-			middleware: [authMiddleware, roleGuardMiddleware('admin')],
-			request: {
-				headers: meRouteSchemas.headers,
-			},
-			responses: {
-				...unauthorizedResponse,
-				...notFoundResponse('Admin não encontrado'),
-				200: {
-					description: 'Perfil do admin',
-					content: {
-						'application/json': {
-							schema: meRouteSchemas.response[200],
-						},
-					},
+					if (result.isFailure())
+						return status(404, { error: 'Admin não encontrado' })
+
+					return result.value.admin
 				},
-			},
-		})
-
-		httpServerApp.openapi(route, async context => {
-			const user = context.get('user')
-			const getAdminResult = await this.props.getAdminUseCase.execute({
-				adminId: user.id,
-			})
-
-			if (getAdminResult.isFailure()) return context.json(null, 404)
-
-			return context.json(getAdminResult.value.admin, 200)
-		})
+				{
+					detail: { summary: 'Perfil do admin', tags: [...this.tags] },
+					headers: t.Object({
+						authorization: t.Optional(t.String()),
+					}),
+					response: {
+						200: t.Object({
+							id: t.String(),
+							email: t.String(),
+							name: t.String(),
+							avatar: t.Optional(t.String()),
+							status: t.String(),
+						}),
+						401: t.Object({ error: t.String() }),
+						404: t.Object({ error: t.String() }),
+					},
+				}
+			)
 	}
 }

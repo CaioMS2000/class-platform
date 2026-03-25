@@ -3,8 +3,8 @@ import type {
 	JwtService,
 	JwtTokenGenerator,
 } from './modules/auth-and-users/domain/application/jwt'
-import type { AdminHttpController } from './modules/auth-and-users/infrastructure/http/controllers/admin-controller'
 import type { AdminRepository } from './modules/auth-and-users/domain/application/repositories/admin-repository'
+import type { AdminHttpController } from './modules/auth-and-users/infrastructure/http/controllers/admin-controller'
 
 interface CradleInterface {
 	jwtService: JwtService

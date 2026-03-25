@@ -1,28 +1,23 @@
 import '@/main'
-import { httpServerApp } from './http-server-app'
-import { createDependenciesMiddleware } from './middlewares/dependencies'
+import { Elysia } from 'elysia'
+import { swagger } from '@elysiajs/swagger'
 import { env } from '@/config/env'
 
-async function init() {
-	httpServerApp.get('/health', ctx => ctx.text('OK'))
-	httpServerApp.get('/healthy', ctx => ctx.text('Yes'))
-
-	const dependenciesMiddleware = createDependenciesMiddleware({
-		jwtService: container.cradle.jwtService,
-	})
-
-	httpServerApp.use('*', dependenciesMiddleware)
-
-	container.cradle.adminHttpController.registerRoutes()
-
-	const httpServer = Bun.serve({
-		port: env.PORT,
-		fetch: httpServerApp.fetch,
-	})
-
-	console.log(
-		`Server running on: ${httpServer.protocol}://${httpServer.hostname}:${httpServer.port}`
+const app = new Elysia()
+	.use(
+		swagger({
+			documentation: {
+				info: { title: 'Main API', version: '1.0.0' },
+			},
+			path: '/doc',
+		})
 	)
-}
+	.decorate('jwtService', container.cradle.jwtService)
+	.get('/health', () => 'OK')
+	.get('/healthy', () => 'Yes')
+	.use(container.cradle.adminHttpController.createPlugin())
+	.listen(env.PORT)
 
-init()
+console.log(`Server running on: ${app.server?.url}`)
+
+export type App = typeof app

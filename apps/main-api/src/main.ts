@@ -2,9 +2,9 @@ import '../global'
 import './container'
 import { asFunction } from 'awilix'
 import { TokenService } from './modules/auth-and-users/infrastructure/auth/token-service'
-import { AdminHttpController } from './modules/auth-and-users/infrastructure/http/controllers/admin-controller'
 import { GetAdminUseCase } from './modules/auth-and-users/domain/application/use-cases'
 import { DrizzleAdminRepository } from './modules/auth-and-users/infrastructure/database/repositories/drizzle-admin-repository'
+import { AdminHttpController } from './modules/auth-and-users/infrastructure/http/controllers/admin-controller'
 
 // Application
 // Repositories
