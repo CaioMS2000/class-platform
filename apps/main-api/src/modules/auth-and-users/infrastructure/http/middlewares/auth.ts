@@ -15,7 +15,7 @@ export const authPlugin = new Elysia({ name: 'auth' })
 
 		return { user: payload as HTTPUser }
 	})
-	.onError(({ error, set }) => {
+	.onError({ as: 'scoped' }, ({ error, set }) => {
 		if (error instanceof Error && error.message === 'Unauthorized') {
 			set.status = 401
 			return { error: 'Unauthorized' }
