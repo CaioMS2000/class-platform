@@ -1,0 +1,19 @@
+{
+  "name": "@repo/shared",
+  "version": "0.0.0",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "exports": {
+  "./*": "./src/*.ts"
+},
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@hono/zod-openapi": "^1.2.3"
+  }
+}
