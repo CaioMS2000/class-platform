@@ -18,7 +18,7 @@ const app = new Elysia()
 	.get('/healthy', () => 'Yes')
 
 // Routes
-app.use(container.cradle.adminHttpController.getRouters())
+app.use(container.cradle.adminHttpController.getRouter())
 
 // Listen
 app.listen(env.PORT)
