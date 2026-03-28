@@ -19,6 +19,7 @@ const app = new Elysia()
 
 // Routes
 app.use(container.cradle.adminHttpController.getRouter())
+app.use(container.cradle.authHttpController.getRouter())
 
 // Listen
 app.listen(env.PORT)
