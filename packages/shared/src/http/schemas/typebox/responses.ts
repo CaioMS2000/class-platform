@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox'
 
 export const unauthorizedResponse = {
-	401: Type.Object({ error: Type.String() }),
+	403: Type.Object({ error: Type.String() }),
 }
 
 export const notFoundResponse = {
