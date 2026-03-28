@@ -31,6 +31,9 @@ export const envSchema = z.object({
 
 	// OAuth - Frontend callback URL
 	OAUTH_FRONTEND_CALLBACK_URL: z.string().default(''),
+
+	// Redis
+	REDIS_URL: z.string().default('redis://localhost:6380'),
 })
 
 const env = envSchema.parse(process.env)
