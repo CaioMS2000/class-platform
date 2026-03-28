@@ -156,7 +156,7 @@ export class SocialLoginUseCase extends UseCase<
 		role: SocialLoginUseCaseRequest['role'],
 		isNewUser: boolean
 	): Promise<SocialLoginUseCaseResponse> {
-		const accessToken = await this.props.jwtService.sign({
+		const accessToken = await this.props.jwtService.signAccessToken({
 			sub: user.id,
 			name: user.name,
 			email: user.email,

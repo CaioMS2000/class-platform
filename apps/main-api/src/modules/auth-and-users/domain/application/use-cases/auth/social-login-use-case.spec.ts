@@ -16,6 +16,8 @@ import { UniqueId } from '@repo/core'
 
 const fakeTokenService = {
 	sign: async () => 'fake-access-token',
+	signAccessToken: async () => 'fake-access-token',
+	verifyAccessToken: async () => null,
 	verify: async () => ({}),
 	decode: async () => ({}),
 }
