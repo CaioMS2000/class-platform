@@ -31,8 +31,12 @@ import type { WatchHistoryRepository } from './modules/learning/application/repo
 import type {
 	GetAdminUseCase,
 	LoginUseCase,
+	LogoutUseCase,
+	RefreshTokenUseCase,
 	RegisterUseCase,
+	SocialLoginUseCase,
 } from './modules/auth-and-users/domain/application/use-cases'
+import type { OAuthProviderService } from './modules/auth-and-users/infrastructure/auth/oauth-provider-service'
 import type { IdGenerator } from '@repo/core'
 
 interface CradleInterface {
@@ -62,6 +66,9 @@ interface CradleInterface {
 	loginUseCase: LoginUseCase
 	getAdminUseCase: GetAdminUseCase
 	registerUseCase: RegisterUseCase
+	socialLoginUseCase: SocialLoginUseCase
+	refreshTokenUseCase: RefreshTokenUseCase
+	logoutUseCase: LogoutUseCase
 
 	// infrastructure
 	jwtService: JwtService
@@ -72,6 +79,7 @@ interface CradleInterface {
 	hashGenerator: HashGenerator
 	tokenGenerator: JwtTokenGenerator
 	idGenerator: IdGenerator
+	oauthProviderService: OAuthProviderService
 	// x: X
 }
 
