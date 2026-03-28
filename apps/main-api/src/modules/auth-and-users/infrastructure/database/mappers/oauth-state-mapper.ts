@@ -9,6 +9,7 @@ export class OAuthStateMapper {
 		return {
 			codeVerifier: row.codeVerifier,
 			provider: row.provider,
+			role: row.role as OAuthStateData['role'],
 		}
 	}
 
@@ -21,6 +22,7 @@ export class OAuthStateMapper {
 			state,
 			codeVerifier: data.codeVerifier,
 			provider: data.provider,
+			role: data.role,
 			expiresAt: new Date(Date.now() + expiresInSeconds * 1000),
 		}
 	}
