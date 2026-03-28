@@ -11,6 +11,7 @@ import { Admin } from '../../../models/admin'
 import { Instructor } from '../../../models/instructor'
 import { Student } from '../../../models/student'
 import { REFRESH_TOKEN_EXPIRY_SECONDS } from '../../constants'
+import type { HTTPUser } from '../../../models/http-user'
 
 export type SocialLoginUseCaseRequest = {
 	provider: string
@@ -25,7 +26,7 @@ export type SocialLoginUseCaseResponse = Result<
 	{
 		accessToken: string
 		refreshToken: string
-		user: { id: string; name: string; email: string; role: string }
+		user: HTTPUser
 		isNewUser: boolean
 	}
 >

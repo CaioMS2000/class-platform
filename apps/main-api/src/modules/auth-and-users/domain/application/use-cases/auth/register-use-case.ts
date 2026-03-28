@@ -1,20 +1,16 @@
 import {
 	failure,
-	IdGenerator,
+	type IdGenerator,
 	type Result,
 	success,
-	UniqueId,
+	type UniqueId,
 	UseCase,
 } from '@repo/core'
 import { EmailAlreadyRegisteredError } from '../../@errors'
-import type { RefreshTokenRepository } from '../../repositories/refresh-token-repository'
 import type { AdminRepository } from '../../repositories/admin-repository'
 import type { InstructorRepository } from '../../repositories/instructor-repository'
 import type { StudentRepository } from '../../repositories/student-repository'
 import type { HashGenerator } from '../../cryptography/hash-generator'
-import type { JwtService } from '../../jwt'
-import type { JwtTokenGenerator } from '../../jwt'
-import { REFRESH_TOKEN_EXPIRY_SECONDS } from '../../constants'
 import { Admin } from '../../../models/admin'
 import { Instructor } from '../../../models/instructor'
 import { Student } from '../../../models/student'
@@ -31,8 +27,6 @@ export type RegisterUseCaseRequest = {
 export type RegisterUseCaseResponse = Result<
 	EmailAlreadyRegisteredError,
 	{
-		accessToken: string
-		refreshToken: string
 		user: HTTPUser
 	}
 >
@@ -43,9 +37,6 @@ type UseCaseProps = {
 	studentRepository: StudentRepository
 	hashGenerator: HashGenerator
 	idGenerator: IdGenerator
-	jwtService: JwtService
-	tokenGenerator: JwtTokenGenerator
-	refreshTokenRepository: RefreshTokenRepository
 }
 
 type PrivateMethodsParams = Omit<
@@ -103,26 +94,7 @@ export class RegisterUseCase extends UseCase<
 			}
 		}
 
-		const accessToken = await this.props.jwtService.sign({
-			sub: id,
-			name: input.name,
-			email: input.email,
-			role: input.role,
-		})
-		const refreshToken = await this.props.tokenGenerator.generateRefreshToken()
-		const refreshTokenHash =
-			await this.props.tokenGenerator.hashRefreshToken(refreshToken)
-
-		await this.props.refreshTokenRepository.save(
-			id,
-			refreshTokenHash,
-			REFRESH_TOKEN_EXPIRY_SECONDS,
-			input.role
-		)
-
 		return success({
-			accessToken,
-			refreshToken,
 			user: { id, name: input.name, email: input.email, role: input.role },
 		})
 	}
