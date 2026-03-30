@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --watch ./src/modules/auth-and-users/infrastructure/http/http-server.ts",
+    "dev": "bun --watch ./src/main.ts",
     "test": "bun test",
     "test:e2e": "bash -c 'bun test --preload src/test/setup-e2e.ts --max-concurrency 1 $(find ./src -name \"*.e2e-spec.ts\")'",
     "test:watch": "bun test --watch",

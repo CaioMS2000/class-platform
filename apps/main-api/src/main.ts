@@ -194,3 +194,6 @@ container.register({
 		)
 		.singleton(),
 })
+
+// Start HTTP server
+import './http/server'
