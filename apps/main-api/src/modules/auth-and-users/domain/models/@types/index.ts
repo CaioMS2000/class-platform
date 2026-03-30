@@ -1,5 +1,4 @@
-export const Role = ['STUDENT', 'INSTRUCTOR', 'ADMIN'] as const
-export type Role = (typeof Role)[number]
+export type { Role } from '@repo/shared/types/role'
 
 export const InstructorStatus = ['active', 'blocked', 'pending'] as const
 export type InstructorStatus = (typeof InstructorStatus)[number]

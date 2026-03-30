@@ -1,1 +1,1 @@
-export type HTTPUser = { id: string; name: string; email: string; role: string }
+export type { HTTPUser } from '@repo/shared/types/http-user'
