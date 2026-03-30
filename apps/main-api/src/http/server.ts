@@ -1,4 +1,3 @@
-import '@/main'
 import { swagger } from '@elysiajs/swagger'
 import { Elysia } from 'elysia'
 import { env } from '@/config/env'

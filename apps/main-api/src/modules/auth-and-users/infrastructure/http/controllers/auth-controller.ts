@@ -12,7 +12,7 @@ import type {
 import type { OAuthStateRepository } from '@/modules/auth-and-users/domain/application/repositories/oauth-state-repository'
 import type { OAuthProviderService } from '@/modules/auth-and-users/infrastructure/auth/oauth-provider-service'
 import { OAuthProvider } from '@/modules/auth-and-users/infrastructure/auth/oauth-provider-service'
-import { BASE_URL } from '../constants'
+import { BASE_URL } from '@/http/constants'
 import { Type } from '@sinclair/typebox'
 import { REFRESH_TOKEN_EXPIRY_SECONDS } from '@/modules/auth-and-users/domain/application/constants'
 

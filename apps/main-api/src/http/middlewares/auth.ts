@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia'
 import { Value } from '@sinclair/typebox/value'
-import type { HTTPUser } from '@/modules/auth-and-users/domain/models/http-user'
+import type { HTTPUser } from '@repo/shared/types/http-user'
 import { httpUserSchema } from '../validators/user'
 import { setup } from '../setup'
 

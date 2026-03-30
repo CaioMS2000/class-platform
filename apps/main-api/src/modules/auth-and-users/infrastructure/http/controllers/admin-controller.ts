@@ -6,9 +6,9 @@ import {
 } from '@repo/shared/http/schemas/typebox/responses'
 import { Elysia, status } from 'elysia'
 import type { GetAdminUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
-import { BASE_URL } from '../constants'
-import { authPlugin } from '../middlewares/auth'
-import { roleGuardPlugin } from '../middlewares/role-guard'
+import { BASE_URL } from '@/http/constants'
+import { authPlugin } from '@/http/middlewares/auth'
+import { roleGuardPlugin } from '@/http/middlewares/role-guard'
 
 type AdminHttpControllerProps = {
 	getAdminUseCase: GetAdminUseCase
