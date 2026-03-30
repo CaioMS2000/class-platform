@@ -1,5 +1,5 @@
-// export const Role = ['student', 'instructor', 'admin'] as const
-// export type Role = typeof Role[number]
+export const Role = ['STUDENT', 'INSTRUCTOR', 'ADMIN'] as const
+export type Role = (typeof Role)[number]
 
 export const InstructorStatus = ['active', 'blocked', 'pending'] as const
 export type InstructorStatus = (typeof InstructorStatus)[number]

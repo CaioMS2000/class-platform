@@ -1,7 +1,9 @@
+import type { Role } from '../../models/@types'
+
 export type OAuthStateData = {
 	codeVerifier: string
 	provider: string
-	role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
+	role: Role
 }
 
 export abstract class OAuthStateRepository {
