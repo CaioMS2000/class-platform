@@ -17,16 +17,16 @@ const app = new Elysia()
 
 type App = typeof app
 
-function initHttpServer(){
+function initHttpServer() {
 	// Routes
-	app.use(container.cradle.adminHttpController.getRouter())
-	app.use(container.cradle.authHttpController.getRouter())
-	app.use(container.cradle.categoryHttpController.getRouter())
+	app.use(container.cradle.adminRouter.getRouter())
+	app.use(container.cradle.authRouter.getRouter())
+	app.use(container.cradle.categoryRouter.getRouter())
 	app.decorate('jwtService', container.cradle.jwtService)
 
 	// Listen
 	app.listen(env.PORT)
-	
+
 	console.log(`Server running on: ${app.server?.url}`)
 }
 

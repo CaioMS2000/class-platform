@@ -11,8 +11,8 @@ import type { OAuthAccountRepository } from './modules/auth-and-users/domain/app
 import type { OAuthStateRepository } from './modules/auth-and-users/domain/application/repositories/oauth-state-repository'
 import type { RefreshTokenRepository } from './modules/auth-and-users/domain/application/repositories/refresh-token-repository'
 import type { StudentRepository as AuthStudentRepository } from './modules/auth-and-users/domain/application/repositories/student-repository'
-import type { AdminHttpController } from './modules/auth-and-users/infrastructure/http/controllers/admin-controller'
-import type { AuthHttpController } from './modules/auth-and-users/infrastructure/http/controllers/auth-controller'
+import type { AdminRouter } from './modules/auth-and-users/infrastructure/http/routes/admin/router'
+import type { AuthRouter } from './modules/auth-and-users/infrastructure/http/routes/auth/router'
 import type { CategoryRepository } from './modules/catalog/application/repositories/category-repository'
 import type { CourseRepository as CatalogCourseRepository } from './modules/catalog/application/repositories/course-repository'
 import type { LessonRepository } from './modules/catalog/application/repositories/lesson-repository'
@@ -36,7 +36,7 @@ import type {
 	CreateCategoryUseCase,
 	GetAllCategoriesUseCase,
 } from './modules/catalog/application/use-cases'
-import type { CategoryHttpController } from './modules/catalog/infrastructure/http/controllers/categories-controller'
+import type { CategoryRouter } from './modules/catalog/infrastructure/http/routes/category/router'
 import type { IdGenerator } from '@repo/core'
 
 interface CradleInterface {
@@ -77,9 +77,9 @@ interface CradleInterface {
 	// infrastructure
 	jwtService: JwtService
 	jwtTokenGenerator: JwtTokenGenerator
-	adminHttpController: AdminHttpController
-	authHttpController: AuthHttpController
-	categoryHttpController: CategoryHttpController
+	adminRouter: AdminRouter
+	authRouter: AuthRouter
+	categoryRouter: CategoryRouter
 	hashVerifier: HashVerifier
 	hashGenerator: HashGenerator
 	tokenGenerator: JwtTokenGenerator
