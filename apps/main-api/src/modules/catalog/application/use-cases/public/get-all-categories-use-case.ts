@@ -25,7 +25,7 @@ export class GetAllCategoriesUseCase extends UseCase<
 	}
 
 	async execute(
-		_input: GetAllCategoriesUseCaseRequest
+		_input: GetAllCategoriesUseCaseRequest = {}
 	): Promise<GetAllCategoriesUseCaseResponse> {
 		const categories = await this.props.categoryRepository.findMany()
 
