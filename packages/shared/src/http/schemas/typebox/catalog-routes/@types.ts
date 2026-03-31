@@ -7,3 +7,13 @@ export const categorySchema = Type.Object({
 	description: Type.Optional(Type.String()),
 	icon: Type.Optional(Type.String()),
 })
+
+export const courseSchema = Type.Object({
+	id: Type.String(),
+	slug: Type.String(),
+	title: Type.String(),
+	subtitle: Type.Optional(Type.String()),
+	description: Type.String(),
+	thumbnail: Type.String(),
+	coverImage: Type.Optional(Type.String()),
+})
