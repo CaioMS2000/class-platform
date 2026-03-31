@@ -22,6 +22,7 @@ function initHttpServer() {
 	app.use(container.cradle.adminRouter.getRouter())
 	app.use(container.cradle.authRouter.getRouter())
 	app.use(container.cradle.categoryRouter.getRouter())
+	app.use(container.cradle.courseRouter.getRouter())
 	app.decorate('jwtService', container.cradle.jwtService)
 
 	// Listen

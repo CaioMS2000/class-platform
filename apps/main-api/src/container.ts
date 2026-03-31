@@ -33,10 +33,12 @@ import type {
 } from './modules/auth-and-users/domain/application/use-cases'
 import type { OAuthProviderService } from './modules/auth-and-users/infrastructure/auth/oauth-provider-service'
 import type {
+	BrowsePublicCatalogUseCase,
 	CreateCategoryUseCase,
 	GetAllCategoriesUseCase,
 } from './modules/catalog/application/use-cases'
 import type { CategoryRouter } from './modules/catalog/infrastructure/http/routes/category/router'
+import type { CourseRouter } from './modules/catalog/infrastructure/http/routes/course/router'
 import type { IdGenerator } from '@repo/core'
 
 interface CradleInterface {
@@ -65,6 +67,7 @@ interface CradleInterface {
 	// catalog use cases
 	getAllCategoriesUseCase: GetAllCategoriesUseCase
 	createCategoryUseCase: CreateCategoryUseCase
+	browsePublicCatalogUseCase: BrowsePublicCatalogUseCase
 
 	// auth-and-users use cases
 	loginUseCase: LoginUseCase
@@ -80,6 +83,7 @@ interface CradleInterface {
 	adminRouter: AdminRouter
 	authRouter: AuthRouter
 	categoryRouter: CategoryRouter
+	courseRouter: CourseRouter
 	hashVerifier: HashVerifier
 	hashGenerator: HashGenerator
 	tokenGenerator: JwtTokenGenerator
@@ -99,6 +103,7 @@ const _container = Object.assign(
 
 declare global {
 	const container: typeof _container
+	type Container = typeof _container
 }
 
 Object.assign(globalThis, {
