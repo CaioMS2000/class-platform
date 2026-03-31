@@ -1,6 +1,6 @@
-import { UniqueId } from '@repo/core'
-import { Course } from '../../domain/entities/course'
-import { Pagination } from './params'
+import type { UniqueId } from '@repo/core'
+import type { Course } from '../../domain/entities/course'
+import type { Pagination } from './params'
 
 export type CourseFilters = {
 	status?: string

@@ -1,13 +1,16 @@
-import { type Result, UseCase, success } from '@repo/core'
-import { Course } from '../../../domain/entities/course'
-import {
-	CourseRepository,
-	type CourseFilters,
-} from '../../repositories/course-repository'
+import { type Result, success, UniqueId, UseCase } from '@repo/core'
+import type { Course } from '../../../domain/entities/course'
+import type { CourseRepository } from '../../repositories/course-repository'
 import type { Pagination } from '../../repositories/params'
 
+type CourseFilters = {
+	level?: string
+	categoryId?: string
+	instructorId?: string
+}
+
 export type BrowsePublicCatalogUseCaseRequest = {
-	filters?: Omit<CourseFilters, 'status'>
+	filters?: CourseFilters
 	pagination?: Pagination
 }
 
@@ -33,7 +36,16 @@ export class BrowsePublicCatalogUseCase extends UseCase<
 		input: BrowsePublicCatalogUseCaseRequest
 	): Promise<BrowsePublicCatalogUseCaseResponse> {
 		const courses = await this.props.courseRepository.findMany(
-			{ ...input.filters, status: 'published' },
+			{
+				...input.filters,
+				categoryId: input.filters?.categoryId
+					? UniqueId(input.filters?.categoryId)
+					: undefined,
+				instructorId: input.filters?.instructorId
+					? UniqueId(input.filters?.instructorId)
+					: undefined,
+				status: 'published',
+			},
 			input.pagination
 		)
 
