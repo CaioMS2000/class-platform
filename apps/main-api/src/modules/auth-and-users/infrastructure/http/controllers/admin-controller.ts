@@ -2,7 +2,7 @@ import { Class } from '@repo/core'
 import { routeSchemas as meRouteSchemas } from '@repo/shared/http/schemas/typebox/admin-routes/me'
 import {
 	notFoundResponse,
-	unauthorizedResponse,
+	insufficientPermissionsResponse,
 } from '@repo/shared/http/schemas/typebox/responses'
 import { Elysia, status } from 'elysia'
 import type { GetAdminUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
@@ -49,7 +49,7 @@ export class AdminHttpController extends Class<AdminHttpControllerProps> {
 				headers: meRouteSchemas.headers,
 				response: {
 					...meRouteSchemas.response,
-					...unauthorizedResponse,
+					...insufficientPermissionsResponse,
 					...notFoundResponse,
 				},
 			}

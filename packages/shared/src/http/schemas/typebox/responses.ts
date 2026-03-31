@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox'
 
-export const unauthorizedResponse = {
+export const insufficientPermissionsResponse = {
 	403: Type.Object({ error: Type.String() }),
 }
 
