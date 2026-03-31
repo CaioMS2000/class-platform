@@ -1,5 +1,4 @@
 import {
-	type AwilixContainer,
 	asFunction,
 	createContainer,
 	InjectionMode,
@@ -37,6 +36,8 @@ import type {
 	SocialLoginUseCase,
 } from './modules/auth-and-users/domain/application/use-cases'
 import type { OAuthProviderService } from './modules/auth-and-users/infrastructure/auth/oauth-provider-service'
+import type { GetAllCategoriesUseCase } from './modules/catalog/application/use-cases'
+import type { CategoryHttpController } from './modules/catalog/infrastructure/http/controllers/categories-controller'
 import type { IdGenerator } from '@repo/core'
 
 interface CradleInterface {
@@ -62,7 +63,10 @@ interface CradleInterface {
 	progressRepository: ProgressRepository
 	watchHistoryRepository: WatchHistoryRepository
 
-	// use cases
+	// catalog use cases
+	getAllCategoriesUseCase: GetAllCategoriesUseCase
+
+	// auth-and-users use cases
 	loginUseCase: LoginUseCase
 	getAdminUseCase: GetAdminUseCase
 	registerUseCase: RegisterUseCase
@@ -75,6 +79,7 @@ interface CradleInterface {
 	jwtTokenGenerator: JwtTokenGenerator
 	adminHttpController: AdminHttpController
 	authHttpController: AuthHttpController
+	categoryHttpController: CategoryHttpController
 	hashVerifier: HashVerifier
 	hashGenerator: HashGenerator
 	tokenGenerator: JwtTokenGenerator
@@ -83,14 +88,6 @@ interface CradleInterface {
 	// x: X
 }
 
-// const _Container = {
-// 	asFunction: function typedAsFunction<T>(fn: (cradle: CradleInterface) => T) {
-// 		return asFunction(fn)
-// 	},
-// }
-// const _container = createContainer({
-// 	injectionMode: InjectionMode.PROXY,
-// })
 const _container = Object.assign(
 	createContainer<CradleInterface>({ injectionMode: InjectionMode.PROXY }),
 	{
@@ -102,11 +99,8 @@ const _container = Object.assign(
 
 declare global {
 	const container: typeof _container
-	// const container: AwilixContainer<CradleInterface>
-	// const Container: typeof _Container
 }
 
 Object.assign(globalThis, {
 	container: _container,
-	// Container: _Container,
 })

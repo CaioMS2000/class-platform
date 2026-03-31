@@ -12,17 +12,22 @@ const app = new Elysia()
 			path: '/doc',
 		})
 	)
-	.decorate('jwtService', container.cradle.jwtService)
 	.get('/health', () => 'OK')
 	.get('/healthy', () => 'Yes')
 
-// Routes
-app.use(container.cradle.adminHttpController.getRouter())
-app.use(container.cradle.authHttpController.getRouter())
+type App = typeof app
 
-// Listen
-app.listen(env.PORT)
+function initHttpServer(){
+	// Routes
+	app.use(container.cradle.adminHttpController.getRouter())
+	app.use(container.cradle.authHttpController.getRouter())
+	app.use(container.cradle.categoryHttpController.getRouter())
+	app.decorate('jwtService', container.cradle.jwtService)
 
-console.log(`Server running on: ${app.server?.url}`)
+	// Listen
+	app.listen(env.PORT)
+	
+	console.log(`Server running on: ${app.server?.url}`)
+}
 
-export type App = typeof app
+export { type App, initHttpServer, app }

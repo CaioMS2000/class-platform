@@ -1,6 +1,6 @@
 import '../global'
 import './container'
-import { asFunction } from 'awilix'
+import {initHttpServer} from './http/server'
 import { UUIDV7Generator } from '@repo/core'
 import {
 	GetAdminUseCase,
@@ -21,6 +21,9 @@ import { DrizzleRefreshTokenRepository } from './modules/auth-and-users/infrastr
 import { DrizzleStudentRepository as AuthModuleDrizzleStudentRepository } from './modules/auth-and-users/infrastructure/database/repositories/drizzle-student-repository'
 import { AdminHttpController } from './modules/auth-and-users/infrastructure/http/controllers/admin-controller'
 import { AuthHttpController } from './modules/auth-and-users/infrastructure/http/controllers/auth-controller'
+import { GetAllCategoriesUseCase } from './modules/catalog/application/use-cases'
+import { DrizzleCategoryRepository } from './modules/catalog/infrastructure/database/repositories/drizzle-category-repository'
+import { CategoryHttpController } from './modules/catalog/infrastructure/http/controllers/categories-controller'
 import { env } from './config/env'
 
 // Application
@@ -44,6 +47,11 @@ container.register({
 		.singleton(),
 	oauthAccountRepository: container
 		.asFunction(() => new DrizzleOAuthAccountRepository())
+		.singleton(),
+
+	// catalog repositories
+	categoryRepository: container
+		.asFunction(() => new DrizzleCategoryRepository())
 		.singleton(),
 })
 // Use cases
@@ -143,6 +151,14 @@ container.register({
 				new LogoutUseCase({ refreshTokenRepository, tokenGenerator })
 		)
 		.singleton(),
+
+	// catalog use cases
+	getAllCategoriesUseCase: container
+		.asFunction(
+			({ categoryRepository }) =>
+				new GetAllCategoriesUseCase({ categoryRepository })
+		)
+		.singleton(),
 })
 // Others
 container.register({
@@ -193,7 +209,14 @@ container.register({
 				})
 		)
 		.singleton(),
+	categoryHttpController: container
+		.asFunction(
+			({ getAllCategoriesUseCase }) =>
+				new CategoryHttpController({ getAllCategoriesUseCase })
+		)
+		.singleton(),
 })
 
 // Start HTTP server
-import './http/server'
+// await import('./http/server')
+initHttpServer()
