@@ -13,8 +13,8 @@ import { DrizzleOAuthAccountRepository } from './infrastructure/database/reposit
 import { RedisOAuthStateRepository } from './infrastructure/database/repositories/redis-oauth-state-repository'
 import { DrizzleRefreshTokenRepository } from './infrastructure/database/repositories/drizzle-refresh-token-repository'
 import { DrizzleStudentRepository } from './infrastructure/database/repositories/drizzle-student-repository'
-import { AdminHttpController } from './infrastructure/http/controllers/admin-controller'
-import { AuthHttpController } from './infrastructure/http/controllers/auth-controller'
+import { AdminRouter } from './infrastructure/http/routes/admin/router'
+import { AuthRouter } from './infrastructure/http/routes/auth/router'
 import { env } from '@/config/env'
 
 export function registerAuthModule(c: typeof container) {
@@ -151,12 +151,10 @@ export function registerAuthModule(c: typeof container) {
 					})
 			)
 			.singleton(),
-		adminHttpController: c
-			.asFunction(
-				({ getAdminUseCase }) => new AdminHttpController({ getAdminUseCase })
-			)
+		adminRouter: c
+			.asFunction(({ getAdminUseCase }) => new AdminRouter({ getAdminUseCase }))
 			.singleton(),
-		authHttpController: c
+		authRouter: c
 			.asFunction(
 				({
 					loginUseCase,
@@ -167,7 +165,7 @@ export function registerAuthModule(c: typeof container) {
 					oauthProviderService,
 					oauthStateRepository,
 				}) =>
-					new AuthHttpController({
+					new AuthRouter({
 						loginUseCase,
 						registerUseCase,
 						socialLoginUseCase,
