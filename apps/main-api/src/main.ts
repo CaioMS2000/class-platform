@@ -1,6 +1,6 @@
 import '../global'
 import './container'
-import {initHttpServer} from './http/server'
+import { initHttpServer } from './http/server'
 import { UUIDV7Generator } from '@repo/core'
 import {
 	GetAdminUseCase,
@@ -16,12 +16,15 @@ import { TokenService } from './modules/auth-and-users/infrastructure/auth/token
 import { DrizzleAdminRepository } from './modules/auth-and-users/infrastructure/database/repositories/drizzle-admin-repository'
 import { DrizzleInstructorRepository } from './modules/auth-and-users/infrastructure/database/repositories/drizzle-instructor-repository'
 import { DrizzleOAuthAccountRepository } from './modules/auth-and-users/infrastructure/database/repositories/drizzle-oauth-account-repository'
-import { DrizzleOAuthStateRepository } from './modules/auth-and-users/infrastructure/database/repositories/drizzle-oauth-state-repository'
+import { RedisOAuthStateRepository } from './modules/auth-and-users/infrastructure/database/repositories/redis-oauth-state-repository'
 import { DrizzleRefreshTokenRepository } from './modules/auth-and-users/infrastructure/database/repositories/drizzle-refresh-token-repository'
 import { DrizzleStudentRepository as AuthModuleDrizzleStudentRepository } from './modules/auth-and-users/infrastructure/database/repositories/drizzle-student-repository'
 import { AdminHttpController } from './modules/auth-and-users/infrastructure/http/controllers/admin-controller'
 import { AuthHttpController } from './modules/auth-and-users/infrastructure/http/controllers/auth-controller'
-import { GetAllCategoriesUseCase } from './modules/catalog/application/use-cases'
+import {
+	CreateCategoryUseCase,
+	GetAllCategoriesUseCase,
+} from './modules/catalog/application/use-cases'
 import { DrizzleCategoryRepository } from './modules/catalog/infrastructure/database/repositories/drizzle-category-repository'
 import { CategoryHttpController } from './modules/catalog/infrastructure/http/controllers/categories-controller'
 import { env } from './config/env'
@@ -43,7 +46,7 @@ container.register({
 		.asFunction(() => new DrizzleRefreshTokenRepository())
 		.singleton(),
 	oauthStateRepository: container
-		.asFunction(() => new DrizzleOAuthStateRepository())
+		.asFunction(() => new RedisOAuthStateRepository())
 		.singleton(),
 	oauthAccountRepository: container
 		.asFunction(() => new DrizzleOAuthAccountRepository())
@@ -159,6 +162,12 @@ container.register({
 				new GetAllCategoriesUseCase({ categoryRepository })
 		)
 		.singleton(),
+	createCategoryUseCase: container
+		.asFunction(
+			({ categoryRepository, idGenerator }) =>
+				new CreateCategoryUseCase({ categoryRepository, idGenerator })
+		)
+		.singleton(),
 })
 // Others
 container.register({
@@ -211,8 +220,11 @@ container.register({
 		.singleton(),
 	categoryHttpController: container
 		.asFunction(
-			({ getAllCategoriesUseCase }) =>
-				new CategoryHttpController({ getAllCategoriesUseCase })
+			({ getAllCategoriesUseCase, createCategoryUseCase }) =>
+				new CategoryHttpController({
+					getAllCategoriesUseCase,
+					createCategoryUseCase,
+				})
 		)
 		.singleton(),
 })

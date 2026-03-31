@@ -1,8 +1,4 @@
-import {
-	asFunction,
-	createContainer,
-	InjectionMode,
-} from 'awilix'
+import { asFunction, createContainer, InjectionMode } from 'awilix'
 import type { HashGenerator } from './modules/auth-and-users/domain/application/cryptography/hash-generator'
 import type { HashVerifier } from './modules/auth-and-users/domain/application/cryptography/hash-verifier'
 import type {
@@ -36,7 +32,10 @@ import type {
 	SocialLoginUseCase,
 } from './modules/auth-and-users/domain/application/use-cases'
 import type { OAuthProviderService } from './modules/auth-and-users/infrastructure/auth/oauth-provider-service'
-import type { GetAllCategoriesUseCase } from './modules/catalog/application/use-cases'
+import type {
+	CreateCategoryUseCase,
+	GetAllCategoriesUseCase,
+} from './modules/catalog/application/use-cases'
 import type { CategoryHttpController } from './modules/catalog/infrastructure/http/controllers/categories-controller'
 import type { IdGenerator } from '@repo/core'
 
@@ -65,6 +64,7 @@ interface CradleInterface {
 
 	// catalog use cases
 	getAllCategoriesUseCase: GetAllCategoriesUseCase
+	createCategoryUseCase: CreateCategoryUseCase
 
 	// auth-and-users use cases
 	loginUseCase: LoginUseCase
