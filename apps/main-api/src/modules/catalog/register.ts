@@ -3,7 +3,7 @@ import {
 	GetAllCategoriesUseCase,
 } from './application/use-cases'
 import { DrizzleCategoryRepository } from './infrastructure/database/repositories/drizzle-category-repository'
-import { CategoryHttpController } from './infrastructure/http/controllers/categories-controller'
+import { CategoryRouter } from './infrastructure/http/routes/category/router'
 
 export function registerCatalogModule(c: typeof container) {
 	// Repositories
@@ -31,10 +31,10 @@ export function registerCatalogModule(c: typeof container) {
 
 	// Infrastructure
 	c.register({
-		categoryHttpController: c
+		categoryRouter: c
 			.asFunction(
 				({ getAllCategoriesUseCase, createCategoryUseCase }) =>
-					new CategoryHttpController({
+					new CategoryRouter({
 						getAllCategoriesUseCase,
 						createCategoryUseCase,
 					})
