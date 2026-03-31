@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun --watch ./src/main.ts",
     "test": "bun test",
-    "test:e2e": "bash -c 'bun test --preload src/test/setup-e2e.ts --max-concurrency 1 $(find ./src -name \"*.e2e-spec.ts\")'",
+    "test:integration": "bash -c 'bun test --preload src/test/setup-integration.ts --max-concurrency 1 $(find ./src -name \"*.integration-spec.ts\")'",
     "test:watch": "bun test --watch",
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false"

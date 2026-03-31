@@ -34,7 +34,7 @@ export async function setupSchema() {
 	const { drizzle } = await import('@/lib/drizzle')
 	await drizzle.$client.query(`SET search_path TO "${schemaId}"`)
 
-	console.log(`[e2e] Schema "${schemaId}" created`)
+	console.log(`[integration] Schema "${schemaId}" created`)
 }
 
 export async function teardownSchema() {
@@ -48,5 +48,5 @@ export async function teardownSchema() {
 		await client.end()
 	}
 
-	console.log(`[e2e] Schema "${schemaId}" dropped`)
+	console.log(`[integration] Schema "${schemaId}" dropped`)
 }
