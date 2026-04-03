@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_private/private/')({
+export const Route = createFileRoute('/_public/_home/')({
 	component: RouteComponent,
 })
 
 function RouteComponent() {
-	return <div>Hello "/_private/"!</div>
+	return <div>Hello "home"!</div>
 }
