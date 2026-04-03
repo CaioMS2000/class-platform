@@ -17,3 +17,8 @@ export const courseSchema = Type.Object({
 	thumbnail: Type.String(),
 	coverImage: Type.Optional(Type.String()),
 })
+
+export enum Currency {
+	USD = 'USD',
+	BRL = 'BRL',
+}
