@@ -13,7 +13,9 @@ const attachmentSchema = Type.Object({
 	url: Type.String(),
 })
 const contentSchema = Type.Object({
-	attachments: Type.Optional(Type.Array(attachmentSchema)),
+	attachments: Type.Optional(
+		Type.Array(attachmentSchema, { description: 'Lista de anexos' })
+	),
 	videoUrl: Type.Optional(Type.String()),
 	article: Type.Optional(Type.String()),
 })

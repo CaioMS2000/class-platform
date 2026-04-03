@@ -27,7 +27,9 @@ const body = Type.Object({
 	),
 	level: courseLevel,
 	thumbnail: Type.String(),
-	categoryIds: Type.Optional(Type.Array(Type.String())),
+	categoryIds: Type.Optional(
+		Type.Array(Type.String(), { description: 'Lista de categorias' })
+	),
 }) satisfies RouteSchemas['body']
 const response = {
 	201: courseSchema,

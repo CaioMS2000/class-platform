@@ -7,6 +7,7 @@ const app = new Elysia()
 		swagger({
 			documentation: {
 				info: { title: 'Main API', version: '1.0.0' },
+				openapi: '3.0.3',
 			},
 			path: '/doc',
 		})

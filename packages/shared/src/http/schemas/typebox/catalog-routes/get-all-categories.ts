@@ -7,13 +7,13 @@ const query = undefined satisfies RouteSchemas['query']
 const params = undefined satisfies RouteSchemas['params']
 const body = undefined satisfies RouteSchemas['body']
 const response = {
-    200: Type.Array(categorySchema)
+	200: Type.Array(categorySchema, { description: 'Lista de categorias' }),
 } satisfies RouteSchemas['response']
 
 export const routeSchemas = {
-    // headers,
-    // query,
-    // params,
-    // body,
-    response
+	// headers,
+	// query,
+	// params,
+	// body,
+	response,
 } as const satisfies RouteSchemas

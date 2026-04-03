@@ -13,7 +13,7 @@ const query = Type.Object({
 const params = undefined satisfies RouteSchemas['params']
 const body = undefined satisfies RouteSchemas['body']
 const response = {
-	200: Type.Array(courseSchema),
+	200: Type.Array(courseSchema, { description: 'Lista de cursos' }),
 } satisfies RouteSchemas['response']
 
 export const routeSchemas = {
