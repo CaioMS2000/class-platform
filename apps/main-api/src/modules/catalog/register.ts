@@ -3,9 +3,13 @@ import {
 	CreateCategoryUseCase,
 	GetAllCategoriesUseCase,
 	InstructorCreateCourseUseCase,
+	InstructorCreateModuleUseCase,
+	InstructorCreateLessonUseCase,
 } from './application/use-cases'
 import { DrizzleCategoryRepository } from './infrastructure/database/repositories/drizzle-category-repository'
 import { DrizzleCourseRepository } from './infrastructure/database/repositories/drizzle-course-repository'
+import { DrizzleModuleRepository } from './infrastructure/database/repositories/drizzle-module-repository'
+import { DrizzleLessonRepository } from './infrastructure/database/repositories/drizzle-lesson-repository'
 import { CategoryRouter } from './infrastructure/http/routes/category/router'
 import { CourseRouter } from './infrastructure/http/routes/course/router'
 import { InstructorRouter } from './infrastructure/http/routes/instructor/router'
@@ -18,6 +22,12 @@ export function registerCatalogModule(c: typeof container) {
 			.singleton(),
 		catalogCourseRepository: c
 			.asFunction(() => new DrizzleCourseRepository())
+			.singleton(),
+		moduleRepository: c
+			.asFunction(() => new DrizzleModuleRepository())
+			.singleton(),
+		lessonRepository: c
+			.asFunction(() => new DrizzleLessonRepository())
 			.singleton(),
 	})
 
@@ -53,6 +63,32 @@ export function registerCatalogModule(c: typeof container) {
 					})
 			)
 			.singleton(),
+		createModuleUseCase: c
+			.asFunction(
+				({ catalogCourseRepository, moduleRepository, idGenerator }) =>
+					new InstructorCreateModuleUseCase({
+						courseRepository: catalogCourseRepository,
+						moduleRepository,
+						idGenerator,
+					})
+			)
+			.singleton(),
+		createLessonUseCase: c
+			.asFunction(
+				({
+					catalogCourseRepository,
+					moduleRepository,
+					lessonRepository,
+					idGenerator,
+				}) =>
+					new InstructorCreateLessonUseCase({
+						courseRepository: catalogCourseRepository,
+						moduleRepository,
+						lessonRepository,
+						idGenerator,
+					})
+			)
+			.singleton(),
 	})
 
 	// Infrastructure
@@ -76,8 +112,12 @@ export function registerCatalogModule(c: typeof container) {
 			.singleton(),
 		instructorRouter: c
 			.asFunction(
-				({ createCourseUseCase }) =>
-					new InstructorRouter({ createCourseUseCase })
+				({ createCourseUseCase, createModuleUseCase, createLessonUseCase }) =>
+					new InstructorRouter({
+						createCourseUseCase,
+						createModuleUseCase,
+						createLessonUseCase,
+					})
 			)
 			.singleton(),
 	})

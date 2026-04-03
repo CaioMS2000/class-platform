@@ -37,6 +37,8 @@ import type {
 	CreateCategoryUseCase,
 	GetAllCategoriesUseCase,
 	InstructorCreateCourseUseCase,
+	InstructorCreateModuleUseCase,
+	InstructorCreateLessonUseCase,
 } from './modules/catalog/application/use-cases'
 import type { CategoryRouter } from './modules/catalog/infrastructure/http/routes/category/router'
 import type { CourseRouter } from './modules/catalog/infrastructure/http/routes/course/router'
@@ -71,6 +73,8 @@ interface CradleInterface {
 	createCategoryUseCase: CreateCategoryUseCase
 	browsePublicCatalogUseCase: BrowsePublicCatalogUseCase
 	createCourseUseCase: InstructorCreateCourseUseCase
+	createModuleUseCase: InstructorCreateModuleUseCase
+	createLessonUseCase: InstructorCreateLessonUseCase
 
 	// auth-and-users use cases
 	loginUseCase: LoginUseCase
