@@ -1,12 +1,12 @@
 import { Type } from '@sinclair/typebox'
 import type { RouteSchemas } from '../types'
-import { categorySchema, courseSchema, Currency } from './@types'
+import { courseSchema, currency } from './@types'
 
-enum CourseLevel {
-	BEGINNER = 'beginner',
-	INTERMEDIATE = 'intermediate',
-	ADVANCED = 'advanced',
-}
+const courseLevel = Type.Union([
+	Type.Literal('beginner', { title: 'beginner' }),
+	Type.Literal('intermediate', { title: 'intermediate' }),
+	Type.Literal('advanced', { title: 'advanced' }),
+])
 const headers = undefined satisfies RouteSchemas['headers']
 const query = undefined satisfies RouteSchemas['query']
 const params = undefined satisfies RouteSchemas['params']
@@ -17,15 +17,15 @@ const body = Type.Object({
 	description: Type.String(),
 	price: Type.Object({
 		amount: Type.Number(),
-		currency: Type.Enum(Currency),
+		currency: currency,
 	}),
 	promotionalPrice: Type.Optional(
 		Type.Object({
 			amount: Type.Number(),
-			currency: Type.Enum(Currency),
+			currency: currency,
 		})
 	),
-	level: Type.Enum(CourseLevel),
+	level: courseLevel,
 	thumbnail: Type.String(),
 	categoryIds: Type.Optional(Type.Array(Type.String())),
 }) satisfies RouteSchemas['body']
