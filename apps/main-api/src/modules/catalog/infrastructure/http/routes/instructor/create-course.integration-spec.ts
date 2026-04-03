@@ -31,7 +31,12 @@ describe('CreateCourseRoute', () => {
 		const course = await makeCourse({ title: 'TypeScript Avancado' })
 		when(useCase.execute(anything())).thenResolve(success({ course }))
 
-		const res = await jsonReq(route.getRoute(), 'POST', '/', validBody)
+		const res = await jsonReq(
+			route.getRoute(),
+			'POST',
+			'/new-course',
+			validBody
+		)
 
 		expect(res.status).toBe(201)
 	})
@@ -41,7 +46,7 @@ describe('CreateCourseRoute', () => {
 			failure(new CategoryNotFoundError())
 		)
 
-		const res = await jsonReq(route.getRoute(), 'POST', '/', {
+		const res = await jsonReq(route.getRoute(), 'POST', '/new-course', {
 			...validBody,
 			categoryIds: ['nonexistent-category'],
 		})
@@ -56,7 +61,12 @@ describe('CreateCourseRoute', () => {
 			failure(new InvalidValueError('Invalid price'))
 		)
 
-		const res = await jsonReq(route.getRoute(), 'POST', '/', validBody)
+		const res = await jsonReq(
+			route.getRoute(),
+			'POST',
+			'/new-course',
+			validBody
+		)
 
 		expect(res.status).toBe(422)
 		const body = await res.json()
@@ -70,7 +80,7 @@ describe('CreateCourseRoute', () => {
 		})
 		when(useCase.execute(anything())).thenResolve(success({ course }))
 
-		const res = await jsonReq(route.getRoute(), 'POST', '/', {
+		const res = await jsonReq(route.getRoute(), 'POST', '/new-course', {
 			...validBody,
 			subtitle: 'Subtitulo do curso',
 			promotionalPrice: { amount: 4900, currency: 'BRL' },

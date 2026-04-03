@@ -11,8 +11,12 @@ const app = new Elysia()
 			path: '/doc',
 		})
 	)
-	.get('/health', () => 'OK')
-	.get('/healthy', () => 'Yes')
+	.get('/health', () => 'OK', {
+		detail: { summary: 'Estado do servidor.', tags: ['Application'] },
+	})
+	.get('/healthy', () => 'Yes', {
+		detail: { summary: 'Estado do servidor.', tags: ['Application'] },
+	})
 
 type App = typeof app
 

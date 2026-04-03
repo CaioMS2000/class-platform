@@ -16,7 +16,7 @@ export class CreateCourseRoute extends Class<CreateCourseRouteProps> {
 
 	getRoute() {
 		return new Elysia().post(
-			'',
+			'new-course',
 			async ({ body }) => {
 				const result = await this.props.createCourseUseCase.execute({
 					...body,
@@ -34,7 +34,7 @@ export class CreateCourseRoute extends Class<CreateCourseRouteProps> {
 				return status(201, result.value.course)
 			},
 			{
-				detail: { summary: 'Criar um novo curso.', tags: ['Course'] },
+				detail: { summary: 'Criar um novo curso.', tags: ['Courses'] },
 				response: {
 					...createCourseRouteSchemas.response,
 					...insufficientPermissionsResponse,
