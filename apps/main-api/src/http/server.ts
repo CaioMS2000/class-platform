@@ -11,6 +11,7 @@ export function initHttpRoutes() {
 	app.use(container.cradle.authRouter.getRouter())
 	app.use(container.cradle.categoryRouter.getRouter())
 	app.use(container.cradle.courseRouter.getRouter())
+	app.use(container.cradle.instructorRouter.getRouter())
 	app.decorate('jwtService', container.cradle.jwtService)
 }
 

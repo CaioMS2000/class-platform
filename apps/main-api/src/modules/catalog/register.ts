@@ -2,11 +2,13 @@ import {
 	BrowsePublicCatalogUseCase,
 	CreateCategoryUseCase,
 	GetAllCategoriesUseCase,
+	InstructorCreateCourseUseCase,
 } from './application/use-cases'
 import { DrizzleCategoryRepository } from './infrastructure/database/repositories/drizzle-category-repository'
 import { DrizzleCourseRepository } from './infrastructure/database/repositories/drizzle-course-repository'
 import { CategoryRouter } from './infrastructure/http/routes/category/router'
 import { CourseRouter } from './infrastructure/http/routes/course/router'
+import { InstructorRouter } from './infrastructure/http/routes/instructor/router'
 
 export function registerCatalogModule(c: typeof container) {
 	// Repositories
@@ -41,6 +43,16 @@ export function registerCatalogModule(c: typeof container) {
 					})
 			)
 			.singleton(),
+		createCourseUseCase: c
+			.asFunction(
+				({ catalogCourseRepository, categoryRepository, idGenerator }) =>
+					new InstructorCreateCourseUseCase({
+						courseRepository: catalogCourseRepository,
+						categoryRepository,
+						idGenerator,
+					})
+			)
+			.singleton(),
 	})
 
 	// Infrastructure
@@ -60,6 +72,12 @@ export function registerCatalogModule(c: typeof container) {
 					new CourseRouter({
 						browsePublicCatalogUseCase,
 					})
+			)
+			.singleton(),
+		instructorRouter: c
+			.asFunction(
+				({ createCourseUseCase }) =>
+					new InstructorRouter({ createCourseUseCase })
 			)
 			.singleton(),
 	})

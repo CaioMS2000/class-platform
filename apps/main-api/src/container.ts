@@ -36,9 +36,11 @@ import type {
 	BrowsePublicCatalogUseCase,
 	CreateCategoryUseCase,
 	GetAllCategoriesUseCase,
+	InstructorCreateCourseUseCase,
 } from './modules/catalog/application/use-cases'
 import type { CategoryRouter } from './modules/catalog/infrastructure/http/routes/category/router'
 import type { CourseRouter } from './modules/catalog/infrastructure/http/routes/course/router'
+import type { InstructorRouter } from './modules/catalog/infrastructure/http/routes/instructor/router'
 import type { IdGenerator } from '@repo/core'
 
 interface CradleInterface {
@@ -68,6 +70,7 @@ interface CradleInterface {
 	getAllCategoriesUseCase: GetAllCategoriesUseCase
 	createCategoryUseCase: CreateCategoryUseCase
 	browsePublicCatalogUseCase: BrowsePublicCatalogUseCase
+	createCourseUseCase: InstructorCreateCourseUseCase
 
 	// auth-and-users use cases
 	loginUseCase: LoginUseCase
@@ -84,6 +87,7 @@ interface CradleInterface {
 	authRouter: AuthRouter
 	categoryRouter: CategoryRouter
 	courseRouter: CourseRouter
+	instructorRouter: InstructorRouter
 	hashVerifier: HashVerifier
 	hashGenerator: HashGenerator
 	tokenGenerator: JwtTokenGenerator
