@@ -5,28 +5,34 @@ import {
 	UseCase,
 	success,
 	failure,
-	type Money,
+	Money,
+	InvalidValueError,
 } from '@repo/core'
 import { Course } from '../../../domain/entities/course'
 import type { CourseRepository } from '../../repositories/course-repository'
 import type { CourseLevel } from '../../../domain/@types'
 import type { CategoryRepository } from '../../repositories/category-repository'
 import { CategoryNotFoundError } from '../../@errors'
+import type { Currency } from '@repo/core/domain/@types/currency'
 
+type MoneyReference = {
+	amount: number
+	currency: Currency
+}
 export type InstructorCreateCourseUseCaseRequest = {
 	instructorId: string
 	title: string
 	subtitle?: string
 	description: string
-	price: Money
-	promotionalPrice?: Money
+	price: MoneyReference
+	promotionalPrice?: MoneyReference
 	level: CourseLevel
 	thumbnail: string
 	categoryIds?: string[]
 }
 
 export type InstructorCreateCourseUseCaseResponse = Result<
-	CategoryNotFoundError,
+	CategoryNotFoundError | InvalidValueError,
 	{
 		course: Course
 	}
@@ -55,8 +61,8 @@ export class InstructorCreateCourseUseCase extends UseCase<
 			title,
 			subtitle,
 			description,
-			price,
-			promotionalPrice,
+			price: _price,
+			promotionalPrice: _promotionalPrice,
 			level,
 			thumbnail,
 			categoryIds = [],
@@ -70,6 +76,28 @@ export class InstructorCreateCourseUseCase extends UseCase<
 
 		if (categories.some(c => c === null)) {
 			return failure(new CategoryNotFoundError())
+		}
+
+		let price: Money
+		let promotionalPrice: Money | undefined
+
+		const createPriceResult = Money.create(_price.amount, _price.currency)
+
+		if (createPriceResult.isFailure()) {
+			return failure(createPriceResult.value)
+		}
+
+		price = createPriceResult.value
+
+		if (_promotionalPrice) {
+			const createPromotionalPriceResult = Money.create(
+				_promotionalPrice.amount,
+				_promotionalPrice.currency
+			)
+			if (createPromotionalPriceResult.isFailure()) {
+				return failure(createPromotionalPriceResult.value)
+			}
+			promotionalPrice = createPromotionalPriceResult.value
 		}
 
 		const course = await Course.create({
