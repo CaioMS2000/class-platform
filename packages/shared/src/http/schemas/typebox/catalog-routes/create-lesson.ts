@@ -1,5 +1,9 @@
 import { Type } from '@sinclair/typebox'
-import type { RouteSchemas } from '../types'
+import {
+	type DetailResponses,
+	type RouteSchemas,
+	toOpenApiSchema,
+} from '../types'
 import { lessonSchema } from './@types'
 
 const lessonType = Type.Union([
@@ -19,9 +23,7 @@ const contentSchema = Type.Object({
 	videoUrl: Type.Optional(Type.String()),
 	article: Type.Optional(Type.String()),
 })
-const headers = undefined satisfies RouteSchemas['headers']
-const query = undefined satisfies RouteSchemas['query']
-const params = undefined satisfies RouteSchemas['params']
+
 const body = Type.Object({
 	moduleId: Type.String(),
 	courseId: Type.String(),
@@ -35,15 +37,27 @@ const body = Type.Object({
 	isFree: Type.Boolean(),
 	requiresPrevious: Type.Optional(Type.Boolean()),
 }) satisfies RouteSchemas['body']
+
+const errorSchema = Type.Object({ error: Type.String() })
+
 const response = {
 	201: lessonSchema,
-	404: Type.Object({ error: Type.String() }),
+	404: errorSchema,
 } satisfies RouteSchemas['response']
 
+const detailResponses: DetailResponses = {
+	201: {
+		description: '',
+		content: { 'application/json': { schema: toOpenApiSchema(lessonSchema) } },
+	},
+	404: {
+		description: '',
+		content: { 'application/json': { schema: toOpenApiSchema(errorSchema) } },
+	},
+}
+
 export const routeSchemas = {
-	// headers,
-	// query,
-	// params,
 	body,
 	response,
+	detailResponses,
 } as const satisfies RouteSchemas

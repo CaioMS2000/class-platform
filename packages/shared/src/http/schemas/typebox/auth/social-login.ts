@@ -1,8 +1,10 @@
 import { Type } from '@sinclair/typebox'
-import type { RouteSchemas } from '../types'
+import {
+	type DetailResponses,
+	type RouteSchemas,
+	toOpenApiSchema,
+} from '../types'
 
-// enum Role { ADMIN = 'ADMIN', INSTRUCTOR = 'INSTRUCTOR', STUDENT = 'STUDENT' }
-// const role = Type.Enum(Role)
 const role = Type.Union([
 	Type.Literal('ADMIN', { title: 'ADMIN' }),
 	Type.Literal('INSTRUCTOR', { title: 'INSTRUCTOR' }),
@@ -16,16 +18,27 @@ const body = Type.Object({
 	providerAccountId: Type.String(),
 	role,
 })
-const response = {
-	201: Type.Object({
-		name: Type.String(),
-		email: Type.String(),
-		phone: Type.String(),
-		role,
-	}),
+
+const responseSchema = Type.Object({
+	name: Type.String(),
+	email: Type.String(),
+	phone: Type.String(),
+	role,
+})
+
+const response = { 201: responseSchema }
+
+const detailResponses: DetailResponses = {
+	201: {
+		description: '',
+		content: {
+			'application/json': { schema: toOpenApiSchema(responseSchema) },
+		},
+	},
 }
 
 export const routeSchemas = {
 	body,
 	response,
+	detailResponses,
 } as const satisfies RouteSchemas

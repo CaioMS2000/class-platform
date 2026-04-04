@@ -1,5 +1,9 @@
 import { Type } from '@sinclair/typebox'
-import type { RouteSchemas } from '../types'
+import {
+	type DetailResponses,
+	type RouteSchemas,
+	toOpenApiSchema,
+} from '../types'
 import { courseSchema, currency } from './@types'
 
 const courseLevel = Type.Union([
@@ -7,9 +11,7 @@ const courseLevel = Type.Union([
 	Type.Literal('intermediate', { title: 'intermediate' }),
 	Type.Literal('advanced', { title: 'advanced' }),
 ])
-const headers = undefined satisfies RouteSchemas['headers']
-const query = undefined satisfies RouteSchemas['query']
-const params = undefined satisfies RouteSchemas['params']
+
 const body = Type.Object({
 	instructorId: Type.String(),
 	title: Type.String(),
@@ -31,15 +33,27 @@ const body = Type.Object({
 		Type.Array(Type.String(), { description: 'Lista de categorias' })
 	),
 }) satisfies RouteSchemas['body']
+
+const errorSchema = Type.Object({ error: Type.String() })
+
 const response = {
 	201: courseSchema,
-	404: Type.Object({ error: Type.String() }),
+	404: errorSchema,
 } satisfies RouteSchemas['response']
 
+const detailResponses: DetailResponses = {
+	201: {
+		description: '',
+		content: { 'application/json': { schema: toOpenApiSchema(courseSchema) } },
+	},
+	404: {
+		description: '',
+		content: { 'application/json': { schema: toOpenApiSchema(errorSchema) } },
+	},
+}
+
 export const routeSchemas = {
-	// headers,
-	// query,
-	// params,
 	body,
 	response,
+	detailResponses,
 } as const satisfies RouteSchemas

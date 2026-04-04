@@ -1,19 +1,27 @@
 import { Type } from '@sinclair/typebox'
-import type { RouteSchemas } from '../types'
+import {
+	type DetailResponses,
+	type RouteSchemas,
+	toOpenApiSchema,
+} from '../types'
 import { categorySchema } from './@types'
 
-const headers = undefined satisfies RouteSchemas['headers']
-const query = undefined satisfies RouteSchemas['query']
-const params = undefined satisfies RouteSchemas['params']
-const body = undefined satisfies RouteSchemas['body']
-const response = {
-	200: Type.Array(categorySchema, { description: 'Lista de categorias' }),
-} satisfies RouteSchemas['response']
+const responseSchema = Type.Array(categorySchema, {
+	description: 'Lista de categorias',
+})
+
+const response = { 200: responseSchema } satisfies RouteSchemas['response']
+
+const detailResponses: DetailResponses = {
+	200: {
+		description: '',
+		content: {
+			'application/json': { schema: toOpenApiSchema(responseSchema) },
+		},
+	},
+}
 
 export const routeSchemas = {
-	// headers,
-	// query,
-	// params,
-	// body,
 	response,
+	detailResponses,
 } as const satisfies RouteSchemas

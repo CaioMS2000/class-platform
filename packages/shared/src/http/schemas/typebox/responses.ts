@@ -1,13 +1,27 @@
 import { Type } from '@sinclair/typebox'
+import type { OpenAPIV3 } from 'openapi-types'
+import { toOpenApiSchema } from './types'
+
+const errorSchema = Type.Object({ error: Type.String() })
+
+const jsonError = {
+	description: '',
+	content: {
+		'application/json': { schema: toOpenApiSchema(errorSchema) },
+	},
+} satisfies OpenAPIV3.ResponseObject
 
 export const insufficientPermissionsResponse = {
-	403: Type.Object({ error: Type.String() }),
-}
+	response: { 403: errorSchema },
+	detailResponses: { 403: jsonError },
+} as const
 
 export const notFoundResponse = {
-	404: Type.Object({ error: Type.String() }),
-}
+	response: { 404: errorSchema },
+	detailResponses: { 404: jsonError },
+} as const
 
 export const serverErrorResponse = {
-	500: Type.Object({ error: Type.String() }),
-}
+	response: { 500: errorSchema },
+	detailResponses: { 500: jsonError },
+} as const

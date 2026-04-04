@@ -1,23 +1,32 @@
 import { Type } from '@sinclair/typebox'
-import type { RouteSchemas } from '../types'
+import {
+	type DetailResponses,
+	type RouteSchemas,
+	toOpenApiSchema,
+} from '../types'
 
 const body = Type.Object({
 	email: Type.String(),
 	password: Type.String(),
 })
 
-// Não utiliazdo pois aparentemente não é possível documentar headers de saída, só de entrada.
-// const headers = Type.Object({
-// 	refresh_token: Type.String(),
-// })
+const responseSchema = Type.Object({
+	access_token: Type.String(),
+})
 
-const response = {
-	200: Type.Object({
-		access_token: Type.String(),
-	}),
+const response = { 200: responseSchema }
+
+const detailResponses: DetailResponses = {
+	200: {
+		description: '',
+		content: {
+			'application/json': { schema: toOpenApiSchema(responseSchema) },
+		},
+	},
 }
 
 export const routeSchemas = {
 	body,
 	response,
+	detailResponses,
 } as const satisfies RouteSchemas
