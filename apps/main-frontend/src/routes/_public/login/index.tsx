@@ -2,11 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
-import { FaGithub, FaGoogle } from 'react-icons/fa'
-import * as z from 'zod'
-
+import { FaGoogle } from 'react-icons/fa'
+import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { postApiV1AuthLogin } from '@/api/generated/auth/auth'
 
 export const Route = createFileRoute('/_public/login/')({
 	beforeLoad: ({ context }) => {
@@ -18,7 +18,7 @@ export const Route = createFileRoute('/_public/login/')({
 })
 
 const schema = z.object({
-	email: z.string().email('Email inválido'),
+	email: z.email('Email inválido'),
 	password: z.string().min(1, 'Senha obrigatória'),
 })
 
@@ -28,8 +28,14 @@ function RouteComponent() {
 		defaultValues: { email: '', password: '' },
 	})
 
-	function onSubmit(data: z.infer<typeof schema>) {
+	async function onSubmit(data: z.infer<typeof schema>) {
+		const res = await postApiV1AuthLogin(data)
+		res.data
 		console.log(data)
+	}
+
+	async function onGoogleLogin() {
+		console.log('google login')
 	}
 
 	return (
@@ -38,7 +44,7 @@ function RouteComponent() {
 			<aside className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 overflow-hidden bg-surface">
 				<div className="relative z-10">
 					<div className="text-2xl font-extrabold tracking-tighter text-white uppercase">
-						The Archivist
+						Class Platform
 					</div>
 				</div>
 				<div className="relative z-10 max-w-lg">
@@ -49,10 +55,6 @@ function RouteComponent() {
 						<br />
 						COLLECTIVE.
 					</h1>
-					<p className="text-on-surface-variant text-sm font-light tracking-wide leading-relaxed uppercase opacity-60">
-						Authorized Personnel Only. Tier 4 Clearance required for global
-						archive access and intelligence processing.
-					</p>
 				</div>
 				{/* Background Image with data-alt */}
 				<div className="absolute inset-0 z-0">
@@ -70,15 +72,15 @@ function RouteComponent() {
 					{/* Mobile Logo */}
 					<div className="lg:hidden mb-12">
 						<div className="text-xl font-extrabold tracking-tighter text-white uppercase">
-							The Archivist
+							Class Platform
 						</div>
 					</div>
 					<header className="mb-12">
 						<h2 className="text-3xl font-bold text-white tracking-tight">
-							Enter the Digital Archive
+							Enter the Class Platform
 						</h2>
 						<p className="text-on-surface-variant text-sm mt-2 font-medium">
-							Verify your credentials to continue research.
+							Verify your credentials to continue.
 						</p>
 					</header>
 					<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -165,35 +167,28 @@ function RouteComponent() {
 					</div>
 					{/* Social Logins */}
 					<div className="">
-						<button className="w-full flex items-center justify-center gap-3 bg-surface-container-highest/30 hover:bg-surface-container-highest transition-colors py-3 px-4 rounded-sm border border-outline-variant/10 group">
+						<Button
+							type="button"
+							onClick={onGoogleLogin}
+							className="w-full flex items-center justify-center gap-3 bg-surface-container-highest/30 hover:bg-surface-container-highest transition-colors py-3 px-4 rounded-sm border border-outline-variant/10 group h-auto"
+						>
 							<FaGoogle className="w-4 h-4 text-on-surface group-hover:text-primary transition-colors" />
 							<span className="text-[0.6875rem] font-bold uppercase tracking-wider text-on-surface">
 								Google
 							</span>
-						</button>
+						</Button>
 					</div>
 					{/* Footer */}
 					<footer className="mt-16 text-center">
 						<p className="text-[0.6875rem] text-md3-outline font-medium tracking-tight uppercase">
-							New Archivist?
+							No account?
 							<a
 								className="text-primary font-bold ml-1 hover:underline underline-offset-4"
 								href="#"
 							>
-								Request Access Account
+								Make Account
 							</a>
 						</p>
-						<div className="mt-12 flex justify-center gap-6 text-[0.6rem] font-bold uppercase tracking-widest text-md3-outline/50">
-							<a className="hover:text-on-surface transition-colors" href="#">
-								Privacy Protocol
-							</a>
-							<a className="hover:text-on-surface transition-colors" href="#">
-								System Status
-							</a>
-							<a className="hover:text-on-surface transition-colors" href="#">
-								v.4.0.1
-							</a>
-						</div>
 					</footer>
 				</div>
 			</main>
