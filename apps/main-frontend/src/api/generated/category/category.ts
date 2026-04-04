@@ -22,18 +22,10 @@ import type {
 } from '@tanstack/react-query'
 
 import type {
-	GetApiV1CategoryAll200OneItem,
-	GetApiV1CategoryAll200ThreeItem,
-	GetApiV1CategoryAll200TwoItem,
-	PostApiV1Category201One,
-	PostApiV1Category201Three,
-	PostApiV1Category201Two,
-	PostApiV1Category403One,
-	PostApiV1Category403Three,
-	PostApiV1Category403Two,
-	PostApiV1Category422One,
-	PostApiV1Category422Three,
-	PostApiV1Category422Two,
+	GetApiV1CategoryAll200Item,
+	PostApiV1Category201,
+	PostApiV1Category403,
+	PostApiV1Category422,
 	PostApiV1CategoryBodyOne,
 	PostApiV1CategoryBodyThree,
 	PostApiV1CategoryBodyTwo,
@@ -42,28 +34,15 @@ import type {
 /**
  * @summary Buscar todas as categorias.
  */
-export type getApiV1CategoryAllResponse200ApplicationJson = {
-	data: GetApiV1CategoryAll200OneItem[]
+export type getApiV1CategoryAllResponse200 = {
+	data: GetApiV1CategoryAll200Item[]
 	status: 200
 }
 
-export type getApiV1CategoryAllResponse200MultipartFormData = {
-	data: GetApiV1CategoryAll200TwoItem[]
-	status: 200
-}
-
-export type getApiV1CategoryAllResponse200TextPlain = {
-	data: GetApiV1CategoryAll200ThreeItem[]
-	status: 200
-}
-
-export type getApiV1CategoryAllResponseSuccess = (
-	| getApiV1CategoryAllResponse200ApplicationJson
-	| getApiV1CategoryAllResponse200MultipartFormData
-	| getApiV1CategoryAllResponse200TextPlain
-) & {
-	headers: Headers
-}
+export type getApiV1CategoryAllResponseSuccess =
+	getApiV1CategoryAllResponse200 & {
+		headers: Headers
+	}
 
 export type getApiV1CategoryAllResponse = getApiV1CategoryAllResponseSuccess
 
@@ -231,65 +210,27 @@ export function useGetApiV1CategoryAll<
 /**
  * @summary Criar uma nova categoria.
  */
-export type postApiV1CategoryResponse201ApplicationJson = {
-	data: PostApiV1Category201One
+export type postApiV1CategoryResponse201 = {
+	data: PostApiV1Category201
 	status: 201
 }
 
-export type postApiV1CategoryResponse201MultipartFormData = {
-	data: PostApiV1Category201Two
-	status: 201
-}
-
-export type postApiV1CategoryResponse201TextPlain = {
-	data: PostApiV1Category201Three
-	status: 201
-}
-
-export type postApiV1CategoryResponse403ApplicationJson = {
-	data: PostApiV1Category403One
+export type postApiV1CategoryResponse403 = {
+	data: PostApiV1Category403
 	status: 403
 }
 
-export type postApiV1CategoryResponse403MultipartFormData = {
-	data: PostApiV1Category403Two
-	status: 403
-}
-
-export type postApiV1CategoryResponse403TextPlain = {
-	data: PostApiV1Category403Three
-	status: 403
-}
-
-export type postApiV1CategoryResponse422ApplicationJson = {
-	data: PostApiV1Category422One
+export type postApiV1CategoryResponse422 = {
+	data: PostApiV1Category422
 	status: 422
 }
 
-export type postApiV1CategoryResponse422MultipartFormData = {
-	data: PostApiV1Category422Two
-	status: 422
-}
-
-export type postApiV1CategoryResponse422TextPlain = {
-	data: PostApiV1Category422Three
-	status: 422
-}
-
-export type postApiV1CategoryResponseSuccess = (
-	| postApiV1CategoryResponse201ApplicationJson
-	| postApiV1CategoryResponse201MultipartFormData
-	| postApiV1CategoryResponse201TextPlain
-) & {
+export type postApiV1CategoryResponseSuccess = postApiV1CategoryResponse201 & {
 	headers: Headers
 }
 export type postApiV1CategoryResponseError = (
-	| postApiV1CategoryResponse403ApplicationJson
-	| postApiV1CategoryResponse403MultipartFormData
-	| postApiV1CategoryResponse403TextPlain
-	| postApiV1CategoryResponse422ApplicationJson
-	| postApiV1CategoryResponse422MultipartFormData
-	| postApiV1CategoryResponse422TextPlain
+	| postApiV1CategoryResponse403
+	| postApiV1CategoryResponse422
 ) & {
 	headers: Headers
 }
@@ -326,13 +267,7 @@ export const postApiV1Category = async (
 }
 
 export const getPostApiV1CategoryMutationOptions = <
-	TError =
-		| PostApiV1Category403One
-		| PostApiV1Category403Two
-		| PostApiV1Category403Three
-		| PostApiV1Category422One
-		| PostApiV1Category422Two
-		| PostApiV1Category422Three,
+	TError = PostApiV1Category403 | PostApiV1Category422,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -392,24 +327,14 @@ export type PostApiV1CategoryMutationBody =
 	| PostApiV1CategoryBodyTwo
 	| PostApiV1CategoryBodyThree
 export type PostApiV1CategoryMutationError =
-	| PostApiV1Category403One
-	| PostApiV1Category403Two
-	| PostApiV1Category403Three
-	| PostApiV1Category422One
-	| PostApiV1Category422Two
-	| PostApiV1Category422Three
+	| PostApiV1Category403
+	| PostApiV1Category422
 
 /**
  * @summary Criar uma nova categoria.
  */
 export const usePostApiV1Category = <
-	TError =
-		| PostApiV1Category403One
-		| PostApiV1Category403Two
-		| PostApiV1Category403Three
-		| PostApiV1Category422One
-		| PostApiV1Category422Two
-		| PostApiV1Category422Three,
+	TError = PostApiV1Category403 | PostApiV1Category422,
 	TContext = unknown,
 >(
 	options?: {

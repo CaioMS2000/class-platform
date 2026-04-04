@@ -5,7 +5,7 @@
  * Development documentation
  * OpenAPI spec version: 1.0.0
  */
-export type GetApiV1AdminMe200One = {
+export type GetApiV1AdminMe200 = {
 	id: string
 	email: string
 	name: string
@@ -13,43 +13,11 @@ export type GetApiV1AdminMe200One = {
 	status: string
 }
 
-export type GetApiV1AdminMe200Two = {
-	id: string
-	email: string
-	name: string
-	avatar?: string
-	status: string
-}
-
-export type GetApiV1AdminMe200Three = {
-	id: string
-	email: string
-	name: string
-	avatar?: string
-	status: string
-}
-
-export type GetApiV1AdminMe403One = {
+export type GetApiV1AdminMe403 = {
 	error: string
 }
 
-export type GetApiV1AdminMe403Two = {
-	error: string
-}
-
-export type GetApiV1AdminMe403Three = {
-	error: string
-}
-
-export type GetApiV1AdminMe404One = {
-	error: string
-}
-
-export type GetApiV1AdminMe404Two = {
-	error: string
-}
-
-export type GetApiV1AdminMe404Three = {
+export type GetApiV1AdminMe404 = {
 	error: string
 }
 
@@ -68,27 +36,11 @@ export type PostApiV1AuthLoginBodyThree = {
 	password: string
 }
 
-export type PostApiV1AuthLogin200One = {
+export type PostApiV1AuthLogin200 = {
 	access_token: string
 }
 
-export type PostApiV1AuthLogin200Two = {
-	access_token: string
-}
-
-export type PostApiV1AuthLogin200Three = {
-	access_token: string
-}
-
-export type PostApiV1AuthLogin401One = {
-	error: string
-}
-
-export type PostApiV1AuthLogin401Two = {
-	error: string
-}
-
-export type PostApiV1AuthLogin401Three = {
+export type PostApiV1AuthLogin401 = {
 	error: string
 }
 
@@ -143,63 +95,23 @@ export type PostApiV1AuthRegisterBodyThree = {
 	role: PostApiV1AuthRegisterBodyThreeRole
 }
 
-export type PostApiV1AuthRegister201OneRole =
-	(typeof PostApiV1AuthRegister201OneRole)[keyof typeof PostApiV1AuthRegister201OneRole]
+export type PostApiV1AuthRegister201Role =
+	(typeof PostApiV1AuthRegister201Role)[keyof typeof PostApiV1AuthRegister201Role]
 
-export const PostApiV1AuthRegister201OneRole = {
+export const PostApiV1AuthRegister201Role = {
 	ADMIN: 'ADMIN',
 	INSTRUCTOR: 'INSTRUCTOR',
 	STUDENT: 'STUDENT',
 } as const
 
-export type PostApiV1AuthRegister201One = {
+export type PostApiV1AuthRegister201 = {
 	name: string
 	email: string
 	phone: string
-	role: PostApiV1AuthRegister201OneRole
+	role: PostApiV1AuthRegister201Role
 }
 
-export type PostApiV1AuthRegister201TwoRole =
-	(typeof PostApiV1AuthRegister201TwoRole)[keyof typeof PostApiV1AuthRegister201TwoRole]
-
-export const PostApiV1AuthRegister201TwoRole = {
-	ADMIN: 'ADMIN',
-	INSTRUCTOR: 'INSTRUCTOR',
-	STUDENT: 'STUDENT',
-} as const
-
-export type PostApiV1AuthRegister201Two = {
-	name: string
-	email: string
-	phone: string
-	role: PostApiV1AuthRegister201TwoRole
-}
-
-export type PostApiV1AuthRegister201ThreeRole =
-	(typeof PostApiV1AuthRegister201ThreeRole)[keyof typeof PostApiV1AuthRegister201ThreeRole]
-
-export const PostApiV1AuthRegister201ThreeRole = {
-	ADMIN: 'ADMIN',
-	INSTRUCTOR: 'INSTRUCTOR',
-	STUDENT: 'STUDENT',
-} as const
-
-export type PostApiV1AuthRegister201Three = {
-	name: string
-	email: string
-	phone: string
-	role: PostApiV1AuthRegister201ThreeRole
-}
-
-export type PostApiV1AuthRegister409One = {
-	error: string
-}
-
-export type PostApiV1AuthRegister409Two = {
-	error: string
-}
-
-export type PostApiV1AuthRegister409Three = {
+export type PostApiV1AuthRegister409 = {
 	error: string
 }
 
@@ -221,23 +133,7 @@ export type GetApiV1AuthSocialByProviderCallbackParams = {
 	state: string
 }
 
-export type GetApiV1CategoryAll200OneItem = {
-	id: string
-	name: string
-	slug: string
-	description?: string
-	icon?: string
-}
-
-export type GetApiV1CategoryAll200TwoItem = {
-	id: string
-	name: string
-	slug: string
-	description?: string
-	icon?: string
-}
-
-export type GetApiV1CategoryAll200ThreeItem = {
+export type GetApiV1CategoryAll200Item = {
 	id: string
 	name: string
 	slug: string
@@ -266,7 +162,7 @@ export type PostApiV1CategoryBodyThree = {
 	icon?: string
 }
 
-export type PostApiV1Category201One = {
+export type PostApiV1Category201 = {
 	id: string
 	name: string
 	slug: string
@@ -274,43 +170,11 @@ export type PostApiV1Category201One = {
 	icon?: string
 }
 
-export type PostApiV1Category201Two = {
-	id: string
-	name: string
-	slug: string
-	description?: string
-	icon?: string
-}
-
-export type PostApiV1Category201Three = {
-	id: string
-	name: string
-	slug: string
-	description?: string
-	icon?: string
-}
-
-export type PostApiV1Category403One = {
+export type PostApiV1Category403 = {
 	error: string
 }
 
-export type PostApiV1Category403Two = {
-	error: string
-}
-
-export type PostApiV1Category403Three = {
-	error: string
-}
-
-export type PostApiV1Category422One = {
-	error: string
-}
-
-export type PostApiV1Category422Two = {
-	error: string
-}
-
-export type PostApiV1Category422Three = {
+export type PostApiV1Category422 = {
 	error: string
 }
 
@@ -322,27 +186,7 @@ export type GetApiV1CourseBrowseParams = {
 	limit?: number
 }
 
-export type GetApiV1CourseBrowse200OneItem = {
-	id: string
-	slug: string
-	title: string
-	subtitle?: string
-	description: string
-	thumbnail: string
-	coverImage?: string
-}
-
-export type GetApiV1CourseBrowse200TwoItem = {
-	id: string
-	slug: string
-	title: string
-	subtitle?: string
-	description: string
-	thumbnail: string
-	coverImage?: string
-}
-
-export type GetApiV1CourseBrowse200ThreeItem = {
+export type GetApiV1CourseBrowse200Item = {
 	id: string
 	slug: string
 	title: string
@@ -496,7 +340,7 @@ export type PostApiV1InstructorNewCourseBodyThree = {
 	categoryIds?: string[]
 }
 
-export type PostApiV1InstructorNewCourse201One = {
+export type PostApiV1InstructorNewCourse201 = {
 	id: string
 	slug: string
 	title: string
@@ -506,47 +350,11 @@ export type PostApiV1InstructorNewCourse201One = {
 	coverImage?: string
 }
 
-export type PostApiV1InstructorNewCourse201Two = {
-	id: string
-	slug: string
-	title: string
-	subtitle?: string
-	description: string
-	thumbnail: string
-	coverImage?: string
-}
-
-export type PostApiV1InstructorNewCourse201Three = {
-	id: string
-	slug: string
-	title: string
-	subtitle?: string
-	description: string
-	thumbnail: string
-	coverImage?: string
-}
-
-export type PostApiV1InstructorNewCourse403One = {
+export type PostApiV1InstructorNewCourse403 = {
 	error: string
 }
 
-export type PostApiV1InstructorNewCourse403Two = {
-	error: string
-}
-
-export type PostApiV1InstructorNewCourse403Three = {
-	error: string
-}
-
-export type PostApiV1InstructorNewCourse404One = {
-	error: string
-}
-
-export type PostApiV1InstructorNewCourse404Two = {
-	error: string
-}
-
-export type PostApiV1InstructorNewCourse404Three = {
+export type PostApiV1InstructorNewCourse404 = {
 	error: string
 }
 
@@ -574,7 +382,7 @@ export type PostApiV1InstructorNewModuleBodyThree = {
 	order: number
 }
 
-export type PostApiV1InstructorNewModule201One = {
+export type PostApiV1InstructorNewModule201 = {
 	id: string
 	courseId: string
 	order: number
@@ -582,43 +390,11 @@ export type PostApiV1InstructorNewModule201One = {
 	description?: string
 }
 
-export type PostApiV1InstructorNewModule201Two = {
-	id: string
-	courseId: string
-	order: number
-	title: string
-	description?: string
-}
-
-export type PostApiV1InstructorNewModule201Three = {
-	id: string
-	courseId: string
-	order: number
-	title: string
-	description?: string
-}
-
-export type PostApiV1InstructorNewModule403One = {
+export type PostApiV1InstructorNewModule403 = {
 	error: string
 }
 
-export type PostApiV1InstructorNewModule403Two = {
-	error: string
-}
-
-export type PostApiV1InstructorNewModule403Three = {
-	error: string
-}
-
-export type PostApiV1InstructorNewModule404One = {
-	error: string
-}
-
-export type PostApiV1InstructorNewModule404Two = {
-	error: string
-}
-
-export type PostApiV1InstructorNewModule404Three = {
+export type PostApiV1InstructorNewModule404 = {
 	error: string
 }
 
@@ -730,7 +506,7 @@ export type PostApiV1InstructorNewLessonBodyThree = {
 	requiresPrevious?: boolean
 }
 
-export type PostApiV1InstructorNewLesson201One = {
+export type PostApiV1InstructorNewLesson201 = {
 	id: string
 	moduleId: string
 	courseId: string
@@ -743,52 +519,10 @@ export type PostApiV1InstructorNewLesson201One = {
 	requiresPrevious: boolean
 }
 
-export type PostApiV1InstructorNewLesson201Two = {
-	id: string
-	moduleId: string
-	courseId: string
-	order: number
-	title: string
-	description?: string
-	type: string
-	duration: number
-	isFree: boolean
-	requiresPrevious: boolean
-}
-
-export type PostApiV1InstructorNewLesson201Three = {
-	id: string
-	moduleId: string
-	courseId: string
-	order: number
-	title: string
-	description?: string
-	type: string
-	duration: number
-	isFree: boolean
-	requiresPrevious: boolean
-}
-
-export type PostApiV1InstructorNewLesson403One = {
+export type PostApiV1InstructorNewLesson403 = {
 	error: string
 }
 
-export type PostApiV1InstructorNewLesson403Two = {
-	error: string
-}
-
-export type PostApiV1InstructorNewLesson403Three = {
-	error: string
-}
-
-export type PostApiV1InstructorNewLesson404One = {
-	error: string
-}
-
-export type PostApiV1InstructorNewLesson404Two = {
-	error: string
-}
-
-export type PostApiV1InstructorNewLesson404Three = {
+export type PostApiV1InstructorNewLesson404 = {
 	error: string
 }

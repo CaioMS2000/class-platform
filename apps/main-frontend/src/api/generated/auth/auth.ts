@@ -24,21 +24,13 @@ import type {
 import type {
 	GetApiV1AuthSocialByProviderCallbackParams,
 	GetApiV1AuthSocialByProviderParams,
-	PostApiV1AuthLogin200One,
-	PostApiV1AuthLogin200Three,
-	PostApiV1AuthLogin200Two,
-	PostApiV1AuthLogin401One,
-	PostApiV1AuthLogin401Three,
-	PostApiV1AuthLogin401Two,
+	PostApiV1AuthLogin200,
+	PostApiV1AuthLogin401,
 	PostApiV1AuthLoginBodyOne,
 	PostApiV1AuthLoginBodyThree,
 	PostApiV1AuthLoginBodyTwo,
-	PostApiV1AuthRegister201One,
-	PostApiV1AuthRegister201Three,
-	PostApiV1AuthRegister201Two,
-	PostApiV1AuthRegister409One,
-	PostApiV1AuthRegister409Three,
-	PostApiV1AuthRegister409Two,
+	PostApiV1AuthRegister201,
+	PostApiV1AuthRegister409,
 	PostApiV1AuthRegisterBodyOne,
 	PostApiV1AuthRegisterBodyThree,
 	PostApiV1AuthRegisterBodyTwo,
@@ -47,48 +39,21 @@ import type {
 /**
  * @summary Realizar login
  */
-export type postApiV1AuthLoginResponse200ApplicationJson = {
-	data: PostApiV1AuthLogin200One
+export type postApiV1AuthLoginResponse200 = {
+	data: PostApiV1AuthLogin200
 	status: 200
 }
 
-export type postApiV1AuthLoginResponse200MultipartFormData = {
-	data: PostApiV1AuthLogin200Two
-	status: 200
-}
-
-export type postApiV1AuthLoginResponse200TextPlain = {
-	data: PostApiV1AuthLogin200Three
-	status: 200
-}
-
-export type postApiV1AuthLoginResponse401ApplicationJson = {
-	data: PostApiV1AuthLogin401One
+export type postApiV1AuthLoginResponse401 = {
+	data: PostApiV1AuthLogin401
 	status: 401
 }
 
-export type postApiV1AuthLoginResponse401MultipartFormData = {
-	data: PostApiV1AuthLogin401Two
-	status: 401
-}
-
-export type postApiV1AuthLoginResponse401TextPlain = {
-	data: PostApiV1AuthLogin401Three
-	status: 401
-}
-
-export type postApiV1AuthLoginResponseSuccess = (
-	| postApiV1AuthLoginResponse200ApplicationJson
-	| postApiV1AuthLoginResponse200MultipartFormData
-	| postApiV1AuthLoginResponse200TextPlain
-) & {
-	headers: Headers
-}
-export type postApiV1AuthLoginResponseError = (
-	| postApiV1AuthLoginResponse401ApplicationJson
-	| postApiV1AuthLoginResponse401MultipartFormData
-	| postApiV1AuthLoginResponse401TextPlain
-) & {
+export type postApiV1AuthLoginResponseSuccess =
+	postApiV1AuthLoginResponse200 & {
+		headers: Headers
+	}
+export type postApiV1AuthLoginResponseError = postApiV1AuthLoginResponse401 & {
 	headers: Headers
 }
 
@@ -124,10 +89,7 @@ export const postApiV1AuthLogin = async (
 }
 
 export const getPostApiV1AuthLoginMutationOptions = <
-	TError =
-		| PostApiV1AuthLogin401One
-		| PostApiV1AuthLogin401Two
-		| PostApiV1AuthLogin401Three,
+	TError = PostApiV1AuthLogin401,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -186,19 +148,13 @@ export type PostApiV1AuthLoginMutationBody =
 	| PostApiV1AuthLoginBodyOne
 	| PostApiV1AuthLoginBodyTwo
 	| PostApiV1AuthLoginBodyThree
-export type PostApiV1AuthLoginMutationError =
-	| PostApiV1AuthLogin401One
-	| PostApiV1AuthLogin401Two
-	| PostApiV1AuthLogin401Three
+export type PostApiV1AuthLoginMutationError = PostApiV1AuthLogin401
 
 /**
  * @summary Realizar login
  */
 export const usePostApiV1AuthLogin = <
-	TError =
-		| PostApiV1AuthLogin401One
-		| PostApiV1AuthLogin401Two
-		| PostApiV1AuthLogin401Three,
+	TError = PostApiV1AuthLogin401,
 	TContext = unknown,
 >(
 	options?: {
@@ -232,50 +188,24 @@ export const usePostApiV1AuthLogin = <
 /**
  * @summary Realizar cadastro
  */
-export type postApiV1AuthRegisterResponse201ApplicationJson = {
-	data: PostApiV1AuthRegister201One
+export type postApiV1AuthRegisterResponse201 = {
+	data: PostApiV1AuthRegister201
 	status: 201
 }
 
-export type postApiV1AuthRegisterResponse201MultipartFormData = {
-	data: PostApiV1AuthRegister201Two
-	status: 201
-}
-
-export type postApiV1AuthRegisterResponse201TextPlain = {
-	data: PostApiV1AuthRegister201Three
-	status: 201
-}
-
-export type postApiV1AuthRegisterResponse409ApplicationJson = {
-	data: PostApiV1AuthRegister409One
+export type postApiV1AuthRegisterResponse409 = {
+	data: PostApiV1AuthRegister409
 	status: 409
 }
 
-export type postApiV1AuthRegisterResponse409MultipartFormData = {
-	data: PostApiV1AuthRegister409Two
-	status: 409
-}
-
-export type postApiV1AuthRegisterResponse409TextPlain = {
-	data: PostApiV1AuthRegister409Three
-	status: 409
-}
-
-export type postApiV1AuthRegisterResponseSuccess = (
-	| postApiV1AuthRegisterResponse201ApplicationJson
-	| postApiV1AuthRegisterResponse201MultipartFormData
-	| postApiV1AuthRegisterResponse201TextPlain
-) & {
-	headers: Headers
-}
-export type postApiV1AuthRegisterResponseError = (
-	| postApiV1AuthRegisterResponse409ApplicationJson
-	| postApiV1AuthRegisterResponse409MultipartFormData
-	| postApiV1AuthRegisterResponse409TextPlain
-) & {
-	headers: Headers
-}
+export type postApiV1AuthRegisterResponseSuccess =
+	postApiV1AuthRegisterResponse201 & {
+		headers: Headers
+	}
+export type postApiV1AuthRegisterResponseError =
+	postApiV1AuthRegisterResponse409 & {
+		headers: Headers
+	}
 
 export type postApiV1AuthRegisterResponse =
 	| postApiV1AuthRegisterResponseSuccess
@@ -311,10 +241,7 @@ export const postApiV1AuthRegister = async (
 }
 
 export const getPostApiV1AuthRegisterMutationOptions = <
-	TError =
-		| PostApiV1AuthRegister409One
-		| PostApiV1AuthRegister409Two
-		| PostApiV1AuthRegister409Three,
+	TError = PostApiV1AuthRegister409,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -373,19 +300,13 @@ export type PostApiV1AuthRegisterMutationBody =
 	| PostApiV1AuthRegisterBodyOne
 	| PostApiV1AuthRegisterBodyTwo
 	| PostApiV1AuthRegisterBodyThree
-export type PostApiV1AuthRegisterMutationError =
-	| PostApiV1AuthRegister409One
-	| PostApiV1AuthRegister409Two
-	| PostApiV1AuthRegister409Three
+export type PostApiV1AuthRegisterMutationError = PostApiV1AuthRegister409
 
 /**
  * @summary Realizar cadastro
  */
 export const usePostApiV1AuthRegister = <
-	TError =
-		| PostApiV1AuthRegister409One
-		| PostApiV1AuthRegister409Two
-		| PostApiV1AuthRegister409Three,
+	TError = PostApiV1AuthRegister409,
 	TContext = unknown,
 >(
 	options?: {

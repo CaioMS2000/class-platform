@@ -19,79 +19,35 @@ import type {
 } from '@tanstack/react-query'
 
 import type {
-	GetApiV1AdminMe200One,
-	GetApiV1AdminMe200Three,
-	GetApiV1AdminMe200Two,
-	GetApiV1AdminMe403One,
-	GetApiV1AdminMe403Three,
-	GetApiV1AdminMe403Two,
-	GetApiV1AdminMe404One,
-	GetApiV1AdminMe404Three,
-	GetApiV1AdminMe404Two,
+	GetApiV1AdminMe200,
+	GetApiV1AdminMe403,
+	GetApiV1AdminMe404,
 } from '../mainAPI.schemas'
 
 /**
  * @summary Perfil do admin
  */
-export type getApiV1AdminMeResponse200ApplicationJson = {
-	data: GetApiV1AdminMe200One
+export type getApiV1AdminMeResponse200 = {
+	data: GetApiV1AdminMe200
 	status: 200
 }
 
-export type getApiV1AdminMeResponse200MultipartFormData = {
-	data: GetApiV1AdminMe200Two
-	status: 200
-}
-
-export type getApiV1AdminMeResponse200TextPlain = {
-	data: GetApiV1AdminMe200Three
-	status: 200
-}
-
-export type getApiV1AdminMeResponse403ApplicationJson = {
-	data: GetApiV1AdminMe403One
+export type getApiV1AdminMeResponse403 = {
+	data: GetApiV1AdminMe403
 	status: 403
 }
 
-export type getApiV1AdminMeResponse403MultipartFormData = {
-	data: GetApiV1AdminMe403Two
-	status: 403
-}
-
-export type getApiV1AdminMeResponse403TextPlain = {
-	data: GetApiV1AdminMe403Three
-	status: 403
-}
-
-export type getApiV1AdminMeResponse404ApplicationJson = {
-	data: GetApiV1AdminMe404One
+export type getApiV1AdminMeResponse404 = {
+	data: GetApiV1AdminMe404
 	status: 404
 }
 
-export type getApiV1AdminMeResponse404MultipartFormData = {
-	data: GetApiV1AdminMe404Two
-	status: 404
-}
-
-export type getApiV1AdminMeResponse404TextPlain = {
-	data: GetApiV1AdminMe404Three
-	status: 404
-}
-
-export type getApiV1AdminMeResponseSuccess = (
-	| getApiV1AdminMeResponse200ApplicationJson
-	| getApiV1AdminMeResponse200MultipartFormData
-	| getApiV1AdminMeResponse200TextPlain
-) & {
+export type getApiV1AdminMeResponseSuccess = getApiV1AdminMeResponse200 & {
 	headers: Headers
 }
 export type getApiV1AdminMeResponseError = (
-	| getApiV1AdminMeResponse403ApplicationJson
-	| getApiV1AdminMeResponse403MultipartFormData
-	| getApiV1AdminMeResponse403TextPlain
-	| getApiV1AdminMeResponse404ApplicationJson
-	| getApiV1AdminMeResponse404MultipartFormData
-	| getApiV1AdminMeResponse404TextPlain
+	| getApiV1AdminMeResponse403
+	| getApiV1AdminMeResponse404
 ) & {
 	headers: Headers
 }
@@ -128,13 +84,7 @@ export const getGetApiV1AdminMeQueryKey = () => {
 
 export const getGetApiV1AdminMeQueryOptions = <
 	TData = Awaited<ReturnType<typeof getApiV1AdminMe>>,
-	TError =
-		| GetApiV1AdminMe403One
-		| GetApiV1AdminMe403Two
-		| GetApiV1AdminMe403Three
-		| GetApiV1AdminMe404One
-		| GetApiV1AdminMe404Two
-		| GetApiV1AdminMe404Three,
+	TError = GetApiV1AdminMe403 | GetApiV1AdminMe404,
 >(options?: {
 	query?: Partial<
 		UseQueryOptions<Awaited<ReturnType<typeof getApiV1AdminMe>>, TError, TData>
@@ -159,23 +109,11 @@ export const getGetApiV1AdminMeQueryOptions = <
 export type GetApiV1AdminMeQueryResult = NonNullable<
 	Awaited<ReturnType<typeof getApiV1AdminMe>>
 >
-export type GetApiV1AdminMeQueryError =
-	| GetApiV1AdminMe403One
-	| GetApiV1AdminMe403Two
-	| GetApiV1AdminMe403Three
-	| GetApiV1AdminMe404One
-	| GetApiV1AdminMe404Two
-	| GetApiV1AdminMe404Three
+export type GetApiV1AdminMeQueryError = GetApiV1AdminMe403 | GetApiV1AdminMe404
 
 export function useGetApiV1AdminMe<
 	TData = Awaited<ReturnType<typeof getApiV1AdminMe>>,
-	TError =
-		| GetApiV1AdminMe403One
-		| GetApiV1AdminMe403Two
-		| GetApiV1AdminMe403Three
-		| GetApiV1AdminMe404One
-		| GetApiV1AdminMe404Two
-		| GetApiV1AdminMe404Three,
+	TError = GetApiV1AdminMe403 | GetApiV1AdminMe404,
 >(
 	options: {
 		query: Partial<
@@ -201,13 +139,7 @@ export function useGetApiV1AdminMe<
 }
 export function useGetApiV1AdminMe<
 	TData = Awaited<ReturnType<typeof getApiV1AdminMe>>,
-	TError =
-		| GetApiV1AdminMe403One
-		| GetApiV1AdminMe403Two
-		| GetApiV1AdminMe403Three
-		| GetApiV1AdminMe404One
-		| GetApiV1AdminMe404Two
-		| GetApiV1AdminMe404Three,
+	TError = GetApiV1AdminMe403 | GetApiV1AdminMe404,
 >(
 	options?: {
 		query?: Partial<
@@ -233,13 +165,7 @@ export function useGetApiV1AdminMe<
 }
 export function useGetApiV1AdminMe<
 	TData = Awaited<ReturnType<typeof getApiV1AdminMe>>,
-	TError =
-		| GetApiV1AdminMe403One
-		| GetApiV1AdminMe403Two
-		| GetApiV1AdminMe403Three
-		| GetApiV1AdminMe404One
-		| GetApiV1AdminMe404Two
-		| GetApiV1AdminMe404Three,
+	TError = GetApiV1AdminMe403 | GetApiV1AdminMe404,
 >(
 	options?: {
 		query?: Partial<
@@ -261,13 +187,7 @@ export function useGetApiV1AdminMe<
 
 export function useGetApiV1AdminMe<
 	TData = Awaited<ReturnType<typeof getApiV1AdminMe>>,
-	TError =
-		| GetApiV1AdminMe403One
-		| GetApiV1AdminMe403Two
-		| GetApiV1AdminMe403Three
-		| GetApiV1AdminMe404One
-		| GetApiV1AdminMe404Two
-		| GetApiV1AdminMe404Three,
+	TError = GetApiV1AdminMe403 | GetApiV1AdminMe404,
 >(
 	options?: {
 		query?: Partial<

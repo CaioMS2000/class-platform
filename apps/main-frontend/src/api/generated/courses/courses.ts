@@ -22,43 +22,23 @@ import type {
 } from '@tanstack/react-query'
 
 import type {
-	GetApiV1CourseBrowse200OneItem,
-	GetApiV1CourseBrowse200ThreeItem,
-	GetApiV1CourseBrowse200TwoItem,
+	GetApiV1CourseBrowse200Item,
 	GetApiV1CourseBrowseParams,
-	PostApiV1InstructorNewCourse201One,
-	PostApiV1InstructorNewCourse201Three,
-	PostApiV1InstructorNewCourse201Two,
-	PostApiV1InstructorNewCourse403One,
-	PostApiV1InstructorNewCourse403Three,
-	PostApiV1InstructorNewCourse403Two,
-	PostApiV1InstructorNewCourse404One,
-	PostApiV1InstructorNewCourse404Three,
-	PostApiV1InstructorNewCourse404Two,
+	PostApiV1InstructorNewCourse201,
+	PostApiV1InstructorNewCourse403,
+	PostApiV1InstructorNewCourse404,
 	PostApiV1InstructorNewCourseBodyOne,
 	PostApiV1InstructorNewCourseBodyThree,
 	PostApiV1InstructorNewCourseBodyTwo,
-	PostApiV1InstructorNewLesson201One,
-	PostApiV1InstructorNewLesson201Three,
-	PostApiV1InstructorNewLesson201Two,
-	PostApiV1InstructorNewLesson403One,
-	PostApiV1InstructorNewLesson403Three,
-	PostApiV1InstructorNewLesson403Two,
-	PostApiV1InstructorNewLesson404One,
-	PostApiV1InstructorNewLesson404Three,
-	PostApiV1InstructorNewLesson404Two,
+	PostApiV1InstructorNewLesson201,
+	PostApiV1InstructorNewLesson403,
+	PostApiV1InstructorNewLesson404,
 	PostApiV1InstructorNewLessonBodyOne,
 	PostApiV1InstructorNewLessonBodyThree,
 	PostApiV1InstructorNewLessonBodyTwo,
-	PostApiV1InstructorNewModule201One,
-	PostApiV1InstructorNewModule201Three,
-	PostApiV1InstructorNewModule201Two,
-	PostApiV1InstructorNewModule403One,
-	PostApiV1InstructorNewModule403Three,
-	PostApiV1InstructorNewModule403Two,
-	PostApiV1InstructorNewModule404One,
-	PostApiV1InstructorNewModule404Three,
-	PostApiV1InstructorNewModule404Two,
+	PostApiV1InstructorNewModule201,
+	PostApiV1InstructorNewModule403,
+	PostApiV1InstructorNewModule404,
 	PostApiV1InstructorNewModuleBodyOne,
 	PostApiV1InstructorNewModuleBodyThree,
 	PostApiV1InstructorNewModuleBodyTwo,
@@ -67,28 +47,15 @@ import type {
 /**
  * @summary Navegar pelo catálogo público de cursos.
  */
-export type getApiV1CourseBrowseResponse200ApplicationJson = {
-	data: GetApiV1CourseBrowse200OneItem[]
+export type getApiV1CourseBrowseResponse200 = {
+	data: GetApiV1CourseBrowse200Item[]
 	status: 200
 }
 
-export type getApiV1CourseBrowseResponse200MultipartFormData = {
-	data: GetApiV1CourseBrowse200TwoItem[]
-	status: 200
-}
-
-export type getApiV1CourseBrowseResponse200TextPlain = {
-	data: GetApiV1CourseBrowse200ThreeItem[]
-	status: 200
-}
-
-export type getApiV1CourseBrowseResponseSuccess = (
-	| getApiV1CourseBrowseResponse200ApplicationJson
-	| getApiV1CourseBrowseResponse200MultipartFormData
-	| getApiV1CourseBrowseResponse200TextPlain
-) & {
-	headers: Headers
-}
+export type getApiV1CourseBrowseResponseSuccess =
+	getApiV1CourseBrowseResponse200 & {
+		headers: Headers
+	}
 
 export type getApiV1CourseBrowseResponse = getApiV1CourseBrowseResponseSuccess
 
@@ -283,65 +250,28 @@ export function useGetApiV1CourseBrowse<
 /**
  * @summary Criar um novo curso.
  */
-export type postApiV1InstructorNewCourseResponse201ApplicationJson = {
-	data: PostApiV1InstructorNewCourse201One
+export type postApiV1InstructorNewCourseResponse201 = {
+	data: PostApiV1InstructorNewCourse201
 	status: 201
 }
 
-export type postApiV1InstructorNewCourseResponse201MultipartFormData = {
-	data: PostApiV1InstructorNewCourse201Two
-	status: 201
-}
-
-export type postApiV1InstructorNewCourseResponse201TextPlain = {
-	data: PostApiV1InstructorNewCourse201Three
-	status: 201
-}
-
-export type postApiV1InstructorNewCourseResponse403ApplicationJson = {
-	data: PostApiV1InstructorNewCourse403One
+export type postApiV1InstructorNewCourseResponse403 = {
+	data: PostApiV1InstructorNewCourse403
 	status: 403
 }
 
-export type postApiV1InstructorNewCourseResponse403MultipartFormData = {
-	data: PostApiV1InstructorNewCourse403Two
-	status: 403
-}
-
-export type postApiV1InstructorNewCourseResponse403TextPlain = {
-	data: PostApiV1InstructorNewCourse403Three
-	status: 403
-}
-
-export type postApiV1InstructorNewCourseResponse404ApplicationJson = {
-	data: PostApiV1InstructorNewCourse404One
+export type postApiV1InstructorNewCourseResponse404 = {
+	data: PostApiV1InstructorNewCourse404
 	status: 404
 }
 
-export type postApiV1InstructorNewCourseResponse404MultipartFormData = {
-	data: PostApiV1InstructorNewCourse404Two
-	status: 404
-}
-
-export type postApiV1InstructorNewCourseResponse404TextPlain = {
-	data: PostApiV1InstructorNewCourse404Three
-	status: 404
-}
-
-export type postApiV1InstructorNewCourseResponseSuccess = (
-	| postApiV1InstructorNewCourseResponse201ApplicationJson
-	| postApiV1InstructorNewCourseResponse201MultipartFormData
-	| postApiV1InstructorNewCourseResponse201TextPlain
-) & {
-	headers: Headers
-}
+export type postApiV1InstructorNewCourseResponseSuccess =
+	postApiV1InstructorNewCourseResponse201 & {
+		headers: Headers
+	}
 export type postApiV1InstructorNewCourseResponseError = (
-	| postApiV1InstructorNewCourseResponse403ApplicationJson
-	| postApiV1InstructorNewCourseResponse403MultipartFormData
-	| postApiV1InstructorNewCourseResponse403TextPlain
-	| postApiV1InstructorNewCourseResponse404ApplicationJson
-	| postApiV1InstructorNewCourseResponse404MultipartFormData
-	| postApiV1InstructorNewCourseResponse404TextPlain
+	| postApiV1InstructorNewCourseResponse403
+	| postApiV1InstructorNewCourseResponse404
 ) & {
 	headers: Headers
 }
@@ -380,13 +310,7 @@ export const postApiV1InstructorNewCourse = async (
 }
 
 export const getPostApiV1InstructorNewCourseMutationOptions = <
-	TError =
-		| PostApiV1InstructorNewCourse403One
-		| PostApiV1InstructorNewCourse403Two
-		| PostApiV1InstructorNewCourse403Three
-		| PostApiV1InstructorNewCourse404One
-		| PostApiV1InstructorNewCourse404Two
-		| PostApiV1InstructorNewCourse404Three,
+	TError = PostApiV1InstructorNewCourse403 | PostApiV1InstructorNewCourse404,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -446,24 +370,14 @@ export type PostApiV1InstructorNewCourseMutationBody =
 	| PostApiV1InstructorNewCourseBodyTwo
 	| PostApiV1InstructorNewCourseBodyThree
 export type PostApiV1InstructorNewCourseMutationError =
-	| PostApiV1InstructorNewCourse403One
-	| PostApiV1InstructorNewCourse403Two
-	| PostApiV1InstructorNewCourse403Three
-	| PostApiV1InstructorNewCourse404One
-	| PostApiV1InstructorNewCourse404Two
-	| PostApiV1InstructorNewCourse404Three
+	| PostApiV1InstructorNewCourse403
+	| PostApiV1InstructorNewCourse404
 
 /**
  * @summary Criar um novo curso.
  */
 export const usePostApiV1InstructorNewCourse = <
-	TError =
-		| PostApiV1InstructorNewCourse403One
-		| PostApiV1InstructorNewCourse403Two
-		| PostApiV1InstructorNewCourse403Three
-		| PostApiV1InstructorNewCourse404One
-		| PostApiV1InstructorNewCourse404Two
-		| PostApiV1InstructorNewCourse404Three,
+	TError = PostApiV1InstructorNewCourse403 | PostApiV1InstructorNewCourse404,
 	TContext = unknown,
 >(
 	options?: {
@@ -500,65 +414,28 @@ export const usePostApiV1InstructorNewCourse = <
 /**
  * @summary Criar um novo módulo.
  */
-export type postApiV1InstructorNewModuleResponse201ApplicationJson = {
-	data: PostApiV1InstructorNewModule201One
+export type postApiV1InstructorNewModuleResponse201 = {
+	data: PostApiV1InstructorNewModule201
 	status: 201
 }
 
-export type postApiV1InstructorNewModuleResponse201MultipartFormData = {
-	data: PostApiV1InstructorNewModule201Two
-	status: 201
-}
-
-export type postApiV1InstructorNewModuleResponse201TextPlain = {
-	data: PostApiV1InstructorNewModule201Three
-	status: 201
-}
-
-export type postApiV1InstructorNewModuleResponse403ApplicationJson = {
-	data: PostApiV1InstructorNewModule403One
+export type postApiV1InstructorNewModuleResponse403 = {
+	data: PostApiV1InstructorNewModule403
 	status: 403
 }
 
-export type postApiV1InstructorNewModuleResponse403MultipartFormData = {
-	data: PostApiV1InstructorNewModule403Two
-	status: 403
-}
-
-export type postApiV1InstructorNewModuleResponse403TextPlain = {
-	data: PostApiV1InstructorNewModule403Three
-	status: 403
-}
-
-export type postApiV1InstructorNewModuleResponse404ApplicationJson = {
-	data: PostApiV1InstructorNewModule404One
+export type postApiV1InstructorNewModuleResponse404 = {
+	data: PostApiV1InstructorNewModule404
 	status: 404
 }
 
-export type postApiV1InstructorNewModuleResponse404MultipartFormData = {
-	data: PostApiV1InstructorNewModule404Two
-	status: 404
-}
-
-export type postApiV1InstructorNewModuleResponse404TextPlain = {
-	data: PostApiV1InstructorNewModule404Three
-	status: 404
-}
-
-export type postApiV1InstructorNewModuleResponseSuccess = (
-	| postApiV1InstructorNewModuleResponse201ApplicationJson
-	| postApiV1InstructorNewModuleResponse201MultipartFormData
-	| postApiV1InstructorNewModuleResponse201TextPlain
-) & {
-	headers: Headers
-}
+export type postApiV1InstructorNewModuleResponseSuccess =
+	postApiV1InstructorNewModuleResponse201 & {
+		headers: Headers
+	}
 export type postApiV1InstructorNewModuleResponseError = (
-	| postApiV1InstructorNewModuleResponse403ApplicationJson
-	| postApiV1InstructorNewModuleResponse403MultipartFormData
-	| postApiV1InstructorNewModuleResponse403TextPlain
-	| postApiV1InstructorNewModuleResponse404ApplicationJson
-	| postApiV1InstructorNewModuleResponse404MultipartFormData
-	| postApiV1InstructorNewModuleResponse404TextPlain
+	| postApiV1InstructorNewModuleResponse403
+	| postApiV1InstructorNewModuleResponse404
 ) & {
 	headers: Headers
 }
@@ -597,13 +474,7 @@ export const postApiV1InstructorNewModule = async (
 }
 
 export const getPostApiV1InstructorNewModuleMutationOptions = <
-	TError =
-		| PostApiV1InstructorNewModule403One
-		| PostApiV1InstructorNewModule403Two
-		| PostApiV1InstructorNewModule403Three
-		| PostApiV1InstructorNewModule404One
-		| PostApiV1InstructorNewModule404Two
-		| PostApiV1InstructorNewModule404Three,
+	TError = PostApiV1InstructorNewModule403 | PostApiV1InstructorNewModule404,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -663,24 +534,14 @@ export type PostApiV1InstructorNewModuleMutationBody =
 	| PostApiV1InstructorNewModuleBodyTwo
 	| PostApiV1InstructorNewModuleBodyThree
 export type PostApiV1InstructorNewModuleMutationError =
-	| PostApiV1InstructorNewModule403One
-	| PostApiV1InstructorNewModule403Two
-	| PostApiV1InstructorNewModule403Three
-	| PostApiV1InstructorNewModule404One
-	| PostApiV1InstructorNewModule404Two
-	| PostApiV1InstructorNewModule404Three
+	| PostApiV1InstructorNewModule403
+	| PostApiV1InstructorNewModule404
 
 /**
  * @summary Criar um novo módulo.
  */
 export const usePostApiV1InstructorNewModule = <
-	TError =
-		| PostApiV1InstructorNewModule403One
-		| PostApiV1InstructorNewModule403Two
-		| PostApiV1InstructorNewModule403Three
-		| PostApiV1InstructorNewModule404One
-		| PostApiV1InstructorNewModule404Two
-		| PostApiV1InstructorNewModule404Three,
+	TError = PostApiV1InstructorNewModule403 | PostApiV1InstructorNewModule404,
 	TContext = unknown,
 >(
 	options?: {
@@ -717,65 +578,28 @@ export const usePostApiV1InstructorNewModule = <
 /**
  * @summary Criar uma nova aula.
  */
-export type postApiV1InstructorNewLessonResponse201ApplicationJson = {
-	data: PostApiV1InstructorNewLesson201One
+export type postApiV1InstructorNewLessonResponse201 = {
+	data: PostApiV1InstructorNewLesson201
 	status: 201
 }
 
-export type postApiV1InstructorNewLessonResponse201MultipartFormData = {
-	data: PostApiV1InstructorNewLesson201Two
-	status: 201
-}
-
-export type postApiV1InstructorNewLessonResponse201TextPlain = {
-	data: PostApiV1InstructorNewLesson201Three
-	status: 201
-}
-
-export type postApiV1InstructorNewLessonResponse403ApplicationJson = {
-	data: PostApiV1InstructorNewLesson403One
+export type postApiV1InstructorNewLessonResponse403 = {
+	data: PostApiV1InstructorNewLesson403
 	status: 403
 }
 
-export type postApiV1InstructorNewLessonResponse403MultipartFormData = {
-	data: PostApiV1InstructorNewLesson403Two
-	status: 403
-}
-
-export type postApiV1InstructorNewLessonResponse403TextPlain = {
-	data: PostApiV1InstructorNewLesson403Three
-	status: 403
-}
-
-export type postApiV1InstructorNewLessonResponse404ApplicationJson = {
-	data: PostApiV1InstructorNewLesson404One
+export type postApiV1InstructorNewLessonResponse404 = {
+	data: PostApiV1InstructorNewLesson404
 	status: 404
 }
 
-export type postApiV1InstructorNewLessonResponse404MultipartFormData = {
-	data: PostApiV1InstructorNewLesson404Two
-	status: 404
-}
-
-export type postApiV1InstructorNewLessonResponse404TextPlain = {
-	data: PostApiV1InstructorNewLesson404Three
-	status: 404
-}
-
-export type postApiV1InstructorNewLessonResponseSuccess = (
-	| postApiV1InstructorNewLessonResponse201ApplicationJson
-	| postApiV1InstructorNewLessonResponse201MultipartFormData
-	| postApiV1InstructorNewLessonResponse201TextPlain
-) & {
-	headers: Headers
-}
+export type postApiV1InstructorNewLessonResponseSuccess =
+	postApiV1InstructorNewLessonResponse201 & {
+		headers: Headers
+	}
 export type postApiV1InstructorNewLessonResponseError = (
-	| postApiV1InstructorNewLessonResponse403ApplicationJson
-	| postApiV1InstructorNewLessonResponse403MultipartFormData
-	| postApiV1InstructorNewLessonResponse403TextPlain
-	| postApiV1InstructorNewLessonResponse404ApplicationJson
-	| postApiV1InstructorNewLessonResponse404MultipartFormData
-	| postApiV1InstructorNewLessonResponse404TextPlain
+	| postApiV1InstructorNewLessonResponse403
+	| postApiV1InstructorNewLessonResponse404
 ) & {
 	headers: Headers
 }
@@ -814,13 +638,7 @@ export const postApiV1InstructorNewLesson = async (
 }
 
 export const getPostApiV1InstructorNewLessonMutationOptions = <
-	TError =
-		| PostApiV1InstructorNewLesson403One
-		| PostApiV1InstructorNewLesson403Two
-		| PostApiV1InstructorNewLesson403Three
-		| PostApiV1InstructorNewLesson404One
-		| PostApiV1InstructorNewLesson404Two
-		| PostApiV1InstructorNewLesson404Three,
+	TError = PostApiV1InstructorNewLesson403 | PostApiV1InstructorNewLesson404,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -880,24 +698,14 @@ export type PostApiV1InstructorNewLessonMutationBody =
 	| PostApiV1InstructorNewLessonBodyTwo
 	| PostApiV1InstructorNewLessonBodyThree
 export type PostApiV1InstructorNewLessonMutationError =
-	| PostApiV1InstructorNewLesson403One
-	| PostApiV1InstructorNewLesson403Two
-	| PostApiV1InstructorNewLesson403Three
-	| PostApiV1InstructorNewLesson404One
-	| PostApiV1InstructorNewLesson404Two
-	| PostApiV1InstructorNewLesson404Three
+	| PostApiV1InstructorNewLesson403
+	| PostApiV1InstructorNewLesson404
 
 /**
  * @summary Criar uma nova aula.
  */
 export const usePostApiV1InstructorNewLesson = <
-	TError =
-		| PostApiV1InstructorNewLesson403One
-		| PostApiV1InstructorNewLesson403Two
-		| PostApiV1InstructorNewLesson403Three
-		| PostApiV1InstructorNewLesson404One
-		| PostApiV1InstructorNewLesson404Two
-		| PostApiV1InstructorNewLesson404Three,
+	TError = PostApiV1InstructorNewLesson403 | PostApiV1InstructorNewLesson404,
 	TContext = unknown,
 >(
 	options?: {
