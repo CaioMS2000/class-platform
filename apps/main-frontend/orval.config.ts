@@ -14,7 +14,8 @@ export default defineConfig({
 			target: './openapi-fixed.json',
 		},
 		output: {
-			target: 'src/api/generated/index.ts',
+			mode: 'tags-split',
+			target: 'src/api/generated',
 			client: 'react-query',
 			clean: true,
 		},
