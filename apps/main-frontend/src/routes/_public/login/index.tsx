@@ -1,6 +1,12 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
+import { Controller, useForm } from 'react-hook-form'
 import { FaGithub, FaGoogle } from 'react-icons/fa'
+import * as z from 'zod'
+
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export const Route = createFileRoute('/_public/login/')({
 	beforeLoad: ({ context }) => {
@@ -11,7 +17,21 @@ export const Route = createFileRoute('/_public/login/')({
 	component: RouteComponent,
 })
 
+const schema = z.object({
+	email: z.string().email('Email inválido'),
+	password: z.string().min(1, 'Senha obrigatória'),
+})
+
 function RouteComponent() {
+	const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
+		resolver: zodResolver(schema),
+		defaultValues: { email: '', password: '' },
+	})
+
+	function onSubmit(data: z.infer<typeof schema>) {
+		console.log(data)
+	}
+
 	return (
 		<div className="bg-surface-container-lowest text-on-surface flex min-h-screen overflow-hidden">
 			{/* Left Panel: Editorial Visual */}
@@ -41,7 +61,7 @@ function RouteComponent() {
 						alt="Monochromatic high-contrast architectural detail of a brutalist concrete library interior with dramatic shadows and sharp lines"
 						src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG9rkcwND2d7UBWUZH6N045PBSPc2Rm4o5JFRzdXFVxzBBg2kO4ffZN7m9x_IS-a_1aICrbD5_QXYliz0ASXbSY4NKU-7YOER9pI9YTyK68SFopRdRrFbGo11kgUS8Zkd1C9NYwBFUtIVFtSN8Q2ojiJjJ5xPOz4Lcap-xel4KSrjzTgkvc8kXjvkzvOTbhntyRzUMsc2JCbzpMkYZs49SPJsSFsj-itDV7UVc63HAm-txRtoNINJdH8QR2ixyxuI_rQWCP2L2mmRB"
 					/>
-					<div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"></div>
+					<div className="absolute inset-0 bg-linear-to-t from-surface-container-lowest via-transparent to-transparent"></div>
 				</div>
 			</aside>
 			{/* Right Panel: Login Form */}
@@ -61,82 +81,96 @@ function RouteComponent() {
 							Verify your credentials to continue research.
 						</p>
 					</header>
-					<form className="space-y-8">
+					<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 						{/* Email Field */}
-						<div className="group">
-							<label
-								className="block text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-md3-outline transition-colors group-focus-within:text-primary mb-1"
-								htmlFor="email"
-							>
-								Credential ID (Email)
-							</label>
-							<input
-								className="w-full bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface focus:ring-0 focus:border-primary transition-all placeholder:text-surface-container-highest"
-								id="email"
-								name="email"
-								placeholder="archivist@institution.org"
-								required
-								type="email"
-							/>
-						</div>
+						<Controller
+							name="email"
+							control={control}
+							render={({ field, fieldState }) => (
+								<div className="group">
+									<label
+										className="block text-[0.6875rem] font-bold uppercase tracking-widest text-md3-outline transition-colors group-focus-within:text-primary mb-1"
+										htmlFor="email"
+									>
+										Email
+									</label>
+									<Input
+										id="email"
+										type="email"
+										placeholder="archivist@institution.org"
+										className="w-full bg-transparent border-0 border-b border-outline-variant rounded-none py-3 px-0 focus-visible:ring-0 focus-visible:border-primary placeholder:text-surface-container-highest"
+										aria-invalid={fieldState.invalid}
+										{...field}
+									/>
+									{fieldState.error && (
+										<p className="text-xs text-error mt-1">
+											{fieldState.error.message}
+										</p>
+									)}
+								</div>
+							)}
+						/>
 						{/* Password Field */}
-						<div className="group">
-							<div className="flex justify-between items-center mb-1">
-								<label
-									className="block text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-md3-outline transition-colors group-focus-within:text-primary"
-									htmlFor="password"
-								>
-									Access Key
-								</label>
-								<a
-									className="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-primary hover:text-on-primary-container transition-colors"
-									href="#"
-								>
-									Forgot Key?
-								</a>
-							</div>
-							<input
-								className="w-full bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-on-surface focus:ring-0 focus:border-primary transition-all placeholder:text-surface-container-highest"
-								id="password"
-								name="password"
-								placeholder="••••••••••••"
-								required
-								type="password"
-							/>
-						</div>
+						<Controller
+							name="password"
+							control={control}
+							render={({ field, fieldState }) => (
+								<div className="group">
+									<div className="flex justify-between items-center mb-1">
+										<label
+											className="block text-[0.6875rem] font-bold uppercase tracking-widest text-md3-outline transition-colors group-focus-within:text-primary"
+											htmlFor="password"
+										>
+											Password
+										</label>
+										<a
+											className="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-primary hover:text-on-primary-container transition-colors"
+											href="#"
+										>
+											Forgot Password?
+										</a>
+									</div>
+									<Input
+										id="password"
+										type="password"
+										placeholder="••••••••••••"
+										className="w-full bg-transparent border-0 border-b border-outline-variant rounded-none py-3 px-0 focus-visible:ring-0 focus-visible:border-primary placeholder:text-surface-container-highest"
+										aria-invalid={fieldState.invalid}
+										{...field}
+									/>
+									{fieldState.error && (
+										<p className="text-xs text-error mt-1">
+											{fieldState.error.message}
+										</p>
+									)}
+								</div>
+							)}
+						/>
 						{/* Login Button */}
-						<button
-							className="w-full bg-linear-to-br from-primary to-primary-container text-on-primary font-bold py-4 px-6 rounded-sm uppercase tracking-widest text-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-2 group"
+						<Button
 							type="submit"
+							className="w-full bg-linear-to-br from-primary to-primary-container text-on-primary font-bold py-4 px-6 h-auto uppercase tracking-widest text-sm active:scale-[0.98]"
 						>
-							Initialise Access
+							Login
 							<ArrowRight className="size-4" />
-						</button>
+						</Button>
 					</form>
 					{/* Divider */}
 					<div className="relative my-12 flex items-center">
-						<div className="flex-grow border-t border-outline-variant/30"></div>
+						<div className="grow border-t border-outline-variant/30"></div>
 						<span className="px-4 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-md3-outline">
 							Third Party Authentication
 						</span>
-						<div className="flex-grow border-t border-outline-variant/30"></div>
+						<div className="grow border-t border-outline-variant/30"></div>
 					</div>
 					{/* Social Logins */}
-					<div
-					// className="grid grid-cols-2 gap-4"
-					>
-						<button className=" w-full flex items-center justify-center gap-3 bg-surface-container-highest/30 hover:bg-surface-container-highest transition-colors py-3 px-4 rounded-sm border border-outline-variant/10 group">
+					<div className="">
+						<button className="w-full flex items-center justify-center gap-3 bg-surface-container-highest/30 hover:bg-surface-container-highest transition-colors py-3 px-4 rounded-sm border border-outline-variant/10 group">
 							<FaGoogle className="w-4 h-4 text-on-surface group-hover:text-primary transition-colors" />
 							<span className="text-[0.6875rem] font-bold uppercase tracking-wider text-on-surface">
 								Google
 							</span>
 						</button>
-						{/* <button className="flex items-center justify-center gap-3 bg-surface-container-highest/30 hover:bg-surface-container-highest transition-colors py-3 px-4 rounded-sm border border-outline-variant/10 group">
-							<FaGithub className="w-4 h-4 text-on-surface group-hover:text-primary transition-colors" />
-							<span className="text-[0.6875rem] font-bold uppercase tracking-wider text-on-surface">
-								GitHub
-							</span>
-						</button> */}
 					</div>
 					{/* Footer */}
 					<footer className="mt-16 text-center">
@@ -149,7 +183,7 @@ function RouteComponent() {
 								Request Access Account
 							</a>
 						</p>
-						<div className="mt-12 flex justify-center gap-6 text-[0.6rem] font-bold uppercase tracking-[0.1em] text-md3-outline/50">
+						<div className="mt-12 flex justify-center gap-6 text-[0.6rem] font-bold uppercase tracking-widest text-md3-outline/50">
 							<a className="hover:text-on-surface transition-colors" href="#">
 								Privacy Protocol
 							</a>
