@@ -24,10 +24,9 @@ export class GetAllCategoriesRoute extends Class<GetAllCategoriesRouteProps> {
 				detail: {
 					summary: 'Buscar todas as categorias.',
 					tags: ['Category'],
+					responses: { ...allCategoriesRouteSchemas.detailResponses },
 				},
-				response: {
-					...allCategoriesRouteSchemas.response,
-				},
+				response: { ...allCategoriesRouteSchemas.response },
 			}
 		)
 	}

@@ -27,11 +27,10 @@ export class BrowseCatalogRoute extends Class<BrowseCatalogRouteProps> {
 				detail: {
 					summary: 'Navegar pelo catálogo público de cursos.',
 					tags: ['Courses'],
-				},
-				response: {
-					...routeSchemas.response,
+					responses: { ...routeSchemas.detailResponses },
 				},
 				query: routeSchemas.query,
+				response: { ...routeSchemas.response },
 			}
 		)
 	}

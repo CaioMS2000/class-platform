@@ -27,12 +27,19 @@ export class CreateModuleRoute extends Class<CreateModuleRouteProps> {
 				return status(201, result.value.module)
 			},
 			{
-				detail: { summary: 'Criar um novo módulo.', tags: ['Courses'] },
-				response: {
-					...routeSchemas.response,
-					...insufficientPermissionsResponse,
+				detail: {
+					summary: 'Criar um novo módulo.',
+					tags: ['Courses'],
+					responses: {
+						...routeSchemas.detailResponses,
+						...insufficientPermissionsResponse.detailResponses,
+					},
 				},
 				body: routeSchemas.body,
+				response: {
+					...routeSchemas.response,
+					...insufficientPermissionsResponse.response,
+				},
 			}
 		)
 	}

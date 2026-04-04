@@ -1,12 +1,14 @@
 import { Class } from '@repo/core'
 import { routeSchemas as registerRouteSchemas } from '@repo/shared/http/schemas/typebox/auth/register'
+import { Type } from '@sinclair/typebox'
 import { Elysia, status } from 'elysia'
 import type { RegisterUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
-import { Type } from '@sinclair/typebox'
 
 type SignUpRouteProps = {
 	registerUseCase: RegisterUseCase
 }
+
+const errorSchema = Type.Object({ error: Type.String() })
 
 export class SignUpRoute extends Class<SignUpRouteProps> {
 	constructor(protected override props: SignUpRouteProps) {
@@ -33,11 +35,21 @@ export class SignUpRoute extends Class<SignUpRouteProps> {
 				return status(201, { user: user })
 			},
 			{
-				detail: { summary: 'Realizar cadastro', tags: ['Auth'] },
+				detail: {
+					summary: 'Realizar cadastro',
+					tags: ['Auth'],
+					responses: {
+						...registerRouteSchemas.detailResponses,
+						409: {
+							description: '',
+							content: { 'application/json': { schema: errorSchema } },
+						},
+					},
+				},
 				body: registerRouteSchemas.body,
 				response: {
 					...registerRouteSchemas.response,
-					409: Type.Object({ error: Type.String() }),
+					409: errorSchema,
 				},
 			}
 		)

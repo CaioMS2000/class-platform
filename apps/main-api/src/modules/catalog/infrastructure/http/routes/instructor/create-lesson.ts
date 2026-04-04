@@ -27,12 +27,19 @@ export class CreateLessonRoute extends Class<CreateLessonRouteProps> {
 				return status(201, result.value.lesson)
 			},
 			{
-				detail: { summary: 'Criar uma nova aula.', tags: ['Courses'] },
-				response: {
-					...routeSchemas.response,
-					...insufficientPermissionsResponse,
+				detail: {
+					summary: 'Criar uma nova aula.',
+					tags: ['Courses'],
+					responses: {
+						...routeSchemas.detailResponses,
+						...insufficientPermissionsResponse.detailResponses,
+					},
 				},
 				body: routeSchemas.body,
+				response: {
+					...routeSchemas.response,
+					...insufficientPermissionsResponse.response,
+				},
 			}
 		)
 	}

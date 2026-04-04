@@ -25,12 +25,19 @@ export class CreateCategoryRoute extends Class<CreateCategoryRouteProps> {
 				return status(201, result.value.category)
 			},
 			{
-				detail: { summary: 'Criar uma nova categoria.', tags: ['Category'] },
-				response: {
-					...createCategoryRouteSchemas.response,
-					...insufficientPermissionsResponse,
+				detail: {
+					summary: 'Criar uma nova categoria.',
+					tags: ['Category'],
+					responses: {
+						...createCategoryRouteSchemas.detailResponses,
+						...insufficientPermissionsResponse.detailResponses,
+					},
 				},
 				body: createCategoryRouteSchemas.body,
+				response: {
+					...createCategoryRouteSchemas.response,
+					...insufficientPermissionsResponse.response,
+				},
 			}
 		)
 	}

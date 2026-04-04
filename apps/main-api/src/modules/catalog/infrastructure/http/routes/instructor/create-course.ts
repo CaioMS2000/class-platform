@@ -34,12 +34,19 @@ export class CreateCourseRoute extends Class<CreateCourseRouteProps> {
 				return status(201, result.value.course)
 			},
 			{
-				detail: { summary: 'Criar um novo curso.', tags: ['Courses'] },
-				response: {
-					...createCourseRouteSchemas.response,
-					...insufficientPermissionsResponse,
+				detail: {
+					summary: 'Criar um novo curso.',
+					tags: ['Courses'],
+					responses: {
+						...createCourseRouteSchemas.detailResponses,
+						...insufficientPermissionsResponse.detailResponses,
+					},
 				},
 				body: createCourseRouteSchemas.body,
+				response: {
+					...createCourseRouteSchemas.response,
+					...insufficientPermissionsResponse.response,
+				},
 			}
 		)
 	}
