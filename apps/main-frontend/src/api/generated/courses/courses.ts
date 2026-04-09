@@ -44,6 +44,10 @@ import type {
 	PostApiV1InstructorNewModuleBodyTwo,
 } from '../mainAPI.schemas'
 
+import { customFetch } from '../../custom-fetch'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
 /**
  * @summary Navegar pelo catálogo público de cursos.
  */
@@ -81,21 +85,13 @@ export const getApiV1CourseBrowse = async (
 	params?: GetApiV1CourseBrowseParams,
 	options?: RequestInit
 ): Promise<getApiV1CourseBrowseResponse> => {
-	const res = await fetch(getGetApiV1CourseBrowseUrl(params), {
-		...options,
-		method: 'GET',
-	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: getApiV1CourseBrowseResponse['data'] = body
-		? JSON.parse(body)
-		: {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as getApiV1CourseBrowseResponse
+	return customFetch<getApiV1CourseBrowseResponse>(
+		getGetApiV1CourseBrowseUrl(params),
+		{
+			...options,
+			method: 'GET',
+		}
+	)
 }
 
 export const getGetApiV1CourseBrowseQueryKey = (
@@ -117,17 +113,18 @@ export const getGetApiV1CourseBrowseQueryOptions = <
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	}
 ) => {
-	const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+	const { query: queryOptions, request: requestOptions } = options ?? {}
 
 	const queryKey =
 		queryOptions?.queryKey ?? getGetApiV1CourseBrowseQueryKey(params)
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof getApiV1CourseBrowse>>
-	> = ({ signal }) => getApiV1CourseBrowse(params, { signal, ...fetchOptions })
+	> = ({ signal }) =>
+		getApiV1CourseBrowse(params, { signal, ...requestOptions })
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof getApiV1CourseBrowse>>,
@@ -162,7 +159,7 @@ export function useGetApiV1CourseBrowse<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
@@ -189,7 +186,7 @@ export function useGetApiV1CourseBrowse<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -208,7 +205,7 @@ export function useGetApiV1CourseBrowse<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -231,7 +228,7 @@ export function useGetApiV1CourseBrowse<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -291,22 +288,14 @@ export const postApiV1InstructorNewCourse = async (
 		| PostApiV1InstructorNewCourseBodyThree,
 	options?: RequestInit
 ): Promise<postApiV1InstructorNewCourseResponse> => {
-	const res = await fetch(getPostApiV1InstructorNewCourseUrl(), {
-		...options,
-		method: 'POST',
-		body: JSON.stringify(postApiV1InstructorNewCourseBody),
-	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: postApiV1InstructorNewCourseResponse['data'] = body
-		? JSON.parse(body)
-		: {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postApiV1InstructorNewCourseResponse
+	return customFetch<postApiV1InstructorNewCourseResponse>(
+		getPostApiV1InstructorNewCourseUrl(),
+		{
+			...options,
+			method: 'POST',
+			body: JSON.stringify(postApiV1InstructorNewCourseBody),
+		}
+	)
 }
 
 export const getPostApiV1InstructorNewCourseMutationOptions = <
@@ -324,7 +313,7 @@ export const getPostApiV1InstructorNewCourseMutationOptions = <
 		},
 		TContext
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
 	Awaited<ReturnType<typeof postApiV1InstructorNewCourse>>,
 	TError,
@@ -337,13 +326,13 @@ export const getPostApiV1InstructorNewCourseMutationOptions = <
 	TContext
 > => {
 	const mutationKey = ['postApiV1InstructorNewCourse']
-	const { mutation: mutationOptions, fetch: fetchOptions } = options
+	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation &&
 			'mutationKey' in options.mutation &&
 			options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, fetch: undefined }
+		: { mutation: { mutationKey }, request: undefined }
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof postApiV1InstructorNewCourse>>,
@@ -356,7 +345,7 @@ export const getPostApiV1InstructorNewCourseMutationOptions = <
 	> = props => {
 		const { data } = props ?? {}
 
-		return postApiV1InstructorNewCourse(data, fetchOptions)
+		return postApiV1InstructorNewCourse(data, requestOptions)
 	}
 
 	return { mutationFn, ...mutationOptions }
@@ -392,7 +381,7 @@ export const usePostApiV1InstructorNewCourse = <
 			},
 			TContext
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseMutationResult<
@@ -455,22 +444,14 @@ export const postApiV1InstructorNewModule = async (
 		| PostApiV1InstructorNewModuleBodyThree,
 	options?: RequestInit
 ): Promise<postApiV1InstructorNewModuleResponse> => {
-	const res = await fetch(getPostApiV1InstructorNewModuleUrl(), {
-		...options,
-		method: 'POST',
-		body: JSON.stringify(postApiV1InstructorNewModuleBody),
-	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: postApiV1InstructorNewModuleResponse['data'] = body
-		? JSON.parse(body)
-		: {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postApiV1InstructorNewModuleResponse
+	return customFetch<postApiV1InstructorNewModuleResponse>(
+		getPostApiV1InstructorNewModuleUrl(),
+		{
+			...options,
+			method: 'POST',
+			body: JSON.stringify(postApiV1InstructorNewModuleBody),
+		}
+	)
 }
 
 export const getPostApiV1InstructorNewModuleMutationOptions = <
@@ -488,7 +469,7 @@ export const getPostApiV1InstructorNewModuleMutationOptions = <
 		},
 		TContext
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
 	Awaited<ReturnType<typeof postApiV1InstructorNewModule>>,
 	TError,
@@ -501,13 +482,13 @@ export const getPostApiV1InstructorNewModuleMutationOptions = <
 	TContext
 > => {
 	const mutationKey = ['postApiV1InstructorNewModule']
-	const { mutation: mutationOptions, fetch: fetchOptions } = options
+	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation &&
 			'mutationKey' in options.mutation &&
 			options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, fetch: undefined }
+		: { mutation: { mutationKey }, request: undefined }
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof postApiV1InstructorNewModule>>,
@@ -520,7 +501,7 @@ export const getPostApiV1InstructorNewModuleMutationOptions = <
 	> = props => {
 		const { data } = props ?? {}
 
-		return postApiV1InstructorNewModule(data, fetchOptions)
+		return postApiV1InstructorNewModule(data, requestOptions)
 	}
 
 	return { mutationFn, ...mutationOptions }
@@ -556,7 +537,7 @@ export const usePostApiV1InstructorNewModule = <
 			},
 			TContext
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseMutationResult<
@@ -619,22 +600,14 @@ export const postApiV1InstructorNewLesson = async (
 		| PostApiV1InstructorNewLessonBodyThree,
 	options?: RequestInit
 ): Promise<postApiV1InstructorNewLessonResponse> => {
-	const res = await fetch(getPostApiV1InstructorNewLessonUrl(), {
-		...options,
-		method: 'POST',
-		body: JSON.stringify(postApiV1InstructorNewLessonBody),
-	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: postApiV1InstructorNewLessonResponse['data'] = body
-		? JSON.parse(body)
-		: {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postApiV1InstructorNewLessonResponse
+	return customFetch<postApiV1InstructorNewLessonResponse>(
+		getPostApiV1InstructorNewLessonUrl(),
+		{
+			...options,
+			method: 'POST',
+			body: JSON.stringify(postApiV1InstructorNewLessonBody),
+		}
+	)
 }
 
 export const getPostApiV1InstructorNewLessonMutationOptions = <
@@ -652,7 +625,7 @@ export const getPostApiV1InstructorNewLessonMutationOptions = <
 		},
 		TContext
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
 	Awaited<ReturnType<typeof postApiV1InstructorNewLesson>>,
 	TError,
@@ -665,13 +638,13 @@ export const getPostApiV1InstructorNewLessonMutationOptions = <
 	TContext
 > => {
 	const mutationKey = ['postApiV1InstructorNewLesson']
-	const { mutation: mutationOptions, fetch: fetchOptions } = options
+	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation &&
 			'mutationKey' in options.mutation &&
 			options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, fetch: undefined }
+		: { mutation: { mutationKey }, request: undefined }
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof postApiV1InstructorNewLesson>>,
@@ -684,7 +657,7 @@ export const getPostApiV1InstructorNewLessonMutationOptions = <
 	> = props => {
 		const { data } = props ?? {}
 
-		return postApiV1InstructorNewLesson(data, fetchOptions)
+		return postApiV1InstructorNewLesson(data, requestOptions)
 	}
 
 	return { mutationFn, ...mutationOptions }
@@ -720,7 +693,7 @@ export const usePostApiV1InstructorNewLesson = <
 			},
 			TContext
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseMutationResult<

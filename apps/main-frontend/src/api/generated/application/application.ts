@@ -18,6 +18,10 @@ import type {
 	UseQueryResult,
 } from '@tanstack/react-query'
 
+import { customFetch } from '../../custom-fetch'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
 /**
  * @summary Estado do servidor.
  */
@@ -39,15 +43,10 @@ export const getGetHealthUrl = () => {
 export const getHealth = async (
 	options?: RequestInit
 ): Promise<getHealthResponse> => {
-	const res = await fetch(getGetHealthUrl(), {
+	return customFetch<getHealthResponse>(getGetHealthUrl(), {
 		...options,
 		method: 'GET',
 	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: getHealthResponse['data'] = body ? JSON.parse(body) : {}
-	return { data, status: res.status, headers: res.headers } as getHealthResponse
 }
 
 export const getGetHealthQueryKey = () => {
@@ -61,15 +60,15 @@ export const getGetHealthQueryOptions = <
 	query?: Partial<
 		UseQueryOptions<Awaited<ReturnType<typeof getHealth>>, TError, TData>
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }) => {
-	const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+	const { query: queryOptions, request: requestOptions } = options ?? {}
 
 	const queryKey = queryOptions?.queryKey ?? getGetHealthQueryKey()
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof getHealth>>> = ({
 		signal,
-	}) => getHealth({ signal, ...fetchOptions })
+	}) => getHealth({ signal, ...requestOptions })
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof getHealth>>,
@@ -99,7 +98,7 @@ export function useGetHealth<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
@@ -121,7 +120,7 @@ export function useGetHealth<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -135,7 +134,7 @@ export function useGetHealth<
 		query?: Partial<
 			UseQueryOptions<Awaited<ReturnType<typeof getHealth>>, TError, TData>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -153,7 +152,7 @@ export function useGetHealth<
 		query?: Partial<
 			UseQueryOptions<Awaited<ReturnType<typeof getHealth>>, TError, TData>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -190,19 +189,10 @@ export const getGetHealthyUrl = () => {
 export const getHealthy = async (
 	options?: RequestInit
 ): Promise<getHealthyResponse> => {
-	const res = await fetch(getGetHealthyUrl(), {
+	return customFetch<getHealthyResponse>(getGetHealthyUrl(), {
 		...options,
 		method: 'GET',
 	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: getHealthyResponse['data'] = body ? JSON.parse(body) : {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as getHealthyResponse
 }
 
 export const getGetHealthyQueryKey = () => {
@@ -216,15 +206,15 @@ export const getGetHealthyQueryOptions = <
 	query?: Partial<
 		UseQueryOptions<Awaited<ReturnType<typeof getHealthy>>, TError, TData>
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }) => {
-	const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+	const { query: queryOptions, request: requestOptions } = options ?? {}
 
 	const queryKey = queryOptions?.queryKey ?? getGetHealthyQueryKey()
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof getHealthy>>> = ({
 		signal,
-	}) => getHealthy({ signal, ...fetchOptions })
+	}) => getHealthy({ signal, ...requestOptions })
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof getHealthy>>,
@@ -254,7 +244,7 @@ export function useGetHealthy<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
@@ -276,7 +266,7 @@ export function useGetHealthy<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -290,7 +280,7 @@ export function useGetHealthy<
 		query?: Partial<
 			UseQueryOptions<Awaited<ReturnType<typeof getHealthy>>, TError, TData>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -308,7 +298,7 @@ export function useGetHealthy<
 		query?: Partial<
 			UseQueryOptions<Awaited<ReturnType<typeof getHealthy>>, TError, TData>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {

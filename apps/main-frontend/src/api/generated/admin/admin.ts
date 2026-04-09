@@ -24,6 +24,10 @@ import type {
 	GetApiV1AdminMe404,
 } from '../mainAPI.schemas'
 
+import { customFetch } from '../../custom-fetch'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
 /**
  * @summary Perfil do admin
  */
@@ -63,19 +67,10 @@ export const getGetApiV1AdminMeUrl = () => {
 export const getApiV1AdminMe = async (
 	options?: RequestInit
 ): Promise<getApiV1AdminMeResponse> => {
-	const res = await fetch(getGetApiV1AdminMeUrl(), {
+	return customFetch<getApiV1AdminMeResponse>(getGetApiV1AdminMeUrl(), {
 		...options,
 		method: 'GET',
 	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: getApiV1AdminMeResponse['data'] = body ? JSON.parse(body) : {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as getApiV1AdminMeResponse
 }
 
 export const getGetApiV1AdminMeQueryKey = () => {
@@ -89,15 +84,15 @@ export const getGetApiV1AdminMeQueryOptions = <
 	query?: Partial<
 		UseQueryOptions<Awaited<ReturnType<typeof getApiV1AdminMe>>, TError, TData>
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }) => {
-	const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+	const { query: queryOptions, request: requestOptions } = options ?? {}
 
 	const queryKey = queryOptions?.queryKey ?? getGetApiV1AdminMeQueryKey()
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1AdminMe>>> = ({
 		signal,
-	}) => getApiV1AdminMe({ signal, ...fetchOptions })
+	}) => getApiV1AdminMe({ signal, ...requestOptions })
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof getApiV1AdminMe>>,
@@ -131,7 +126,7 @@ export function useGetApiV1AdminMe<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
@@ -157,7 +152,7 @@ export function useGetApiV1AdminMe<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -175,7 +170,7 @@ export function useGetApiV1AdminMe<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -197,7 +192,7 @@ export function useGetApiV1AdminMe<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {

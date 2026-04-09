@@ -36,6 +36,10 @@ import type {
 	PostApiV1AuthRegisterBodyTwo,
 } from '../mainAPI.schemas'
 
+import { customFetch } from '../../custom-fetch'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
 /**
  * @summary Realizar login
  */
@@ -72,20 +76,11 @@ export const postApiV1AuthLogin = async (
 		| PostApiV1AuthLoginBodyThree,
 	options?: RequestInit
 ): Promise<postApiV1AuthLoginResponse> => {
-	const res = await fetch(getPostApiV1AuthLoginUrl(), {
+	return customFetch<postApiV1AuthLoginResponse>(getPostApiV1AuthLoginUrl(), {
 		...options,
 		method: 'POST',
 		body: JSON.stringify(postApiV1AuthLoginBody),
 	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: postApiV1AuthLoginResponse['data'] = body ? JSON.parse(body) : {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postApiV1AuthLoginResponse
 }
 
 export const getPostApiV1AuthLoginMutationOptions = <
@@ -103,7 +98,7 @@ export const getPostApiV1AuthLoginMutationOptions = <
 		},
 		TContext
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
 	Awaited<ReturnType<typeof postApiV1AuthLogin>>,
 	TError,
@@ -116,13 +111,13 @@ export const getPostApiV1AuthLoginMutationOptions = <
 	TContext
 > => {
 	const mutationKey = ['postApiV1AuthLogin']
-	const { mutation: mutationOptions, fetch: fetchOptions } = options
+	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation &&
 			'mutationKey' in options.mutation &&
 			options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, fetch: undefined }
+		: { mutation: { mutationKey }, request: undefined }
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof postApiV1AuthLogin>>,
@@ -135,7 +130,7 @@ export const getPostApiV1AuthLoginMutationOptions = <
 	> = props => {
 		const { data } = props ?? {}
 
-		return postApiV1AuthLogin(data, fetchOptions)
+		return postApiV1AuthLogin(data, requestOptions)
 	}
 
 	return { mutationFn, ...mutationOptions }
@@ -169,7 +164,7 @@ export const usePostApiV1AuthLogin = <
 			},
 			TContext
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseMutationResult<
@@ -222,22 +217,14 @@ export const postApiV1AuthRegister = async (
 		| PostApiV1AuthRegisterBodyThree,
 	options?: RequestInit
 ): Promise<postApiV1AuthRegisterResponse> => {
-	const res = await fetch(getPostApiV1AuthRegisterUrl(), {
-		...options,
-		method: 'POST',
-		body: JSON.stringify(postApiV1AuthRegisterBody),
-	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: postApiV1AuthRegisterResponse['data'] = body
-		? JSON.parse(body)
-		: {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postApiV1AuthRegisterResponse
+	return customFetch<postApiV1AuthRegisterResponse>(
+		getPostApiV1AuthRegisterUrl(),
+		{
+			...options,
+			method: 'POST',
+			body: JSON.stringify(postApiV1AuthRegisterBody),
+		}
+	)
 }
 
 export const getPostApiV1AuthRegisterMutationOptions = <
@@ -255,7 +242,7 @@ export const getPostApiV1AuthRegisterMutationOptions = <
 		},
 		TContext
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
 	Awaited<ReturnType<typeof postApiV1AuthRegister>>,
 	TError,
@@ -268,13 +255,13 @@ export const getPostApiV1AuthRegisterMutationOptions = <
 	TContext
 > => {
 	const mutationKey = ['postApiV1AuthRegister']
-	const { mutation: mutationOptions, fetch: fetchOptions } = options
+	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation &&
 			'mutationKey' in options.mutation &&
 			options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, fetch: undefined }
+		: { mutation: { mutationKey }, request: undefined }
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof postApiV1AuthRegister>>,
@@ -287,7 +274,7 @@ export const getPostApiV1AuthRegisterMutationOptions = <
 	> = props => {
 		const { data } = props ?? {}
 
-		return postApiV1AuthRegister(data, fetchOptions)
+		return postApiV1AuthRegister(data, requestOptions)
 	}
 
 	return { mutationFn, ...mutationOptions }
@@ -321,7 +308,7 @@ export const usePostApiV1AuthRegister = <
 			},
 			TContext
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseMutationResult<
@@ -380,24 +367,13 @@ export const getApiV1AuthSocialByProvider = async (
 	params: GetApiV1AuthSocialByProviderParams,
 	options?: RequestInit
 ): Promise<getApiV1AuthSocialByProviderResponse> => {
-	const res = await fetch(
+	return customFetch<getApiV1AuthSocialByProviderResponse>(
 		getGetApiV1AuthSocialByProviderUrl(provider, params),
 		{
 			...options,
 			method: 'GET',
 		}
 	)
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: getApiV1AuthSocialByProviderResponse['data'] = body
-		? JSON.parse(body)
-		: {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as getApiV1AuthSocialByProviderResponse
 }
 
 export const getGetApiV1AuthSocialByProviderQueryKey = (
@@ -424,10 +400,10 @@ export const getGetApiV1AuthSocialByProviderQueryOptions = <
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	}
 ) => {
-	const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+	const { query: queryOptions, request: requestOptions } = options ?? {}
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -436,7 +412,10 @@ export const getGetApiV1AuthSocialByProviderQueryOptions = <
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof getApiV1AuthSocialByProvider>>
 	> = ({ signal }) =>
-		getApiV1AuthSocialByProvider(provider, params, { signal, ...fetchOptions })
+		getApiV1AuthSocialByProvider(provider, params, {
+			signal,
+			...requestOptions,
+		})
 
 	return {
 		queryKey,
@@ -477,7 +456,7 @@ export function useGetApiV1AuthSocialByProvider<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
@@ -505,7 +484,7 @@ export function useGetApiV1AuthSocialByProvider<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -525,7 +504,7 @@ export function useGetApiV1AuthSocialByProvider<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -549,7 +528,7 @@ export function useGetApiV1AuthSocialByProvider<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -609,24 +588,13 @@ export const getApiV1AuthSocialByProviderCallback = async (
 	params: GetApiV1AuthSocialByProviderCallbackParams,
 	options?: RequestInit
 ): Promise<getApiV1AuthSocialByProviderCallbackResponse> => {
-	const res = await fetch(
+	return customFetch<getApiV1AuthSocialByProviderCallbackResponse>(
 		getGetApiV1AuthSocialByProviderCallbackUrl(provider, params),
 		{
 			...options,
 			method: 'GET',
 		}
 	)
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: getApiV1AuthSocialByProviderCallbackResponse['data'] = body
-		? JSON.parse(body)
-		: {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as getApiV1AuthSocialByProviderCallbackResponse
 }
 
 export const getGetApiV1AuthSocialByProviderCallbackQueryKey = (
@@ -653,10 +621,10 @@ export const getGetApiV1AuthSocialByProviderCallbackQueryOptions = <
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	}
 ) => {
-	const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+	const { query: queryOptions, request: requestOptions } = options ?? {}
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -667,7 +635,7 @@ export const getGetApiV1AuthSocialByProviderCallbackQueryOptions = <
 	> = ({ signal }) =>
 		getApiV1AuthSocialByProviderCallback(provider, params, {
 			signal,
-			...fetchOptions,
+			...requestOptions,
 		})
 
 	return {
@@ -709,7 +677,7 @@ export function useGetApiV1AuthSocialByProviderCallback<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
@@ -737,7 +705,7 @@ export function useGetApiV1AuthSocialByProviderCallback<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -757,7 +725,7 @@ export function useGetApiV1AuthSocialByProviderCallback<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -781,7 +749,7 @@ export function useGetApiV1AuthSocialByProviderCallback<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -823,21 +791,13 @@ export const getPostApiV1AuthRefreshUrl = () => {
 export const postApiV1AuthRefresh = async (
 	options?: RequestInit
 ): Promise<postApiV1AuthRefreshResponse> => {
-	const res = await fetch(getPostApiV1AuthRefreshUrl(), {
-		...options,
-		method: 'POST',
-	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: postApiV1AuthRefreshResponse['data'] = body
-		? JSON.parse(body)
-		: {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postApiV1AuthRefreshResponse
+	return customFetch<postApiV1AuthRefreshResponse>(
+		getPostApiV1AuthRefreshUrl(),
+		{
+			...options,
+			method: 'POST',
+		}
+	)
 }
 
 export const getPostApiV1AuthRefreshMutationOptions = <
@@ -850,7 +810,7 @@ export const getPostApiV1AuthRefreshMutationOptions = <
 		void,
 		TContext
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
 	Awaited<ReturnType<typeof postApiV1AuthRefresh>>,
 	TError,
@@ -858,19 +818,19 @@ export const getPostApiV1AuthRefreshMutationOptions = <
 	TContext
 > => {
 	const mutationKey = ['postApiV1AuthRefresh']
-	const { mutation: mutationOptions, fetch: fetchOptions } = options
+	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation &&
 			'mutationKey' in options.mutation &&
 			options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, fetch: undefined }
+		: { mutation: { mutationKey }, request: undefined }
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof postApiV1AuthRefresh>>,
 		void
 	> = () => {
-		return postApiV1AuthRefresh(fetchOptions)
+		return postApiV1AuthRefresh(requestOptions)
 	}
 
 	return { mutationFn, ...mutationOptions }
@@ -893,7 +853,7 @@ export const usePostApiV1AuthRefresh = <TError = unknown, TContext = unknown>(
 			void,
 			TContext
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseMutationResult<
@@ -929,19 +889,10 @@ export const getPostApiV1AuthLogoutUrl = () => {
 export const postApiV1AuthLogout = async (
 	options?: RequestInit
 ): Promise<postApiV1AuthLogoutResponse> => {
-	const res = await fetch(getPostApiV1AuthLogoutUrl(), {
+	return customFetch<postApiV1AuthLogoutResponse>(getPostApiV1AuthLogoutUrl(), {
 		...options,
 		method: 'POST',
 	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: postApiV1AuthLogoutResponse['data'] = body ? JSON.parse(body) : {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postApiV1AuthLogoutResponse
 }
 
 export const getPostApiV1AuthLogoutMutationOptions = <
@@ -954,7 +905,7 @@ export const getPostApiV1AuthLogoutMutationOptions = <
 		void,
 		TContext
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
 	Awaited<ReturnType<typeof postApiV1AuthLogout>>,
 	TError,
@@ -962,19 +913,19 @@ export const getPostApiV1AuthLogoutMutationOptions = <
 	TContext
 > => {
 	const mutationKey = ['postApiV1AuthLogout']
-	const { mutation: mutationOptions, fetch: fetchOptions } = options
+	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation &&
 			'mutationKey' in options.mutation &&
 			options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, fetch: undefined }
+		: { mutation: { mutationKey }, request: undefined }
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof postApiV1AuthLogout>>,
 		void
 	> = () => {
-		return postApiV1AuthLogout(fetchOptions)
+		return postApiV1AuthLogout(requestOptions)
 	}
 
 	return { mutationFn, ...mutationOptions }
@@ -997,7 +948,7 @@ export const usePostApiV1AuthLogout = <TError = unknown, TContext = unknown>(
 			void,
 			TContext
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseMutationResult<

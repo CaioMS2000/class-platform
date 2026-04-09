@@ -31,6 +31,10 @@ import type {
 	PostApiV1CategoryBodyTwo,
 } from '../mainAPI.schemas'
 
+import { customFetch } from '../../custom-fetch'
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
 /**
  * @summary Buscar todas as categorias.
  */
@@ -53,19 +57,10 @@ export const getGetApiV1CategoryAllUrl = () => {
 export const getApiV1CategoryAll = async (
 	options?: RequestInit
 ): Promise<getApiV1CategoryAllResponse> => {
-	const res = await fetch(getGetApiV1CategoryAllUrl(), {
+	return customFetch<getApiV1CategoryAllResponse>(getGetApiV1CategoryAllUrl(), {
 		...options,
 		method: 'GET',
 	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: getApiV1CategoryAllResponse['data'] = body ? JSON.parse(body) : {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as getApiV1CategoryAllResponse
 }
 
 export const getGetApiV1CategoryAllQueryKey = () => {
@@ -83,15 +78,15 @@ export const getGetApiV1CategoryAllQueryOptions = <
 			TData
 		>
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }) => {
-	const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+	const { query: queryOptions, request: requestOptions } = options ?? {}
 
 	const queryKey = queryOptions?.queryKey ?? getGetApiV1CategoryAllQueryKey()
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof getApiV1CategoryAll>>
-	> = ({ signal }) => getApiV1CategoryAll({ signal, ...fetchOptions })
+	> = ({ signal }) => getApiV1CategoryAll({ signal, ...requestOptions })
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof getApiV1CategoryAll>>,
@@ -125,7 +120,7 @@ export function useGetApiV1CategoryAll<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & {
@@ -151,7 +146,7 @@ export function useGetApiV1CategoryAll<
 				>,
 				'initialData'
 			>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -169,7 +164,7 @@ export function useGetApiV1CategoryAll<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -191,7 +186,7 @@ export function useGetApiV1CategoryAll<
 				TData
 			>
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & {
@@ -250,20 +245,11 @@ export const postApiV1Category = async (
 		| PostApiV1CategoryBodyThree,
 	options?: RequestInit
 ): Promise<postApiV1CategoryResponse> => {
-	const res = await fetch(getPostApiV1CategoryUrl(), {
+	return customFetch<postApiV1CategoryResponse>(getPostApiV1CategoryUrl(), {
 		...options,
 		method: 'POST',
 		body: JSON.stringify(postApiV1CategoryBody),
 	})
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-	const data: postApiV1CategoryResponse['data'] = body ? JSON.parse(body) : {}
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postApiV1CategoryResponse
 }
 
 export const getPostApiV1CategoryMutationOptions = <
@@ -281,7 +267,7 @@ export const getPostApiV1CategoryMutationOptions = <
 		},
 		TContext
 	>
-	fetch?: RequestInit
+	request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
 	Awaited<ReturnType<typeof postApiV1Category>>,
 	TError,
@@ -294,13 +280,13 @@ export const getPostApiV1CategoryMutationOptions = <
 	TContext
 > => {
 	const mutationKey = ['postApiV1Category']
-	const { mutation: mutationOptions, fetch: fetchOptions } = options
+	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation &&
 			'mutationKey' in options.mutation &&
 			options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, fetch: undefined }
+		: { mutation: { mutationKey }, request: undefined }
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof postApiV1Category>>,
@@ -313,7 +299,7 @@ export const getPostApiV1CategoryMutationOptions = <
 	> = props => {
 		const { data } = props ?? {}
 
-		return postApiV1Category(data, fetchOptions)
+		return postApiV1Category(data, requestOptions)
 	}
 
 	return { mutationFn, ...mutationOptions }
@@ -349,7 +335,7 @@ export const usePostApiV1Category = <
 			},
 			TContext
 		>
-		fetch?: RequestInit
+		request?: SecondParameter<typeof customFetch>
 	},
 	queryClient?: QueryClient
 ): UseMutationResult<
