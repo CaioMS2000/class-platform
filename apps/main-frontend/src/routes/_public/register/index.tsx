@@ -3,9 +3,11 @@ import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { Controller, useForm } from 'react-hook-form'
 import { FaGoogle } from 'react-icons/fa'
 import { z } from 'zod'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { postApiV1AuthRegister } from '@/api/generated/auth/auth'
 
 export const Route = createFileRoute('/_public/register/')({
 	beforeLoad: ({ context }) => {
@@ -21,7 +23,7 @@ const schema = z
 		fullName: z.string().min(1, 'Nome obrigatório'),
 		email: z.email('Email inválido'),
 		phoneNumber: z.string().min(1, 'Telefone obrigatório'),
-		role: z.enum(['instructor', 'student'], {
+		role: z.enum(['INSTRUCTOR', 'STUDENT'], {
 			message: 'Selecione um papel',
 		}),
 		password: z.string().min(8, 'Mínimo de 8 caracteres'),
@@ -45,8 +47,23 @@ function RouteComponent() {
 		},
 	})
 
-	function onSubmit(data: z.infer<typeof schema>) {
+	async function onSubmit(data: z.infer<typeof schema>) {
 		console.log(data)
+		const response = await postApiV1AuthRegister({
+			...data,
+			phone: data.phoneNumber,
+			name: data.fullName,
+			role: data.role,
+		})
+		if (response.status === 201) {
+			Route.redirect({
+				to: '/login',
+			})
+		} else {
+			if (response.status === 409) {
+				toast.error(response.data.error)
+			}
+		}
 	}
 
 	function onGoogleLogin() {
@@ -216,9 +233,9 @@ function RouteComponent() {
 											<input
 												className="sr-only peer"
 												type="radio"
-												value="instructor"
-												checked={field.value === 'instructor'}
-												onChange={() => field.onChange('instructor')}
+												value="INSTRUCTOR"
+												checked={field.value === 'INSTRUCTOR'}
+												onChange={() => field.onChange('INSTRUCTOR')}
 											/>
 											<div className="flex w-full items-center justify-between">
 												<div className="flex items-center">
@@ -244,9 +261,9 @@ function RouteComponent() {
 											<input
 												className="sr-only peer"
 												type="radio"
-												value="student"
-												checked={field.value === 'student'}
-												onChange={() => field.onChange('student')}
+												value="STUDENT"
+												checked={field.value === 'STUDENT'}
+												onChange={() => field.onChange('STUDENT')}
 											/>
 											<div className="flex w-full items-center justify-between">
 												<div className="flex items-center">
