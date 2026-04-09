@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv'
 
 dotenv.config({ path: '.env' })
 
-const apiTarget = `${process.env.API_URL}/doc/json`
+const apiTarget = `${process.env.VITE_API_URL}/doc/json`
 
 console.log('API target:', apiTarget)
 
@@ -18,6 +18,12 @@ export default defineConfig({
 			target: 'src/api/generated',
 			client: 'react-query',
 			clean: true,
+			override: {
+				mutator: {
+					path: './src/api/custom-fetch.ts',
+					name: 'customFetch',
+				},
+			},
 		},
 	},
 })
