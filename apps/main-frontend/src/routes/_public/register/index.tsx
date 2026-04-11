@@ -2,12 +2,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { Controller, useForm } from 'react-hook-form'
 import { FaGoogle } from 'react-icons/fa'
-import { z } from 'zod'
 import { toast } from 'sonner'
-
+import { z } from 'zod'
+import { usePostApiV1AuthRegister } from '@/api/generated/auth/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { postApiV1AuthRegister } from '@/api/generated/auth/auth'
+import { useRegister } from '@/hooks/use-register'
 
 export const Route = createFileRoute('/_public/register/')({
 	beforeLoad: ({ context }) => {
@@ -35,6 +35,12 @@ const schema = z
 	})
 
 function RouteComponent() {
+	const { mutateAsync } = useRegister({
+		onError: error => {
+			error.status
+			console.log(error)
+		},
+	})
 	const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
@@ -49,21 +55,15 @@ function RouteComponent() {
 
 	async function onSubmit(data: z.infer<typeof schema>) {
 		console.log(data)
-		const response = await postApiV1AuthRegister({
-			...data,
-			phone: data.phoneNumber,
-			name: data.fullName,
-			role: data.role,
+		const response = await mutateAsync({
+			data: {
+				...data,
+				phone: data.phoneNumber,
+				name: data.fullName,
+				role: data.role,
+			},
 		})
-		if (response.status === 201) {
-			Route.redirect({
-				to: '/login',
-			})
-		} else {
-			if (response.status === 409) {
-				toast.error(response.data.error)
-			}
-		}
+		const { email } = response.data
 	}
 
 	function onGoogleLogin() {
