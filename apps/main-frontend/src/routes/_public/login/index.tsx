@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
 import { FaGoogle } from 'react-icons/fa'
@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { postApiV1AuthLogin } from '@/api/generated/auth/auth'
+import { useLogin } from '@/hooks/use-login'
 
 const searchSchema = z.object({
 	email: z.email().optional(),
@@ -28,15 +29,15 @@ const formSchema = z.object({
 
 function RouteComponent() {
 	const { email: preDefinedEmail } = Route.useSearch()
+	const { mutateAsync } = useLogin()
 	const { control, handleSubmit } = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: { email: preDefinedEmail || '', password: '' },
 	})
 
 	async function onSubmit(data: z.infer<typeof formSchema>) {
-		const res = await postApiV1AuthLogin(data)
-		res.data
-		console.log(data)
+		const res = await mutateAsync({ data })
+		const { access_token } = res.data
 	}
 
 	async function onGoogleLogin() {
@@ -187,12 +188,12 @@ function RouteComponent() {
 					<footer className="mt-16 text-center">
 						<p className="text-[0.6875rem] text-md3-outline font-medium tracking-tight uppercase">
 							No account?
-							<a
+							<Link
 								className="text-primary font-bold ml-1 hover:underline underline-offset-4"
-								href="#"
+								to="/register"
 							>
 								Make Account
-							</a>
+							</Link>
 						</p>
 					</footer>
 				</div>
