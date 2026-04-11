@@ -8,27 +8,32 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { postApiV1AuthLogin } from '@/api/generated/auth/auth'
 
+const searchSchema = z.object({
+	email: z.email().optional(),
+})
 export const Route = createFileRoute('/_public/login/')({
 	beforeLoad: ({ context }) => {
 		if (context.auth.isAuthenticated) {
 			throw redirect({ to: '/account' })
 		}
 	},
+	validateSearch: searchSchema,
 	component: RouteComponent,
 })
 
-const schema = z.object({
+const formSchema = z.object({
 	email: z.email('Email inválido'),
 	password: z.string().min(1, 'Senha obrigatória'),
 })
 
 function RouteComponent() {
-	const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
-		resolver: zodResolver(schema),
-		defaultValues: { email: '', password: '' },
+	const { email: preDefinedEmail } = Route.useSearch()
+	const { control, handleSubmit } = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		defaultValues: { email: preDefinedEmail || '', password: '' },
 	})
 
-	async function onSubmit(data: z.infer<typeof schema>) {
+	async function onSubmit(data: z.infer<typeof formSchema>) {
 		const res = await postApiV1AuthLogin(data)
 		res.data
 		console.log(data)
