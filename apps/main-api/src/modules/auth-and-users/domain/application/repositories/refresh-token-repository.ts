@@ -15,5 +15,5 @@ export abstract class RefreshTokenRepository {
 	} | null>
 	abstract revoke(tokenHash: string): Promise<void>
 	abstract revokeAllForUser(userId: UniqueId): Promise<void>
-	abstract markUsed(tokenHash: string): Promise<void>
+	abstract markUsed(tokenHash: string): Promise<boolean>
 }

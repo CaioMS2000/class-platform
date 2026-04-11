@@ -59,14 +59,13 @@ export class RefreshTokenUseCase extends UseCase<
 			return failure(InvalidRefreshTokenError)
 		}
 
-		// Replay detection: token already used → revoke all tokens for this user
-		if (stored.used) {
+		// Atomic mark-as-used: returns false if already used (race condition or replay)
+		const marked = await this.props.refreshTokenRepository.markUsed(tokenHash)
+
+		if (!marked) {
 			await this.props.refreshTokenRepository.revokeAllForUser(stored.userId)
 			return failure(TokenReplayDetectedError)
 		}
-
-		// Mark current token as used (for replay detection)
-		await this.props.refreshTokenRepository.markUsed(tokenHash)
 
 		let user: { id: UniqueId; name: string; email: string } | null = null
 

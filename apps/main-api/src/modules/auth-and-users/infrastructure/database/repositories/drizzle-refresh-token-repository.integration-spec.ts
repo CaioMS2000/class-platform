@@ -125,7 +125,24 @@ describe('DrizzleRefreshTokenRepository', () => {
 	})
 
 	describe('markUsed', () => {
-		it('should mark a refresh token as used', async () => {
+		it('should mark a refresh token as used and return true', async () => {
+			const { data } = await createStudentAndTokenData()
+			await repo.save(
+				data.userId,
+				data.tokenHash,
+				data.expiresInSeconds,
+				data.role
+			)
+
+			const result = await repo.markUsed(data.tokenHash)
+
+			expect(result).toBe(true)
+			const found = await repo.findByTokenHash(data.tokenHash)
+			expect(found).not.toBeNull()
+			expect(found!.used).toBe(true)
+		})
+
+		it('should return false when token is already used', async () => {
 			const { data } = await createStudentAndTokenData()
 			await repo.save(
 				data.userId,
@@ -135,10 +152,9 @@ describe('DrizzleRefreshTokenRepository', () => {
 			)
 
 			await repo.markUsed(data.tokenHash)
+			const result = await repo.markUsed(data.tokenHash)
 
-			const found = await repo.findByTokenHash(data.tokenHash)
-			expect(found).not.toBeNull()
-			expect(found!.used).toBe(true)
+			expect(result).toBe(false)
 		})
 	})
 })

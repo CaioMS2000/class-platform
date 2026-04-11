@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { drizzle } from '@/lib/drizzle'
 import type { UniqueId } from '@repo/core'
 import { RefreshTokenRepository } from '../../../domain/application/repositories/refresh-token-repository'
@@ -48,10 +48,18 @@ export class DrizzleRefreshTokenRepository extends RefreshTokenRepository {
 		await drizzle.delete(refreshTokens).where(eq(refreshTokens.userId, userId))
 	}
 
-	async markUsed(tokenHash: string): Promise<void> {
-		await drizzle
+	async markUsed(tokenHash: string): Promise<boolean> {
+		const result = await drizzle
 			.update(refreshTokens)
 			.set({ used: true })
-			.where(eq(refreshTokens.tokenHash, tokenHash))
+			.where(
+				and(
+					eq(refreshTokens.tokenHash, tokenHash),
+					eq(refreshTokens.used, false)
+				)
+			)
+			.returning({ id: refreshTokens.id })
+
+		return result.length > 0
 	}
 }
