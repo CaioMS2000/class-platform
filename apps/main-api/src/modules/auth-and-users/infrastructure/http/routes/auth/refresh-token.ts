@@ -1,7 +1,11 @@
 import { Class } from '@repo/core'
+import { routeSchemas } from '@repo/shared/http/schemas/typebox/auth/refresh-token'
+import { Type } from '@sinclair/typebox'
 import { Elysia, status } from 'elysia'
-import type { RefreshTokenUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
 import { REFRESH_TOKEN_EXPIRY_SECONDS } from '@/modules/auth-and-users/domain/application/constants'
+import type { RefreshTokenUseCase } from '@/modules/auth-and-users/domain/application/use-cases'
+
+const errorSchema = Type.Object({ error: Type.String() })
 
 type RefreshTokenRouteProps = {
 	refreshTokenUseCase: RefreshTokenUseCase
@@ -42,10 +46,24 @@ export class RefreshTokenRoute extends Class<RefreshTokenRouteProps> {
 					path: '/',
 				})
 
-				return { access_token: accessToken }
+				return status(200, { access_token: accessToken })
 			},
 			{
-				detail: { summary: 'Renovar access token', tags: ['Auth'] },
+				detail: {
+					summary: 'Renovar access token',
+					tags: ['Auth'],
+					responses: {
+						...routeSchemas.detailResponses,
+						401: {
+							description: '',
+							content: { 'application/json': { schema: errorSchema } },
+						},
+					},
+				},
+				response: {
+					...routeSchemas.response,
+					401: errorSchema,
+				},
 			}
 		)
 	}
