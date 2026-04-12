@@ -133,6 +133,14 @@ export type GetApiV1AuthSocialByProviderCallbackParams = {
 	state: string
 }
 
+export type PostApiV1AuthRefresh200 = {
+	access_token: string
+}
+
+export type PostApiV1AuthRefresh401 = {
+	error: string
+}
+
 export type GetApiV1CategoryAll200Item = {
 	id: string
 	name: string

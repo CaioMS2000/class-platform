@@ -29,6 +29,8 @@ import type {
 	PostApiV1AuthLoginBodyOne,
 	PostApiV1AuthLoginBodyThree,
 	PostApiV1AuthLoginBodyTwo,
+	PostApiV1AuthRefresh200,
+	PostApiV1AuthRefresh401,
 	PostApiV1AuthRegister201,
 	PostApiV1AuthRegister409,
 	PostApiV1AuthRegisterBodyOne,
@@ -773,16 +775,27 @@ export function useGetApiV1AuthSocialByProviderCallback<
  * @summary Renovar access token
  */
 export type postApiV1AuthRefreshResponse200 = {
-	data: void
+	data: PostApiV1AuthRefresh200
 	status: 200
+}
+
+export type postApiV1AuthRefreshResponse401 = {
+	data: PostApiV1AuthRefresh401
+	status: 401
 }
 
 export type postApiV1AuthRefreshResponseSuccess =
 	postApiV1AuthRefreshResponse200 & {
 		headers: Headers
 	}
+export type postApiV1AuthRefreshResponseError =
+	postApiV1AuthRefreshResponse401 & {
+		headers: Headers
+	}
 
-export type postApiV1AuthRefreshResponse = postApiV1AuthRefreshResponseSuccess
+export type postApiV1AuthRefreshResponse =
+	| postApiV1AuthRefreshResponseSuccess
+	| postApiV1AuthRefreshResponseError
 
 export const getPostApiV1AuthRefreshUrl = () => {
 	return `/api/v1/auth/refresh`
@@ -801,7 +814,7 @@ export const postApiV1AuthRefresh = async (
 }
 
 export const getPostApiV1AuthRefreshMutationOptions = <
-	TError = unknown,
+	TError = PostApiV1AuthRefresh401,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -840,12 +853,15 @@ export type PostApiV1AuthRefreshMutationResult = NonNullable<
 	Awaited<ReturnType<typeof postApiV1AuthRefresh>>
 >
 
-export type PostApiV1AuthRefreshMutationError = unknown
+export type PostApiV1AuthRefreshMutationError = PostApiV1AuthRefresh401
 
 /**
  * @summary Renovar access token
  */
-export const usePostApiV1AuthRefresh = <TError = unknown, TContext = unknown>(
+export const usePostApiV1AuthRefresh = <
+	TError = PostApiV1AuthRefresh401,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof postApiV1AuthRefresh>>,
