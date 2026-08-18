@@ -40,7 +40,11 @@ yarn-error.log*
 # others
 .vscode
 *.py
+*.txt
 *.sh
-!commit-stages.sh
-arquivos.txt
+*.md
+!README.md
+!docs/**
+!apps/*/docs/**
+!apps/*/src/modules/*/docs/**
 temp
