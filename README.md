@@ -1,159 +1,105 @@
-# Turborepo starter
+# class-platform
 
-This Turborepo starter is maintained by the Turborepo core team.
+Backend e frontend de uma plataforma de ensino (modelo Hotmart/Kiwify): catálogo de cursos,
+autenticação e, em construção, acompanhamento de progresso de aprendizado. Projeto de
+portfólio, em desenvolvimento ativo — a seção [Estado atual](#estado-atual-e-limitações-conhecidas)
+é honesta sobre o que já funciona e o que ainda não.
 
-## Using this example
+## Tour de 30 segundos
 
-Run the following command:
+- **Monorepo Turborepo** com `apps/main-api` (Bun + Elysia, REST) e `apps/main-frontend`
+  (React 19 + Vite), mais `packages/core` (kernel de domínio compartilhado) e `packages/shared`
+  (schemas Typebox compartilhados entre API e frontend, base do cliente gerado via OpenAPI).
+- **Clean Architecture com bounded contexts pragmáticos** — `domain` → `application` →
+  `infrastructure`, dependência sempre pra dentro, sem o overhead de DDD formal. Por quê:
+  [ADR 001 — Clean Architecture pragmática](apps/main-api/docs/adr/001-clean-architecture-pragmatica-bounded-contexts.md).
+- **Autenticação:** JWT (RS256) com rotação de refresh token e detecção de replay, login social
+  via Google OAuth 2.0/PKCE, três papéis de usuário (`admin`, `instructor`, `student`).
+- 58 arquivos de teste no backend (unitários com `ts-mockito`, mais suítes de integração e
+  end-to-end separadas).
 
-```sh
-npx create-turbo@latest
-```
+## Tour de 5 minutos
 
-## What's inside?
+### Arquitetura
 
-This Turborepo includes the following packages/apps:
+Veja os diagramas C4 (Context + Container) em
+[docs/architecture/c4-context-and-container.md](docs/architecture/c4-context-and-container.md).
+Resumo: uma SPA (`main-frontend`) consome a API (`main-api`) via REST; a API persiste em
+PostgreSQL (Drizzle) e usa Redis para o estado OAuth (PKCE); o login social passa pelo Google.
 
-### Apps and Packages
+### Decisões arquiteturais registradas (ADR)
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- [Clean Architecture pragmática + bounded contexts, sem DDD completo](apps/main-api/docs/adr/001-clean-architecture-pragmatica-bounded-contexts.md)
+- [Separação de responsabilidades do `JwtService`](apps/main-api/src/modules/auth-and-users/docs/adr/001-jwt-service-separation-of-concerns.md)
+- [Onde colocar a lógica de media/upload](apps/main-api/src/modules/catalog/docs/adr/001-media-upload-placement.md)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Módulos do backend (`apps/main-api/src/modules`)
 
-### Utilities
+| Módulo | O que faz | Estado |
+|---|---|---|
+| `auth-and-users` | Cadastro/login, JWT + refresh token, OAuth Google/PKCE, papéis admin/instructor/student | Em uso |
+| `catalog` | CRUD de cursos, módulos, aulas e categorias; navegação pública do catálogo | Em uso |
+| `learning` | Progresso do aluno, matrícula, acompanhamento de aulas assistidas | Código existe, ainda não registrado no bootstrap |
 
-This Turborepo has some additional tools already setup for you:
+## Rodando localmente
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Pré-requisitos: [Bun](https://bun.com) `>=1.3`, PostgreSQL, Redis.
 
 ```sh
-turbo build --filter=docs
+bun install
 ```
 
-Without global `turbo`:
+Configure `apps/main-api/.env` com (ver `apps/main-api/src/config/env/index.ts` para o schema
+completo validado com Zod):
+
+```
+DATABASE_URL=
+JWT_PRIVATE_KEY=      # par RS256
+JWT_PUBLIC_KEY=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=
+OAUTH_FRONTEND_CALLBACK_URL=
+REDIS_URL=redis://localhost:6380
+```
+
+Subir tudo (API + frontend) via Turborepo:
 
 ```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+bun run dev
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+Ou individualmente:
 
 ```sh
-cd my-turborepo
-turbo dev
+cd apps/main-api && bun run dev        # API em Bun --watch, Swagger em /doc
+cd apps/main-frontend && bun run dev   # Vite dev server
 ```
 
-Without global `turbo`, use your package manager:
+### Testes (backend)
 
 ```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+cd apps/main-api
+bun test                # unitários
+bun run test:integration
+bun run test:e2e
+bun run test:cov
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+## Estado atual e limitações conhecidas
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+- O módulo `learning` tem código de domínio mas ainda não está ligado ao bootstrap da API —
+  não é possível assistir aulas/acompanhar progresso via API hoje.
+- Upload de mídia (vídeo via Bunny Stream, imagens via S3) está **decidido** (ver ADR) mas
+  **não implementado** ainda.
+- O frontend está em construção; autenticação (store + provider) é o trabalho mais recente.
+- Migrar refresh tokens de Postgres para Redis é uma oportunidade identificada, mas ainda sem
+  decisão registrada — hoje só o estado OAuth usa Redis.
+- Sem pipeline de deploy/infra como código ainda; o projeto roda localmente.
 
-```sh
-turbo dev --filter=web
-```
+## Stack
 
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+**Backend:** Bun, Elysia, Drizzle ORM, PostgreSQL, Redis, Awilix (DI), Zod, `jose` (JWT).
+**Frontend:** React 19, Vite, TanStack Router/Query, Zustand, Tailwind, shadcn/ui, Orval (cliente
+gerado a partir do OpenAPI da API).
+**Compartilhado:** TypeScript, Biome, Turborepo, Husky + lint-staged.
